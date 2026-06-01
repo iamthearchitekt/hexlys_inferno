@@ -1,0 +1,26 @@
+
+  game.js:2146:    }
+  game.js:2147:
+> game.js:2148:    damagePlayer() {
+  game.js:2149:        if (this.player.invulTimer > 0) return;
+  game.js:2150:
+  game.js:2151:        // If powered up, lose fireball power but stay alive! (Nintendo style)
+  game.js:2152:        if (this.player.poweredUp) {
+  game.js:2153:            this.player.poweredUp = false;
+  game.js:2154:            synth.playDamage();
+  game.js:2155:            this.player.invulTimer = 90;
+  game.js:2156:            this.player.hurtTimer = 25;
+  game.js:2157:            this.player.vy = -6.0;
+  game.js:2158:            this.player.vx = -this.player.direction * 3.5;
+  game.js:2159:            this.player.grounded = false;
+  game.js:2160:            this.showToast("POWER LOST!");
+  game.js:2161:            return;
+  game.js:2162:        }
+  game.js:2163:
+  game.js:2164:        this.player.health--;
+  game.js:2165:        this.updateHUD();
+  game.js:2166:        synth.playDamage();
+  game.js:2167:        this.player.invulTimer = 90;
+  game.js:2168:        this.player.hurtTimer = 25;
+
+

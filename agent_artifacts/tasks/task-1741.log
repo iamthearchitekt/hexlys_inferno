@@ -1,0 +1,7 @@
+Remove-Item : A positional parameter cannot be found that accepts argument 'update_level.py'.
+At line:1 char:1
++ rm update_level.js update_level.py
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Remove-Item], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.RemoveItemCommand
+ 

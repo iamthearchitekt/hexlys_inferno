@@ -1,0 +1,37 @@
+
+  game.js:1693:        this.flowers = [];
+  game.js:1694:        this.enemyFireballTimer = 300; // First spawn after 5 seconds
+  game.js:1695:
+> game.js:1696:        let shardCount = 0;
+  game.js:1697:        for (let r = 0; r < LEVEL_DATA.length; r++) {
+  game.js:1698:            this.levelGrid[r] = [];
+  game.js:1699:            for (let c = 0; c < LEVEL_DATA[r].length; c++) {
+  game.js:1700:                const cell = LEVEL_DATA[r][c];
+  game.js:1701:                
+  game.js:1702:                if (cell === 7) {
+  game.js:1703:                    // Spawns 33% of the mapped shards in a 100% deterministic pattern,
+  game.js:1704:                    // ensuring they always spawn in the exact same spots on restart!
+  game.js:1705:                    if (shardCount % 3 === 0) {
+  game.js:1706:                        this.coins.push(new SoulCoin(c * TILE_SIZE, r * TILE_SIZE));
+  game.js:1707:                    }
+  game.js:1708:                    shardCount++;
+  game.js:1709:                    this.levelGrid[r][c] = TILES.EMPTY;
+  game.js:1710:                } else if (cell === 8) {
+  game.js:1711:                    this.enemies.push(new Enemy(c * TILE_SIZE, r * TILE_SIZE, 'SKULL_BUG'));
+  game.js:1712:                    this.levelGrid[r][c] = TILES.EMPTY;
+  game.js:1713:                } else if (cell === 9) {
+  game.js:1714:                    this.enemies.push(new Enemy(c * TILE_SIZE, r * TILE_SIZE, 'FIRE_IMP'));
+  game.js:1715:                    this.levelGrid[r][c] = TILES.EMPTY;
+  game.js:1716:                } else if (cell === 10) {
+  game.js:1717:                    this.enemies.push(new Enemy(c * TILE_SIZE, r * TILE_SIZE, 'HORNED_BLOB'));
+  game.js:1718:                    this.levelGrid[r][c] = TILES.EMPTY;
+  game.js:1719:                } else {
+  game.js:1720:                    this.levelGrid[r][c] = cell;
+  game.js:1721:                }
+  game.js:1722:            }
+  game.js:1723:        }
+  game.js:1724:
+  game.js:1725:        // Set maximum coin count dynamically based on the actual spawned shards!
+  game.js:1726:        this.player.maxCoins = this.coins.length || 1;
+
+

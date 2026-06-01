@@ -1,0 +1,6 @@
+Successfully scheduled one-shot timer.
+Expected to fire at: 2026-06-01T18:38:23-04:00
+Prompt: Check if git is installed
+
+[2026-06-01T18:38:18-04:00] Still waiting. Remaining time: 5s
+[2026-06-01T18:38:23-04:00] Timer fired.

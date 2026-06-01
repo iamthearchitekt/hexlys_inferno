@@ -1,0 +1,19 @@
+
+  game.js:2586:// Start loop with bulletproof readyState check
+  game.js:2587:function initGame() {
+  game.js:2588:    const engine = new GameEngine();
+> game.js:2589:    function gameLoop() {
+  game.js:2590:        engine.update();
+  game.js:2591:        engine.render();
+> game.js:2592:        requestAnimationFrame(gameLoop);
+  game.js:2593:    }
+> game.js:2594:    gameLoop();
+  game.js:2595:}
+  game.js:2596:
+  game.js:2597:if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  game.js:2598:    initGame();
+  game.js:2599:} else {
+  game.js:2600:    window.addEventListener('DOMContentLoaded', initGame);
+  game.js:2601:}
+
+

@@ -1,0 +1,73 @@
+
+  game.js:2044:            }
+  game.js:2045:        }
+  game.js:2046:
+> game.js:2047:        this.resolveInteractions();
+  game.js:2048:
+  game.js:2049:        // 7. Stable Lockstep Camera Follow - Hard-locked to player integer position to mathematically 
+eliminate all pixel judder
+  game.js:2050:        const targetX = Math.round(this.player.x) - 441;
+  game.js:2051:        const maxScroll = (this.levelGrid[0].length * TILE_SIZE) - this.width;
+  game.js:2052:        this.camera.x = Math.max(0, Math.min(targetX, maxScroll));
+  game.js:2053:
+  game.js:2054:        this.input.clearFrameTriggers();
+  game.js:2055:    }
+  game.js:2056:
+  game.js:2057:    resolveCollisions() {
+  game.js:2058:        this.player.x += this.player.vx;
+  game.js:2059:        this.player.grounded = false;
+  game.js:2060:
+  game.js:2061:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2062:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2063:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2064:                const t = this.getTile(c, r);
+  game.js:2065:                if (this.isSolid(t)) {
+  game.js:2066:                    if (this.player.vx > 0) {
+  game.js:2067:                        this.player.x = c * TILE_SIZE - this.player.width;
+  game.js:2068:                        this.player.vx = 0;
+  game.js:2069:                    } else if (this.player.vx < 0) {
+  game.js:2070:                        this.player.x = (c + 1) * TILE_SIZE;
+  game.js:2071:                        this.player.vx = 0;
+  game.js:2072:                    }
+  game.js:2073:                }
+  game.js:2074:            }
+  game.js:2075:        }
+  game.js:2076:
+  game.js:2077:        this.player.y += this.player.vy;
+  game.js:2198:        }
+  game.js:2199:    }
+  game.js:2200:
+> game.js:2201:    resolveInteractions() {
+  game.js:2202:        const px = this.player.x;
+  game.js:2203:        const py = this.player.y;
+  game.js:2204:        const pw = this.player.width;
+  game.js:2205:        const ph = this.player.height;
+  game.js:2206:
+  game.js:2207:        // 1. Soul Shard collections
+  game.js:2208:        this.coins.forEach(coin => {
+  game.js:2209:            if (coin.collected) return;
+  game.js:2210:            // Generous AABB collision detection to make collection feel natural and responsive
+  game.js:2211:            const hitX = px < coin.x + 18 && px + pw > coin.x - 18;
+  game.js:2212:            const hitY = py < coin.y + 24 && py + ph > coin.y - 24;
+  game.js:2213:            if (hitX && hitY) {
+  game.js:2214:                coin.collected = true;
+  game.js:2215:                this.player.coins++;
+  game.js:2216:                this.player.score += 50;
+  game.js:2217:                synth.playCollect();
+  game.js:2218:                this.updateHUD();
+  game.js:2219:                for (let i = 0; i < 6; i++) particles.spawnEmber(coin.x, coin.y);
+  game.js:2220:            }
+  game.js:2221:        });
+  game.js:2222:
+  game.js:2223:        // 2. Lava Flower collections (Fire Suit Power-up)
+  game.js:2224:        this.flowers.forEach(flower => {
+  game.js:2225:            if (flower.collected) return;
+  game.js:2226:            // AABB overlapping
+  game.js:2227:            const hitX = px < flower.x + 30 && px + pw > flower.x;
+  game.js:2228:            const hitY = py < flower.y + 30 && py + ph > flower.y;
+  game.js:2229:            if (hitX && hitY) {
+  game.js:2230:                flower.collected = true;
+  game.js:2231:                this.player.poweredUp = true;
+
+

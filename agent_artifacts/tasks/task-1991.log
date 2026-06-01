@@ -1,0 +1,36 @@
+
+  game.js:124: * Supports: Chunky pixel scale, horizontal flips, and palette transformations (Fire Hexly).
+  game.js:125: */
+> game.js:126:function drawPixelMatrix(ctx, x, y, matrix, flipX, pixelSize, colorOverrides = null) {
+  game.js:127:    const rows = matrix.length;
+  game.js:128:    const cols = matrix[0].length;
+  game.js:129:    
+  game.js:130:    ctx.save();
+  game.js:131:    ctx.translate(Math.floor(x), Math.floor(y));
+  game.js:132:    
+  game.js:133:    if (flipX) {
+  game.js:134:        ctx.scale(-1, 1);
+  game.js:135:        ctx.translate(-cols * pixelSize, 0);
+  game.js:136:    }
+  game.js:137:
+  game.js:138:    for (let r = 0; r < rows; r++) {
+  game.js:139:        const rowString = matrix[r];
+  game.js:140:        for (let c = 0; c < cols; c++) {
+  game.js:141:            const char = rowString[c];
+  game.js:142:            if (char !== '.') {
+  game.js:143:                // Apply Fire power-up color mappings if provided
+  game.js:144:                let color = PALETTE[char];
+  game.js:145:                if (colorOverrides && colorOverrides[char]) {
+  game.js:146:                    color = colorOverrides[char];
+  game.js:147:                }
+  game.js:148:                
+  game.js:149:                if (color && color !== 'transparent') {
+  game.js:150:                    ctx.fillStyle = color;
+  game.js:151:                    ctx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+  game.js:152:                }
+  game.js:153:            }
+  game.js:154:        }
+  game.js:155:    }
+  game.js:156:    ctx.restore();
+
+

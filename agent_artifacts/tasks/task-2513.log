@@ -1,0 +1,39 @@
+
+  game.js:1873:                
+  game.js:1874:                if (cell === 13) {
+  game.js:1875:                    this.bosses.push(new Boss(c * TILE_SIZE, actualRow * TILE_SIZE));
+  game.js:1876:                    this.levelGrid[actualRow][c] = TILES.EMPTY;
+  game.js:1877:                } else if (cell === 14) {
+> game.js:1878:                    this.levelGrid[actualRow][c] = TILES.FALLING_PLATFORM;
+  game.js:1879:                } else if (cell === 7) {
+  game.js:1880:                    if (shardCount % 3 === 0) {
+  game.js:1881:                        this.coins.push(new SoulCoin(c * TILE_SIZE, actualRow * TILE_SIZE));
+  game.js:1882:                    }
+  game.js:1883:                    shardCount++;
+  game.js:1884:                    this.levelGrid[actualRow][c] = TILES.EMPTY;
+  game.js:1885:                } else if (cell === 8) {
+  game.js:1886:                    this.enemies.push(new Enemy(c * TILE_SIZE, actualRow * TILE_SIZE, 'SKULL_BUG'));
+  game.js:1887:                    this.levelGrid[actualRow][c] = TILES.EMPTY;
+  game.js:1888:                } else if (cell === 9) {
+  game.js:2279:                    if (this.player.vy > 0) {
+  game.js:2280:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2281:                        this.player.vy = 0;
+  game.js:2282:                        this.player.grounded = true;
+  game.js:2283:
+> game.js:2284:                        if (t === TILES.FALLING_PLATFORM && !this.platformTimers[`${c},${r}`]) {
+  game.js:2285:                            this.platformTimers[`${c},${r}`] = 120; // 2 seconds
+  game.js:2286:                        }
+  game.js:2287:
+> game.js:2288:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM && t !== TILES.FALLING_PLATFORM) {
+  game.js:2289:                            this.player.lastSafeX = this.player.x;
+  game.js:2290:                            this.player.lastSafeY = this.player.y;
+  game.js:2291:                        }
+  game.js:2292:                    } else if (this.player.vy < 0) {
+  game.js:2293:                        this.player.y = (r + 1) * TILE_SIZE;
+  game.js:2294:                        this.player.vy = 0;
+  game.js:2295:                        this.triggerCeilingBump(c, r);
+  game.js:2296:                    }
+  game.js:2297:                }
+  game.js:2298:            }
+
+

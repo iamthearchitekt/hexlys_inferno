@@ -1,0 +1,15 @@
+        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+                if (this.getTile(c, r) === TILES.LAVA) {
+                    this.damagePlayer();
+                    return;
+                }
+            }
+
+    getTile(col, row) {
+        if (col < 0 || col >= this.levelGrid[0].length || row < 0 || row >= 12) return TILES.EMPTY;
+        return this.levelGrid[row][col];
+    }
+
+    isSolid(tile) {
+        return tile === TILES.GROUND || 

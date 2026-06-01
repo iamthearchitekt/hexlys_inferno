@@ -1,0 +1,108 @@
+
+  game.js:22:hexlyWalk2Img.src = 'hexly_walk2.png';
+  game.js:23:
+> game.js:24:const hexlyJumpImg = new Image();
+> game.js:25:let hexlyJumpImgLoaded = false;
+> game.js:26:hexlyJumpImg.onload = () => {
+> game.js:27:    hexlyJumpImgLoaded = true;
+  game.js:28:};
+> game.js:29:hexlyJumpImg.src = 'hexly_jump.png';
+  game.js:30:
+  game.js:31:const hexlyCrouchImg = new Image();
+  game.js:337:            "....bbbb....bb......bbbb.."
+  game.js:338:        ],
+> game.js:339:        JUMP: [
+  game.js:340:            "p.....bb..........bb.....p",
+  game.js:341:            "pp...bllb........brrb...pp",
+  game.js:735:    }
+  game.js:736:
+> game.js:737:    playJump() {
+  game.js:738:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:739:        this.resume();
+  game.js:851:        this.right = false;
+  game.js:852:        this.down = false;
+> game.js:853:        this.jump = false;
+> game.js:854:        this.jumpPressed = false;
+  game.js:855:        this.shootPressed = false;
+  game.js:856:        this.shootHeld = false;
+  game.js:868:        if (code === 'ArrowDown' || code === 'KeyS') this.down = true;
+  game.js:869:        if (code === 'Space' || code === 'ArrowUp' || code === 'KeyW') {
+> game.js:870:            if (!this.jump) this.jumpPressed = true;
+> game.js:871:            this.jump = true;
+  game.js:872:        }
+  game.js:873:        if (code === 'KeyP') this.pausePressed = true;
+  game.js:890:        if (code === 'ArrowRight' || code === 'KeyD') this.right = false;
+  game.js:891:        if (code === 'ArrowDown' || code === 'KeyS') this.down = false;
+> game.js:892:        if (code === 'Space' || code === 'ArrowUp' || code === 'KeyW') this.jump = false;
+  game.js:893:        if (code === 'KeyZ' || code === 'KeyJ' || code === 'ShiftLeft') this.shootHeld = false;
+  game.js:894:    }
+  game.js:895:
+  game.js:896:    clearFrameTriggers() {
+> game.js:897:        this.jumpPressed = false;
+  game.js:898:        this.shootPressed = false;
+  game.js:899:        this.pausePressed = false;
+  game.js:1011:    }
+  game.js:1012:
+> game.js:1013:    spawnJumpDust(x, y) {
+  game.js:1014:        for (let i = 0; i < 5; i++) {
+  game.js:1015:            this.add(new Particle(x, y, (Math.random() - 0.5) * 1.5, -Math.random() * 0.4, 'rgba(249, 
+87, 0, 0.4)', Math.random() * 5 + 3, Math.random() * 20 + 10, 'dust'));
+  game.js:1624:            poweredUp: false, // Morphing Fire Hexly state
+  game.js:1625:            coyoteTimer: 0,
+> game.js:1626:            jumpBufferTimer: 0,
+  game.js:1627:            invulTimer: 0,
+  game.js:1628:            hurtTimer: 0,
+  game.js:1639:            friction: 0.85,
+  game.js:1640:            maxSpeedX: 4.2,
+> game.js:1641:            jumpForce: -15.0,
+  game.js:1642:            maxFallSpeed: 10.0,
+  game.js:1643:            coyoteDuration: 9,
+> game.js:1644:            jumpBufferDuration: 6
+  game.js:1645:        };
+  game.js:1646:
+  game.js:1865:        if (this.player.hurtTimer > 0) this.player.hurtTimer--;
+  game.js:1866:        if (this.player.coyoteTimer > 0) this.player.coyoteTimer--;
+> game.js:1867:        if (this.player.jumpBufferTimer > 0) this.player.jumpBufferTimer--;
+  game.js:1868:
+  game.js:1869:        const p = this.player;
+  game.js:1937:        p.vx = Math.max(-currentMaxSpeed, Math.min(p.vx, currentMaxSpeed));
+  game.js:1938:
+> game.js:1939:        // 3. Jumps physics calculations
+> game.js:1940:        if (this.input.jumpPressed) {
+> game.js:1941:            this.player.jumpBufferTimer = this.physics.jumpBufferDuration;
+  game.js:1942:        }
+  game.js:1943:
+  game.js:1949:        }
+  game.js:1950:
+> game.js:1951:        if (this.player.jumpBufferTimer > 0 && this.player.coyoteTimer > 0) {
+> game.js:1952:            synth.playJump();
+> game.js:1953:            this.player.vy = this.physics.jumpForce;
+  game.js:1954:            this.player.grounded = false;
+  game.js:1955:            this.player.coyoteTimer = 0;
+> game.js:1956:            this.player.jumpBufferTimer = 0;
+> game.js:1957:            particles.spawnJumpDust(this.player.x + this.player.width / 2, this.player.y + 
+this.player.height);
+  game.js:1958:        }
+  game.js:1959:
+> game.js:1960:        if (!this.input.jump && this.player.vy < -2.0) {
+  game.js:1961:            this.player.vy = -2.0;
+  game.js:1962:        }
+  game.js:2458:            ctx.save();
+  game.js:2459:            
+> game.js:2460:            // 1. Pick the correct animation frame image (custom jump/crouch frames included)
+  game.js:2461:            let currentHexlyImg = hexlyImg;
+  game.js:2462:            if (p.crouching && hexlyCrouchImgLoaded) {
+  game.js:2463:                currentHexlyImg = hexlyCrouchImg;
+> game.js:2464:            } else if (!p.grounded && hexlyJumpImgLoaded) {
+> game.js:2465:                currentHexlyImg = hexlyJumpImg;
+  game.js:2466:            } else if (p.grounded && Math.abs(p.vx) > 0.2 && hexlyWalk2ImgLoaded) {
+  game.js:2467:                const walkFrame = Math.floor(p.animTime) % 2;
+  game.js:2553:                frame = SPRITES.HEXLY.WIN;
+  game.js:2554:            } else if (p.crouching) {
+> game.js:2555:                frame = SPRITES.HEXLY.JUMP; // Fallback representation of crouching
+  game.js:2556:            } else if (!p.grounded) {
+> game.js:2557:                frame = SPRITES.HEXLY.JUMP;
+  game.js:2558:            } else if (Math.abs(p.vx) > 0.2) {
+  game.js:2559:                const runCycle = Math.floor(p.animTime * 2.5) % 2;
+
+

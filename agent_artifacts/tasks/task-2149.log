@@ -1,0 +1,23 @@
+
+  game.js:2383:            for (let c = startCol; c <= endCol; c++) {
+  game.js:2384:                const tile = this.getTile(c, r);
+  game.js:2385:                if (tile !== TILES.EMPTY) {
+> game.js:2386:                    this.drawSingleTile(c * TILE_SIZE, r * TILE_SIZE, tile);
+  game.js:2387:                }
+  game.js:2388:            }
+  game.js:2389:        }
+  game.js:2390:    }
+  game.js:2391:
+> game.js:2392:    drawSingleTile(x, y, type) {
+  game.js:2393:        let matrix = null;
+  game.js:2394:        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
+  game.js:2395:        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
+  game.js:2396:        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+  game.js:2397:        else if (type === TILES.REWARD) {
+  game.js:2398:            // Draw the ground-brown base tile first
+  game.js:2399:            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
+  game.js:2400:            // Pulsing orange-red glow overlay using 'lighter' composite (sin wave 0..1)
+  game.js:2401:            const pulse = (Math.sin(this.frameCounter * 0.12) + 1) / 2; // 0..1 oscillation
+  game.js:2402:            this.ctx.save();
+
+

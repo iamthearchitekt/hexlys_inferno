@@ -1,0 +1,29 @@
+
+  game.js:2390:    }
+  game.js:2391:
+  game.js:2392:    drawSingleTile(x, y, type) {
+  game.js:2393:        let matrix = null;
+  game.js:2394:        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
+> game.js:2395:        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
+  game.js:2396:        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+  game.js:2397:        else if (type === TILES.REWARD) {
+  game.js:2398:            // Draw the ground-brown base tile first
+  game.js:2399:            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
+  game.js:2400:            // Pulsing orange-red glow overlay using 'lighter' composite (sin wave 0..1)
+  game.js:2401:            const pulse = (Math.sin(this.frameCounter * 0.12) + 1) / 2; // 0..1 oscillation
+  game.js:2402:            this.ctx.save();
+  game.js:2403:            this.ctx.globalCompositeOperation = 'lighter';
+  game.js:2404:            this.ctx.globalAlpha = 0.10 + pulse * 0.22; // 0.10  0.32 breathing range
+  game.js:2405:            const grd = this.ctx.createRadialGradient(
+  game.js:2406:                x + TILE_SIZE / 2, y + TILE_SIZE / 2, 2,
+  game.js:2407:                x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE * 0.7
+  game.js:2408:            );
+  game.js:2409:            grd.addColorStop(0,   'rgba(255, 220, 80, 1)');
+  game.js:2410:            grd.addColorStop(0.4, 'rgba(255, 100, 0, 0.9)');
+  game.js:2411:            grd.addColorStop(1,   'rgba(180, 20, 0, 0)');
+  game.js:2412:            this.ctx.fillStyle = grd;
+  game.js:2413:            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+  game.js:2414:            // Pulsing border glow
+  game.js:2415:            this.ctx.globalAlpha = 0.08 + pulse * 0.14;
+
+

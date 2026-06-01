@@ -1,0 +1,189 @@
+
+  game.js:1664:            maxHealth: 3,
+  game.js:1665:            score: 0,
+  game.js:1666:            coins: 0,
+> game.js:1667:            poweredUp: false, // Morphing Fire Hexly state
+  game.js:1668:            coyoteTimer: 0,
+  game.js:1669:            jumpBufferTimer: 0,
+  game.js:1670:            invulTimer: 0,
+  game.js:1671:            hurtTimer: 0,
+  game.js:1672:            direction: 1,
+  game.js:1673:            lastSafeX: 80,
+  game.js:1674:            lastSafeY: 300,
+  game.js:1675:            animTime: 0,
+  game.js:1676:            crouching: false
+  game.js:1677:        };
+  game.js:1678:
+  game.js:1679:        this.physics = {
+  game.js:1680:            gravity: 0.52,
+  game.js:1681:            acceleration: 0.38,
+  game.js:1682:            friction: 0.85,
+  game.js:1793:        this.player.health = 3;
+  game.js:1794:        this.player.score = 0;
+  game.js:1795:        this.player.coins = 0;
+> game.js:1796:        this.player.poweredUp = false; // Reset fireball morph
+  game.js:1797:        this.player.grounded = false;
+  game.js:1798:        this.player.invulTimer = 0;
+  game.js:1799:        this.player.hurtTimer = 0;
+  game.js:1800:        this.player.lastSafeX = 80;
+  game.js:1801:        this.player.lastSafeY = 300;
+  game.js:1802:
+  game.js:1803:        this.camera.x = 0;
+  game.js:1804:        this.camera.targetX = 0;
+  game.js:1805:        this.camera.floatX = 0;
+  game.js:1806:        
+  game.js:1807:        this.timeRemaining = this.timeLimit;
+  game.js:1808:        this.initializeMap();
+  game.js:1809:        this.updateHUD();
+  game.js:1810:
+  game.js:1811:        if (this.timerInterval) clearInterval(this.timerInterval);
+  game.js:2015:        }
+  game.js:2016:
+  game.js:2017:        // 4. Bouncing Fireball shooting logic
+> game.js:2018:        if (this.input.shootPressed && this.player.poweredUp) {
+  game.js:2019:            if (this.fireballs.length < 2) { // Max 2 active fireballs
+  game.js:2020:                synth.playFireball();
+  game.js:2021:                const fx = this.player.x + (this.player.direction === 1 ? this.player.width : -12);
+  game.js:2022:                const fy = this.player.y + 15;
+  game.js:2023:                this.fireballs.push(new Fireball(fx, fy, this.player.direction * 6.5, 1.0));
+  game.js:2024:            }
+  game.js:2025:        }
+  game.js:2026:
+  game.js:2027:        this.resolveCollisions();
+  game.js:2028:
+  game.js:2029:        // 5. Ambient embers and bubbling lava
+  game.js:2030:        if (this.frameCounter % 15 === 0) {
+  game.js:2031:            const rColX = Math.floor(Math.random() * this.levelGrid[0].length);
+  game.js:2032:            for (let y = 9; y < 12; y++) {
+  game.js:2033:                if (this.levelGrid[y] && this.levelGrid[y][rColX] === TILES.LAVA) {
+  game.js:2167:            const cx = col * TILE_SIZE;
+  game.js:2168:            const cy = row * TILE_SIZE;
+  game.js:2169:            
+> game.js:2170:            if (!this.player.poweredUp) {
+  game.js:2171:                synth.playVictory();
+  game.js:2172:                this.flowers.push(new LavaFlower(cx, cy));
+  game.js:2173:                this.showToast("POWERUP RELEASED!");
+  game.js:2174:            } else {
+  game.js:2175:                synth.playCollect();
+  game.js:2176:                this.player.coins++;
+  game.js:2177:                this.player.score += 100;
+  game.js:2178:                for (let i = 0; i < 8; i++) particles.spawnEmber(cx + TILE_SIZE/2, cy);
+  game.js:2179:                this.updateHUD();
+  game.js:2180:                this.showToast("+1 BONUS SOUL!");
+  game.js:2181:            }
+  game.js:2182:        }
+  game.js:2183:    }
+  game.js:2184:
+  game.js:2185:    damagePlayer() {
+  game.js:2186:        if (this.player.invulTimer > 0) return;
+  game.js:2187:
+  game.js:2188:        // If powered up, lose fireball power but stay alive! (Nintendo style)
+> game.js:2189:        if (this.player.poweredUp) {
+> game.js:2190:            this.player.poweredUp = false;
+  game.js:2191:            synth.playDamage();
+  game.js:2192:            this.player.invulTimer = 90;
+  game.js:2193:            this.player.hurtTimer = 25;
+  game.js:2194:            this.player.vy = -6.0;
+  game.js:2195:            this.player.vx = -this.player.direction * 3.5;
+  game.js:2196:            this.player.grounded = false;
+  game.js:2197:            this.showToast("POWER LOST!");
+  game.js:2198:            return;
+  game.js:2199:        }
+  game.js:2200:
+  game.js:2201:        this.player.health--;
+  game.js:2202:        this.updateHUD();
+  game.js:2203:        synth.playDamage();
+  game.js:2204:        this.player.invulTimer = 90;
+  game.js:2205:        this.player.hurtTimer = 25;
+  game.js:2241:                    this.player.health = savedHealth;
+  game.js:2242:                    this.player.score  = savedScore;
+  game.js:2243:                    this.player.coins  = 0; // Reset collected coins so they match the fully respawned 
+shards on the map!
+> game.js:2244:                    this.player.poweredUp = false;
+  game.js:2245:                    this.player.x = 80;
+  game.js:2246:                    this.player.y = 300;
+  game.js:2247:                    this.player.vx = 0;
+  game.js:2248:                    this.player.vy = 0;
+  game.js:2249:                    this.player.invulTimer = 120; // 2-second grace period
+  game.js:2250:                    this.player.hurtTimer  = 0;
+  game.js:2251:                    this.player.grounded   = false;
+  game.js:2252:                    this.camera.x = 0;
+  game.js:2253:                    this.camera.targetX = 0;
+  game.js:2254:                    this.state = 'PLAYING';
+  game.js:2255:                    this.updateHUD();
+  game.js:2256:                    this.showToast('BACK TO START!');
+  game.js:2257:                }
+  game.js:2258:            }, 900);
+  game.js:2259:        }
+  game.js:2289:            const hitY = py < flower.y + 30 && py + ph > flower.y;
+  game.js:2290:            if (hitX && hitY) {
+  game.js:2291:                flower.collected = true;
+> game.js:2292:                this.player.poweredUp = true;
+  game.js:2293:                this.player.score += 500;
+  game.js:2294:                synth.playVictory(); // Epic chime chords
+  game.js:2295:                this.updateHUD();
+  game.js:2296:                this.showToast("FIRE HEXLY MORPHED!");
+  game.js:2297:                
+  game.js:2298:                // Spawn sparkling embers
+  game.js:2299:                for (let i = 0; i < 15; i++) {
+  game.js:2300:                    particles.spawnEmber(flower.x + 15, flower.y + 15);
+  game.js:2301:                }
+  game.js:2302:            }
+  game.js:2303:        });
+  game.js:2304:
+  game.js:2305:        // 3. Enemy stomping checking
+  game.js:2306:        this.enemies.forEach(enemy => {
+  game.js:2307:            if (enemy.dead || this.state !== 'PLAYING') return;
+  game.js:2596:            
+  game.js:2597:            // 6. Draw Hexly beautifully auto-trimmed and auto-aligned!
+  game.js:2598:            // If powered up, draw molten aura under him
+> game.js:2599:            if (p.poweredUp) {
+  game.js:2600:                ctx.save();
+  game.js:2601:                ctx.shadowColor = '#ff5a00';
+  game.js:2602:                ctx.shadowBlur = 12 + Math.sin(p.animTime * 1.2) * 8;
+  game.js:2603:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, dx, dy, drawW, drawH, p.direction === -1);
+  game.js:2604:                ctx.restore();
+  game.js:2605:            } else {
+  game.js:2606:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, dx, dy, drawW, drawH, p.direction === -1);
+  game.js:2607:            }
+  game.js:2608:            
+  game.js:2609:            if (scaleSaved) ctx.restore();
+  game.js:2610:            
+  game.js:2611:            // 7. If powered up, draw pulsing Heatwave overlay
+> game.js:2612:            if (p.poweredUp) {
+  game.js:2613:                ctx.save();
+  game.js:2614:                ctx.globalCompositeOperation = 'lighter';
+  game.js:2615:                ctx.globalAlpha = 0.28 + Math.sin(p.animTime * 1.2) * 0.18;
+  game.js:2616:                
+  game.js:2617:                // Draw heatwave slightly larger
+  game.js:2618:                const pulseScale = 1.04 + Math.sin(p.animTime * 1.2) * 0.02;
+  game.js:2619:                const pw = drawW * pulseScale;
+  game.js:2620:                const ph = drawH * pulseScale;
+  game.js:2621:                const pdx = p.x + p.width / 2 - pw / 2;
+  game.js:2622:                const pdy = p.y + p.height - ph;
+  game.js:2623:                
+  game.js:2624:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, pdx, pdy, pw, ph, p.direction === -1);
+  game.js:2625:                ctx.restore();
+  game.js:2626:            }
+  game.js:2627:            
+  game.js:2654:            drawPixelMatrix(ctx, drawX, drawY, frame, p.direction === -1, 3.0);
+  game.js:2655:
+  game.js:2656:            // If powered up, draw a second, pulsing heatwave star power blending overlay matrix on top!
+> game.js:2657:            if (p.poweredUp) {
+  game.js:2658:                ctx.save();
+  game.js:2659:                ctx.globalCompositeOperation = 'lighter';
+  game.js:2660:                ctx.globalAlpha = 0.28 + Math.sin(p.animTime * 6) * 0.18;
+  game.js:2661:                drawPixelMatrix(ctx, drawX, drawY, frame, p.direction === -1, 3.0);
+  game.js:2662:                ctx.restore();
+  game.js:2663:            }
+  game.js:2664:        }
+  game.js:2665:    }
+  game.js:2666:}
+  game.js:2667:
+  game.js:2668:
+  game.js:2669:// Start loop with bulletproof readyState check
+  game.js:2670:function initGame() {
+  game.js:2671:    const engine = new GameEngine();
+  game.js:2672:    function gameLoop() {
+
+

@@ -1,0 +1,254 @@
+
+  game.js:963:            this.vx *= 0.95;
+  game.js:964:            this.vy *= 0.95;
+  game.js:965:        }
+  game.js:966:    }
+  game.js:967:
+> game.js:968:    draw(ctx, cameraX) {
+  game.js:969:        ctx.fillStyle = this.color;
+  game.js:970:        const alpha = Math.max(0, this.life / this.maxLife);
+  game.js:971:        ctx.save();
+  game.js:972:        ctx.globalAlpha = alpha;
+  game.js:973:        ctx.fillRect(Math.floor(this.x - cameraX - this.size / 2), Math.floor(this.y - this.size / 2), 
+this.size, this.size);
+  game.js:974:        ctx.restore();
+  game.js:975:    }
+  game.js:976:}
+  game.js:977:
+  game.js:978:class ParticleSystem {
+  game.js:979:    constructor() {
+  game.js:980:        this.particles = [];
+  game.js:981:    }
+  game.js:982:
+  game.js:983:    add(p) {
+  game.js:984:        if (this.particles.length > 200) this.particles.shift();
+  game.js:985:        this.particles.push(p);
+  game.js:986:    }
+  game.js:987:
+  game.js:988:    spawnEmber(x, y) {
+  game.js:989:        const colors = ['#f95700', '#f7be00', '#e61e29'];
+  game.js:990:        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.8, -Math.random() * 0.7 - 0.3, 
+colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 1, Math.random() * 80 + 40, 'ember'));
+  game.js:991:    }
+  game.js:992:
+  game.js:993:    spawnLavaBubble(x, y) {
+  game.js:994:        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.3, -Math.random() * 0.4 - 0.2, '#f95700', 
+Math.random() * 4 + 2, Math.random() * 50 + 20, 'dust'));
+  game.js:995:    }
+  game.js:996:
+  game.js:997:    spawnStompExplosion(x, y) {
+  game.js:998:        const colors = ['#ffffff', '#f7be00', '#e61e29'];
+  game.js:1031:            p.update();
+  game.js:1032:            if (p.life <= 0 || p.y > 560) this.particles.splice(i, 1);
+  game.js:1033:        }
+  game.js:1034:    }
+  game.js:1035:
+> game.js:1036:    draw(ctx, cameraX) {
+> game.js:1037:        this.particles.forEach(p => p.draw(ctx, cameraX));
+  game.js:1038:    }
+  game.js:1039:}
+  game.js:1040:const particles = new ParticleSystem();
+  game.js:1041:
+  game.js:1042:
+  game.js:1043:// ----------------------------------------------------
+  game.js:1044:// 7. FIREBALL & LAVA FLOWER ENTITIES (Power-up Core)
+  game.js:1045:// ----------------------------------------------------
+  game.js:1046:class LavaFlower {
+  game.js:1047:    constructor(x, y) {
+  game.js:1048:        this.x = x + TILE_SIZE / 2 - 15;
+  game.js:1049:        this.y = y;
+  game.js:1050:        this.startY = y;
+  game.js:1051:        this.collected = false;
+  game.js:1052:        this.vy = -1.5; // Pop up slowly
+  game.js:1053:        this.floatingTimer = 0;
+  game.js:1054:    }
+  game.js:1055:
+  game.js:1056:    update() {
+  game.js:1057:        // Pop out of block then float in place
+  game.js:1058:        if (this.y > this.startY - 35) {
+  game.js:1059:            this.y += this.vy;
+  game.js:1060:        } else {
+  game.js:1061:            this.floatingTimer += 0.08;
+  game.js:1062:            this.y = (this.startY - 35) + Math.sin(this.floatingTimer) * 3;
+  game.js:1063:        }
+  game.js:1064:    }
+  game.js:1065:
+> game.js:1066:    draw(ctx, cameraX) {
+  game.js:1067:        if (this.collected) return;
+  game.js:1068:        const drawX = Math.round(this.x);
+  game.js:1069:        const drawY = Math.round(this.y);
+  game.js:1070:        if (powerupImgLoaded) {
+  game.js:1071:            // Draw with a gentle bob glow effect
+  game.js:1072:            ctx.save();
+  game.js:1073:            ctx.shadowColor = '#ff6a00';
+  game.js:1074:            ctx.shadowBlur = 14;
+  game.js:1075:            ctx.drawImage(powerupImg, drawX - 5, drawY - 5, 40, 40);
+  game.js:1076:            ctx.restore();
+  game.js:1077:        } else if (flameImgLoaded) {
+  game.js:1078:            ctx.drawImage(flameImg, drawX, drawY, 30, 30);
+  game.js:1079:        } else {
+  game.js:1080:            drawPixelMatrix(ctx, drawX, drawY, SPRITES.FLOWER, false, 3.0);
+  game.js:1081:        }
+  game.js:1082:    }
+  game.js:1083:}
+  game.js:1084:
+  game.js:1085:class Fireball {
+  game.js:1086:    constructor(x, y, vx, vy) {
+  game.js:1087:        this.x = x;
+  game.js:1088:        this.y = y;
+  game.js:1089:        this.vx = vx;
+  game.js:1090:        this.vy = vy;
+  game.js:1091:        this.width = 12;
+  game.js:1092:        this.height = 12;
+  game.js:1093:        this.bounces = 0;
+  game.js:1094:        this.dead = false;
+  game.js:1095:    }
+  game.js:1096:
+  game.js:1174:        if (this.y > 540 || this.x < 0 || this.x > levelGrid[0].length * TILE_SIZE) {
+  game.js:1175:            this.dead = true;
+  game.js:1176:        }
+  game.js:1177:    }
+  game.js:1178:
+> game.js:1179:    draw(ctx, cameraX) {
+  game.js:1180:        const drawX = Math.round(this.x);
+  game.js:1181:        const drawY = Math.round(this.y);
+  game.js:1182:        if (fireballImgLoaded) {
+  game.js:1183:            ctx.save();
+  game.js:1184:            ctx.shadowColor = '#ffaa00';
+  game.js:1185:            ctx.shadowBlur = 16;
+  game.js:1186:            // Draw centered on the fireball hitbox
+  game.js:1187:            ctx.drawImage(fireballImg, drawX - 10, drawY - 10, 32, 32);
+  game.js:1188:            ctx.restore();
+  game.js:1189:        } else {
+  game.js:1190:            drawPixelMatrix(ctx, drawX, drawY, SPRITES.FIREBALL, false, 2.0);
+  game.js:1191:        }
+  game.js:1192:    }
+  game.js:1193:
+  game.js:1194:    getTile(col, row, levelGrid) {
+  game.js:1195:        if (col < 0 || col >= levelGrid[0].length || row < 0 || row >= 12) return TILES.EMPTY;
+  game.js:1196:        return levelGrid[row][col];
+  game.js:1197:    }
+  game.js:1198:
+  game.js:1199:    getTileBounds(x, y, w, h) {
+  game.js:1200:        return {
+  game.js:1201:            minX: Math.floor(x / TILE_SIZE),
+  game.js:1202:            maxX: Math.floor((x + w - 0.01) / TILE_SIZE),
+  game.js:1203:            minY: Math.floor(y / TILE_SIZE),
+  game.js:1204:            maxY: Math.floor((y + h - 0.01) / TILE_SIZE)
+  game.js:1205:        };
+  game.js:1206:    }
+  game.js:1207:
+  game.js:1208:    isHitSolid(bounds, levelGrid) {
+  game.js:1209:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:1321:
+  game.js:1322:    update(frame) {
+  game.js:1323:        this.y = this.baseY + Math.sin(frame * 0.08 + this.bobOffset) * 4;
+  game.js:1324:    }
+  game.js:1325:
+> game.js:1326:    draw(ctx, cameraX) {
+  game.js:1327:        if (this.collected) return;
+  game.js:1328:        
+  game.js:1329:        // Draw the soul shard crystal beautifully auto-trimmed and scaled
+  game.js:1330:        const dw = 22;
+  game.js:1331:        const dh = 40;
+  game.js:1332:        const dx = this.x - dw / 2;
+  game.js:1333:        const dy = this.y - dh / 2;
+  game.js:1334:        
+  game.js:1335:        if (soulShardImgLoaded) {
+  game.js:1336:            drawSpriteAutoTrimmed(ctx, soulShardImg, dx, dy, dw, dh, false);
+  game.js:1337:        } else {
+  game.js:1338:            // Fallback to original retro coin if image hasn't loaded yet
+  game.js:1339:            const drawX = Math.round(this.x - 15);
+  game.js:1340:            const drawY = Math.round(this.y - 15);
+  game.js:1341:            drawPixelMatrix(ctx, drawX, drawY, SPRITES.COIN, false, 3.0);
+  game.js:1342:        }
+  game.js:1343:    }
+  game.js:1344:}
+  game.js:1345:
+  game.js:1346:class Enemy {
+  game.js:1347:    constructor(x, y, type) {
+  game.js:1348:        this.x = x;
+  game.js:1349:        this.y = y;
+  game.js:1350:        this.type = type;
+  game.js:1351:        this.vx = type === 'SKULL_BUG' ? 0.9 : type === 'HORNED_BLOB' ? 0.5 : 0;
+  game.js:1352:        this.vy = 0;
+  game.js:1353:        this.direction = 1;
+  game.js:1354:        this.dead = false;
+  game.js:1355:
+  game.js:1356:        // Set dimensions based on type
+  game.js:1444:        }
+  game.js:1445:        // Guard against overflow of animTimer (unlikely but safe)
+  game.js:1446:        if (this.animTimer > 1000) this.animTimer = 0;
+  game.js:1447:    }
+  game.js:1448:
+> game.js:1449:    draw(ctx, cameraX, player = null) {
+  game.js:1450:        if (this.dead) return;
+  game.js:1451:
+  game.js:1452:        const drawX = Math.round(this.x);
+  game.js:1453:        const drawY = Math.round(this.y);
+  game.js:1454:
+  game.js:1455:        if (this.type === 'FIRE_IMP') {
+  game.js:1456:            // Flying skeleton demon
+  game.js:1457:            const frame1Ready = flyingSkeletonImgLoaded;
+  game.js:1458:            const frame2Ready = flyingSkeleton2ImgLoaded;
+  game.js:1459:
+  game.js:1460:            let facingScale = 1;
+  game.js:1461:            if (player) {
+  game.js:1462:                // If player is to the right, we want scale 1 (facing right). If left, scale -1 (facing 
+left).
+  game.js:1463:                facingScale = (player.x + player.width / 2 > this.x + this.width / 2) ? 1 : -1;
+  game.js:1464:            }
+  game.js:1465:
+  game.js:1466:            if (frame1Ready && frame2Ready) {
+  game.js:1467:                ctx.save();
+  game.js:1468:                ctx.translate(Math.round(this.x + this.width / 2), Math.round(this.y + this.height / 
+2));
+  game.js:1469:                ctx.scale(facingScale, 1);
+  game.js:1470:                // Red-eye glow shadow
+  game.js:1471:                ctx.shadowColor = '#ff0000';
+  game.js:1472:                ctx.shadowBlur  = 16;
+  game.js:1473:                const frameImg = this.animFrame === 0 ? flyingSkeletonImg : flyingSkeleton2Img;
+  game.js:1474:                ctx.drawImage(frameImg,
+  game.js:1475:                    -this.width / 2, -this.height / 2,
+  game.js:1476:                    this.width, this.height);
+  game.js:1477:                ctx.restore();
+  game.js:1478:            } else if (flyingSkeletonImgLoaded) {
+  game.js:1479:                ctx.save();
+  game.js:1526:    constructor(canvasWidth, canvasHeight) {
+  game.js:1527:        this.width = canvasWidth;
+  game.js:1528:        this.height = canvasHeight;
+  game.js:1529:    }
+  game.js:1530:
+> game.js:1531:    draw(ctx, cameraX) {
+  game.js:1532:        if (bgImgLoaded) {
+  game.js:1533:            // Draw your gorgeous custom pixel art background scrolling at 20% speed
+  game.js:1534:            // Use 2x width scroll modulus so the full mirror-pair can repeat seamlessly
+  game.js:1535:            const scrollX = (cameraX * 0.2) % (this.width * 2);
+  game.js:1536:            
+  game.js:1537:            ctx.save();
+  game.js:1538:            ctx.translate(-scrollX, 0);
+  game.js:1539:            
+  game.js:1540:            // 1. Draw primary background scaled to canvas size (Normal)
+  game.js:1541:            ctx.drawImage(bgImg, 0, 0, this.width, this.height);
+  game.js:1542:            
+  game.js:1543:            // 2. Draw wrapping duplicate background image (Mirrored horizontally to stitch perfectly)
+  game.js:1544:            ctx.save();
+  game.js:1545:            ctx.translate(this.width * 2, 0);
+  game.js:1546:            ctx.scale(-1, 1);
+  game.js:1547:            ctx.drawImage(bgImg, 0, 0, this.width, this.height);
+  game.js:1548:            ctx.restore();
+  game.js:1549:
+  game.js:1550:            // 3. Draw third duplicate background image (Normal) to complete the 2-tile loop seamlessly
+  game.js:1551:            ctx.drawImage(bgImg, this.width * 2, 0, this.width, this.height);
+  game.js:1552:            
+  game.js:1553:            ctx.restore();
+  game.js:1554:        } else {
+  game.js:1555:            // Flat Spooky Underworld Sky (Crimson-Obsidian) Fallback
+  game.js:1556:            const skyGrad = ctx.createLinearGradient(0, 0, 0, this.height);
+  game.js:1557:            skyGrad.addColorStop(0, '#000000');
+  game.js:1558:            skyGrad.addColorStop(0.6, '#180305');
+  game.js:1559:            skyGrad.addColorStop(1, '#47050a');
+  game.js:1560:            ctx.fillStyle = skyGrad;
+  game.js:1561:            ctx.fillRect(0, 0, this.width, this.height);
+
+

@@ -1,0 +1,7 @@
+Remove-Item : A positional parameter cannot be found that accepts argument 'revert_level.js'.
+At line:1 char:1
++ rm shift_level.js revert_level.js
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Remove-Item], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.RemoveItemCommand
+ 

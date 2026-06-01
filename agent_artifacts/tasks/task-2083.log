@@ -1,0 +1,24 @@
+
+  game.js:2293:        const bounds = this.getTileBounds(px, py, pw, ph);
+  game.js:2294:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2295:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+> game.js:2296:                if (this.getTile(c, r) === TILES.PORTAL) {
+  game.js:2297:                    this.triggerVictory();
+  game.js:2298:                    return;
+  game.js:2299:                }
+  game.js:2423:            else if (frame === 1) matrix = SPRITES.TILES.LAVA_B;
+  game.js:2424:            else matrix = SPRITES.TILES.LAVA_C;
+  game.js:2425:        }
+> game.js:2426:        else if (type === TILES.PORTAL) {
+  game.js:2427:            if (portalImgLoaded) {
+  game.js:2428:                const pw = 70;
+  game.js:2429:                const ph = 110;
+  game.js:2464:
+  game.js:2465:                this.ctx.restore();
+  game.js:2466:            } else {
+> game.js:2467:                matrix = SPRITES.TILES.PORTAL;
+  game.js:2468:            }
+  game.js:2469:            return; // Portal handled - skip matrix draw
+  game.js:2470:        }
+
+

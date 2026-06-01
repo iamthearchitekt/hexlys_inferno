@@ -1,0 +1,31 @@
+
+  game.js:2069:                for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2070:                    for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2071:                        const t = this.getTile(c, r);
+> game.js:2072:                        if (this.isSolid(t)) {
+  game.js:2073:                            blocked = true;
+  game.js:2074:                            break;
+  game.js:2075:                        }
+  game.js:2258:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2259:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2260:                const t = this.getTile(c, r);
+> game.js:2261:                if (this.isSolid(t)) {
+  game.js:2262:                    if (this.player.vx > 0) {
+  game.js:2263:                        this.player.x = c * TILE_SIZE - this.player.width;
+  game.js:2264:                        this.player.vx = 0;
+  game.js:2275:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2276:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2277:                const t = this.getTile(c, r);
+> game.js:2278:                if (this.isSolid(t)) {
+  game.js:2279:                    if (this.player.vy > 0) {
+  game.js:2280:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2281:                        this.player.vy = 0;
+  game.js:2518:        return this.levelGrid[row][col];
+  game.js:2519:    }
+  game.js:2520:
+> game.js:2521:    isSolid(tile) {
+  game.js:2522:        return tile === TILES.GROUND || 
+  game.js:2523:               tile === TILES.PLATFORM || 
+  game.js:2524:               tile === TILES.BREAKABLE || 
+
+

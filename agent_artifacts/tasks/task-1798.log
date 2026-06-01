@@ -1,0 +1,213 @@
+
+  game.js:2342:
+  game.js:2343:        particles.draw(this.ctx, 0);
+  game.js:2344:
+> game.js:2345:        this.drawHexly();
+  game.js:2346:
+  game.js:2347:        this.ctx.restore();
+  game.js:2348:    }
+  game.js:2349:
+  game.js:2350:    drawTiles() {
+  game.js:2351:        const startCol = Math.floor(this.camera.x / TILE_SIZE);
+  game.js:2352:        const endCol = Math.ceil((this.camera.x + this.width) / TILE_SIZE);
+  game.js:2353:        
+  game.js:2354:        for (let r = 0; r < 12; r++) {
+  game.js:2355:            for (let c = startCol; c <= endCol; c++) {
+  game.js:2356:                const tile = this.getTile(c, r);
+  game.js:2357:                if (tile !== TILES.EMPTY) {
+  game.js:2358:                    this.drawSingleTile(c * TILE_SIZE, r * TILE_SIZE, tile);
+  game.js:2359:                }
+  game.js:2360:            }
+  game.js:2361:        }
+  game.js:2362:    }
+  game.js:2363:
+  game.js:2364:    drawSingleTile(x, y, type) {
+  game.js:2365:        let matrix = null;
+  game.js:2366:        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
+  game.js:2367:        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
+  game.js:2368:        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+  game.js:2369:        else if (type === TILES.REWARD) {
+  game.js:2370:            // Draw the ground-brown base tile first
+  game.js:2371:            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
+  game.js:2372:            // Pulsing orange-red glow overlay using 'lighter' composite (sin wave 0..1)
+  game.js:2373:            const pulse = (Math.sin(this.frameCounter * 0.12) + 1) / 2; // 0..1 oscillation
+  game.js:2374:            this.ctx.save();
+  game.js:2375:            this.ctx.globalCompositeOperation = 'lighter';
+  game.js:2376:            this.ctx.globalAlpha = 0.10 + pulse * 0.22; // 0.10  0.32 breathing range
+  game.js:2377:            const grd = this.ctx.createRadialGradient(
+  game.js:2378:                x + TILE_SIZE / 2, y + TILE_SIZE / 2, 2,
+  game.js:2379:                x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE * 0.7
+  game.js:2380:            );
+  game.js:2381:            grd.addColorStop(0,   'rgba(255, 220, 80, 1)');
+  game.js:2382:            grd.addColorStop(0.4, 'rgba(255, 100, 0, 0.9)');
+  game.js:2383:            grd.addColorStop(1,   'rgba(180, 20, 0, 0)');
+  game.js:2384:            this.ctx.fillStyle = grd;
+  game.js:2385:            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+  game.js:2386:            // Pulsing border glow
+  game.js:2387:            this.ctx.globalAlpha = 0.08 + pulse * 0.14;
+  game.js:2388:            this.ctx.strokeStyle = '#ff8800';
+  game.js:2389:            this.ctx.lineWidth = 2 + pulse * 2;
+  game.js:2390:            this.ctx.strokeRect(x + 1, y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+  game.js:2391:            this.ctx.restore();
+  game.js:2392:            return;
+  game.js:2393:        }
+  game.js:2394:        else if (type === TILES.SPENT_REWARD) matrix = SPRITES.TILES.SPENT;
+  game.js:2395:        else if (type === TILES.LAVA) {
+  game.js:2396:            // Slow 3-frame downward waterfall animation (18 ticks per frame = sluggish lava)
+  game.js:2397:            const frame = Math.floor(this.frameCounter / 18) % 3;
+  game.js:2398:            if (frame === 0) matrix = SPRITES.TILES.LAVA_A;
+  game.js:2399:            else if (frame === 1) matrix = SPRITES.TILES.LAVA_B;
+  game.js:2400:            else matrix = SPRITES.TILES.LAVA_C;
+  game.js:2401:        }
+  game.js:2402:        else if (type === TILES.PORTAL) {
+  game.js:2403:            if (portalImgLoaded) {
+  game.js:2404:                const pw = 70;
+  game.js:2405:                const ph = 110;
+  game.js:2406:                const px2 = x + (TILE_SIZE - pw) / 2;
+  game.js:2407:                const py2 = y - ph + TILE_SIZE;
+  game.js:2408:
+  game.js:2409:                // --- 2-frame color-dodge glow animation ---
+  game.js:2410:                // Frame 0 (ticks 0-19): base hot-red glow
+  game.js:2411:                // Frame 1 (ticks 20-39): bright energy surge with lighter blend
+  game.js:2412:                const glowFrame = Math.floor(this.frameCounter / 20) % 2;
+  game.js:2413:
+  game.js:2414:                // Smooth pulse factor using sine wave (010 over 40 ticks)
+  game.js:2415:                const pulseSin = (Math.sin(this.frameCounter * (Math.PI / 20)) + 1) / 2; // 0..1
+  game.js:2416:
+  game.js:2417:                this.ctx.save();
+  game.js:2418:
+  game.js:2419:                // Layer 1 - base portal image with animated shadow glow
+  game.js:2420:                this.ctx.shadowColor = glowFrame === 0 ? '#ff3300' : '#ff9900';
+  game.js:2421:                this.ctx.shadowBlur  = 20 + pulseSin * 30; // pulses 2050
+  game.js:2422:                this.ctx.drawImage(portalImg, px2, py2, pw, ph);
+  game.js:2423:
+  game.js:2424:                // Layer 2 - color-dodge bright inner light overlay on frame 1
+  game.js:2425:                if (glowFrame === 1) {
+  game.js:2426:                    this.ctx.globalCompositeOperation = 'lighter';
+  game.js:2427:                    this.ctx.globalAlpha = 0.18 + pulseSin * 0.22; // 0.180.40
+  game.js:2428:                    // Draw a radial inner-glow ellipse over the portal aperture
+  game.js:2429:                    const grd = this.ctx.createRadialGradient(
+  game.js:2430:                        px2 + pw * 0.42, py2 + ph * 0.52, 2,
+  game.js:2431:                        px2 + pw * 0.42, py2 + ph * 0.52, pw * 0.55
+  game.js:2432:                    );
+  game.js:2433:                    grd.addColorStop(0,   'rgba(255,255,220,1)');
+  game.js:2434:                    grd.addColorStop(0.3, 'rgba(255,160,30,0.8)');
+  game.js:2435:                    grd.addColorStop(0.7, 'rgba(255,40,0,0.4)');
+  game.js:2436:                    grd.addColorStop(1,   'rgba(0,0,0,0)');
+  game.js:2437:                    this.ctx.fillStyle = grd;
+  game.js:2438:                    this.ctx.fillRect(px2, py2, pw, ph);
+  game.js:2439:                }
+  game.js:2440:
+  game.js:2441:                this.ctx.restore();
+  game.js:2442:            } else {
+  game.js:2443:                matrix = SPRITES.TILES.PORTAL;
+  game.js:2444:            }
+  game.js:2445:            return; // Portal handled - skip matrix draw
+  game.js:2451:        }
+  game.js:2452:    }
+  game.js:2453:
+> game.js:2454:    drawHexly() {
+  game.js:2455:        const p = this.player;
+  game.js:2456:        if (p.invulTimer > 0 && Math.floor(p.invulTimer / 4) % 2 === 0) return;
+  game.js:2457:
+  game.js:2458:        const ctx = this.ctx;
+  game.js:2459:
+  game.js:2460:        if (hexlyImgLoaded) {
+  game.js:2461:            ctx.save();
+  game.js:2462:            
+  game.js:2463:            // 1. Pick the correct animation frame image (custom jump/crouch frames included)
+  game.js:2464:            let currentHexlyImg = hexlyImg;
+  game.js:2465:            if (p.crouching && hexlyCrouchImgLoaded) {
+  game.js:2466:                currentHexlyImg = hexlyCrouchImg;
+  game.js:2467:            } else if (!p.grounded && hexlyJumpImgLoaded) {
+  game.js:2468:                currentHexlyImg = hexlyJumpImg;
+  game.js:2469:            } else if (p.grounded && Math.abs(p.vx) > 0.2 && hexlyWalk2ImgLoaded) {
+  game.js:2470:                const walkFrame = Math.floor(p.animTime) % 2;
+  game.js:2471:                currentHexlyImg = walkFrame === 0 ? hexlyImg : hexlyWalk2Img;
+  game.js:2472:            }
+  game.js:2473:            
+  game.js:2474:            // 2. Set visual size: Hexly is drawn at 82px high normally, or 55px when crouching
+  game.js:2475:            const drawH = p.crouching ? 55 : 82;
+  game.js:2476:            
+  game.js:2477:            // Cache trim bounds and calculate dynamic width keeping natural visual proportions
+  game.js:2478:            if (!currentHexlyImg.trimBounds) {
+  game.js:2479:                currentHexlyImg.trimBounds = getSpriteTrimBounds(currentHexlyImg);
+  game.js:2480:            }
+  game.js:2481:            const b = currentHexlyImg.trimBounds || { x: 0, y: 0, w: currentHexlyImg.naturalWidth || 
+690, h: currentHexlyImg.naturalHeight || 860 };
+  game.js:2482:            
+  game.js:2483:            const sourceW = b.w > 0 ? b.w : 690;
+  game.js:2484:            const sourceH = b.h > 0 ? b.h : 860;
+  game.js:2485:            const drawW = drawH * (sourceW / sourceH);
+  game.js:2486:            
+  game.js:2487:            let dx = p.x + p.width / 2 - drawW / 2;
+  game.js:2488:            let dy = p.y + p.height - drawH + 5; // Shift down by 5px to align with visual floor 
+surface (black border)
+  game.js:2489:
+  game.js:2490:            // 5. Apply Invulnerability translucent flash
+  game.js:2491:            if (p.invulTimer > 0 && Math.floor(p.invulTimer / 4) % 2 === 0) {
+  game.js:2492:                ctx.restore();
+  game.js:2493:                return;
+  game.js:2494:            }
+  game.js:2495:            if (p.invulTimer > 0) {
+  game.js:2496:                ctx.globalAlpha = 0.6;
+  game.js:2497:            }
+  game.js:2498:            
+  game.js:2499:            // 5. Apply dynamic floor-anchored animations
+  game.js:2500:            let scaleSaved = false;
+  game.js:2501:            if (p.hurtTimer > 0) {
+  game.js:2502:                // Rotate around the bottom center
+  game.js:2503:                ctx.save();
+  game.js:2504:                ctx.translate(p.x + p.width / 2, p.y + p.height);
+  game.js:2505:                ctx.rotate(p.direction * 0.15);
+  game.js:2506:                ctx.translate(-(p.x + p.width / 2), -(p.y + p.height));
+  game.js:2507:                scaleSaved = true;
+  game.js:2508:            } 
+  game.js:2509:            else if (this.state === 'VICTORY') {
+  game.js:2510:                const bounce = Math.abs(Math.sin(p.animTime * 2.2)) * 8;
+  game.js:2511:                dy -= Math.round(bounce);
+  game.js:2512:            }
+  game.js:2513:            
+  game.js:2514:            // 6. Draw Hexly beautifully auto-trimmed and auto-aligned!
+  game.js:2515:            // If powered up, draw molten aura under him
+  game.js:2516:            if (p.poweredUp) {
+  game.js:2517:                ctx.save();
+  game.js:2518:                ctx.shadowColor = '#ff5a00';
+  game.js:2519:                ctx.shadowBlur = 12 + Math.sin(p.animTime * 1.2) * 8;
+  game.js:2520:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, dx, dy, drawW, drawH, p.direction === -1);
+  game.js:2521:                ctx.restore();
+  game.js:2522:            } else {
+  game.js:2523:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, dx, dy, drawW, drawH, p.direction === -1);
+  game.js:2524:            }
+  game.js:2525:            
+  game.js:2526:            if (scaleSaved) ctx.restore();
+  game.js:2527:            
+  game.js:2528:            // 7. If powered up, draw pulsing Heatwave overlay
+  game.js:2529:            if (p.poweredUp) {
+  game.js:2530:                ctx.save();
+  game.js:2531:                ctx.globalCompositeOperation = 'lighter';
+  game.js:2532:                ctx.globalAlpha = 0.28 + Math.sin(p.animTime * 1.2) * 0.18;
+  game.js:2533:                
+  game.js:2534:                // Draw heatwave slightly larger
+  game.js:2535:                const pulseScale = 1.04 + Math.sin(p.animTime * 1.2) * 0.02;
+  game.js:2536:                const pw = drawW * pulseScale;
+  game.js:2537:                const ph = drawH * pulseScale;
+  game.js:2538:                const pdx = p.x + p.width / 2 - pw / 2;
+  game.js:2539:                const pdy = p.y + p.height - ph;
+  game.js:2540:                
+  game.js:2541:                drawSpriteAutoTrimmed(ctx, currentHexlyImg, pdx, pdy, pw, ph, p.direction === -1);
+  game.js:2542:                ctx.restore();
+  game.js:2543:            }
+  game.js:2544:            
+  game.js:2545:            // Restore any rotation/scale saves
+  game.js:2546:            if (scaleSaved) {
+  game.js:2547:                ctx.restore();
+  game.js:2548:            }
+  game.js:2549:            
+  game.js:2550:            ctx.restore();
+  game.js:2551:        } else {
+  game.js:2552:            // Bulletproof Fallback: if PNG fails/hasn't loaded, draw the high-def 26x30 matrix
+  game.js:2553:            let frame = SPRITES.HEXLY.IDLE;
+  game.js:2554:            if (p.hurtTimer > 0) {
+
+

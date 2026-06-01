@@ -1,0 +1,45 @@
+
+> game.js:2083:                    if (this.player.vy > 0) {
+  game.js:2084:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2085:                        this.player.vy = 0;
+  game.js:2086:                        this.player.grounded = true;
+  game.js:2087:                        
+  game.js:2088:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+  game.js:2089:                            this.player.lastSafeX = this.player.x;
+  game.js:2090:                            this.player.lastSafeY = this.player.y;
+  game.js:2091:                        }
+  game.js:2092:                    } else if (this.player.vy < 0) {
+  game.js:2093:                        this.player.y = (r + 1) * TILE_SIZE;
+  game.js:2094:                        this.player.vy = 0;
+  game.js:2095:                        this.triggerCeilingBump(c, r);
+  game.js:2096:                    }
+  game.js:2097:                }
+  game.js:2098:            }
+  game.js:2099:        }
+  game.js:2100:
+  game.js:2101:        if (this.player.x < 0) {
+  game.js:2102:            this.player.x = 0;
+  game.js:2103:            this.player.vx = 0;
+> game.js:2252:                const falling = this.player.vy > 0;
+  game.js:2253:                const hitTop = (py + ph - this.player.vy) <= (enemy.y + 10);
+  game.js:2254:                
+  game.js:2255:                if (falling && hitTop) {
+  game.js:2256:                    enemy.dead = true;
+  game.js:2257:                    this.player.vy = -7.5;
+  game.js:2258:                    this.player.score += 150;
+  game.js:2259:                    synth.playStomp();
+  game.js:2260:                    this.updateHUD();
+  game.js:2261:                    particles.spawnStompExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+  game.js:2262:                } else {
+  game.js:2263:                    this.damagePlayer();
+  game.js:2264:                }
+  game.js:2265:            }
+  game.js:2266:        });
+  game.js:2267:
+  game.js:2268:        // 4. Portal Goal check
+  game.js:2269:        const bounds = this.getTileBounds(px, py, pw, ph);
+  game.js:2270:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2271:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2272:                if (this.getTile(c, r) === TILES.PORTAL) {
+
+

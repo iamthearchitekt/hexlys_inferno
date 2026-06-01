@@ -1,0 +1,55 @@
+
+  game.js:437:    // TILES: Size 10 cols x 10 rows. Scale 4.5 = 45x45px (Perfect 45px grids!)
+> game.js:438:    TILES: {
+  game.js:439:        GROUND: [
+  game.js:440:            "bbbbbbbbbb",
+  game.js:441:            "bqqfffqqeb",
+  game.js:442:            "bqfhhhfheb",
+  game.js:443:            "bqfheehfeb",
+  game.js:444:            "bqfhhhfheb",
+  game.js:445:            "bqfeeeffeb",
+  game.js:446:            "bqfhhhhheb",
+  game.js:447:            "bqfeeeeeeb",
+  game.js:448:            "bheeeeeehb",
+  game.js:449:            "bbbbbbbbbb"
+  game.js:450:        ],
+  game.js:451:        PLATFORM: [
+  game.js:452:            "bbbbbbbbbb",
+  game.js:453:            "bqqfffqqfb",
+  game.js:454:            "bqfhhhfheb",
+  game.js:455:            "bheeeeeehb",
+  game.js:456:            "bbbbbbbbbb",
+  game.js:457:            "..........",
+  game.js:458:            "..........",
+  game.js:459:            "..........",
+  game.js:460:            "..........",
+  game.js:461:            ".........."
+  game.js:462:        ],
+  game.js:463:        BREAKABLE: [
+  game.js:464:            "bbbbbbbbbb",
+  game.js:465:            "bqqqqqqqqb",
+  game.js:466:            "bqfqffqffb",
+  game.js:467:            "bqffqffqfb",
+  game.js:468:            "bfqffqffbb",
+  game.js:469:            "bqffqffqfb",
+  game.js:470:            "bqfqffqffb",
+  game.js:471:            "bqqqqqqqqb",
+  game.js:472:            "beeeeeeeeb",
+  game.js:473:            "bbbbbbbbbb"
+  game.js:474:        ],
+  game.js:475:        // REWARD: Brown earth base (same as GROUND) - gets an orange pulse overlay when drawn
+  game.js:476:        REWARD: [
+  game.js:477:            "bbbbbbbbbb",
+  game.js:478:            "bqqfffqqfb",
+  game.js:479:            "bqfhhhfheb",
+  game.js:480:            "bqfheehfeb",
+  game.js:481:            "bqfhhhfheb",
+  game.js:482:            "bqfeeeffeb",
+  game.js:483:            "bqfhhhhheb",
+  game.js:484:            "bqfeeeeeeb",
+  game.js:485:            "bheeeeeehb",
+  game.js:486:            "bbbbbbbbbb"
+  game.js:487:        ],
+  game.js:488:        // SPENT: Same brown base but darker - no glow, solid full-size
+
+

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexly's Inferno Escape - Retro 2D Platformer</title>
+    <!-- Import Google Fonts for professional retro chiptune and modern styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <div id="arcade-cabinet">
+        <div id="game-container">
+            <!-- HTML5 Game Canvas -->
+            <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+            <!-- HUD Overlay (Visible during active gameplay) -->
+            <div id="hud-overlay" class="hidden">
+                <div class="hud-item" id="hud-health">
+                    <div class="heart-container" id="heart-container"></div>
+                </div>
+                <div class="hud-item" id="hud-score">
+                    <span class="hud-label">SCORE:</span>
+                    <span class="hud-value" id="score-val">000000</span>
+                </div>
+            </div>
+
+            <!-- Title Screen Overlay -->
+            <div id="title-screen" class="overlay-screen">
+                <!-- High-Definition Loopable Background Video (HTML5 Muted Autoplay) -->
+                <video id="title-bg-video" autoplay loop muted playsinline>
+                    <source src="start.mp4" type="video/mp4">
+                </video>
+
+                <!-- Dynamic Spacer to align floating control cards in the bottom half -->
+                <div class="title-spacer"></div>
+
+                <div class="menu-actions">
+                    <button id="start-btn" class="arcade-btn start-img-btn pulse">
+                        <img src="start_btn.png" alt="START" class="start-btn-img">
+                    </button>
+                </div>
+
+                <div class="control-legend">
+                    <div class="control-column">
+                        <h3>CONTROLS</h3>
+                        <p><strong>A / D</strong> or <strong>← / →</strong> : MOVE</p>
+                        <p><strong>SPACE</strong> or <strong>W</strong> : JUMP</p>
+                        <p><strong>Z / J</strong> : FIRE &nbsp;|&nbsp; <strong>P</strong> : PAUSE &nbsp;|&nbsp; <strong>R</strong> : RESET</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pause Screen Overlay -->
+            <div id="pause-screen" class="overlay-screen hidden">
+                <div class="pause-box">
+                    <h2 class="screen-heading">DEPTHS PAUSED</h2>
+                    <p class="blink">PRESS 'P' TO RESUME</p>
+                    <button id="resume-btn" class="arcade-btn small-btn">RESUME</button>
+                    <button id="pause-reset-btn" class="arcade-btn small-btn outline-btn">RESTART (R)</button>
+                </div>
+            </div>
+
+            <!-- Game Over Screen Overlay -->
+            <div id="game-over-screen" class="overlay-screen hidden">
+                <div class="game-over-box">
+                    <img src="game_over.png" alt="GAME OVER" class="game-over-img">
+                    <button id="retry-btn" class="arcade-btn pulse">TRY AGAIN (R)</button>
+                    <!-- Hidden elements for backward compatibility with game.js updating -->
+                    <div style="display: none;">
+                        <span id="go-score"></span>
+                        <span id="go-coins"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Victory Screen Overlay -->
+            <div id="victory-screen" class="overlay-screen hidden">
+                <div class="victory-box">
+                    <h2 class="screen-heading success-text">INFERNO ESCAPED!</h2>
+                    <p class="victory-subtext">Hexly successfully leaped out of the underworld!</p>
+                    
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <span class="stat-lbl">TOTAL SCORE</span>
+                            <span class="stat-val" id="vic-score">000000</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-lbl">SOULS SAVED</span>
+                            <span class="stat-val" id="vic-coins">0/30</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-lbl">ESCAPE TIME</span>
+                            <span class="stat-val" id="vic-time">0:00</span>
+                        </div>
+                    </div>
+
+                    <button id="victory-retry-btn" class="arcade-btn pulse">PLAY AGAIN (R)</button>
+                </div>
+            </div>
+
+            <!-- Toast / Message system overlay -->
+            <div id="toast-message" class="hidden">COULDN'T BUMP BLOCK!</div>
+        </div>
+    </div>
+
+    <!-- Load the modular retro-platformer code -->
+    <script src="game.js?v=3"></script>
+</body>
+</html>

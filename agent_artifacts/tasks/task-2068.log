@@ -1,0 +1,73 @@
+
+  game.js:54:flameImg.onload = () => { flameImgLoaded = true; };
+  game.js:55:flameImg.src = 'flame.png';
+  game.js:56:
+> game.js:57:const portalImg = new Image();
+> game.js:58:let portalImgLoaded = false;
+> game.js:59:portalImg.onload = () => { portalImgLoaded = true; };
+> game.js:60:portalImg.src = 'portal.png';
+  game.js:61:
+  game.js:62:const fireballImg = new Image();
+  game.js:63:let fireballImgLoaded = false;
+  game.js:64:fireballImg.onload = () => { fireballImgLoaded = true; };
+  game.js:65:fireballImg.src = 'fireball.png';
+  game.js:66:
+  game.js:67:const enemyFireballImg = new Image();
+  game.js:68:let enemyFireballImgLoaded = false;
+  game.js:69:enemyFireballImg.onload = () => { enemyFireballImgLoaded = true; };
+  game.js:70:enemyFireballImg.src = 'enemy_fireball.png';
+  game.js:71:
+  game.js:72:const powerupImg = new Image();
+  game.js:73:let powerupImgLoaded = false;
+  game.js:74:powerupImg.onload = () => { powerupImgLoaded = true; };
+  game.js:75:powerupImg.src = 'powerup.png';
+  game.js:76:
+  game.js:77:const flyingSkeletonImg = new Image();
+  game.js:78:let flyingSkeletonImgLoaded = false;
+  game.js:79:flyingSkeletonImg.onload = () => { flyingSkeletonImgLoaded = true; };
+  game.js:80:flyingSkeletonImg.src = 'flying_skeleton.png';
+  game.js:2424:            else matrix = SPRITES.TILES.LAVA_C;
+  game.js:2425:        }
+  game.js:2426:        else if (type === TILES.PORTAL) {
+> game.js:2427:            if (portalImgLoaded) {
+  game.js:2428:                const pw = 70;
+  game.js:2429:                const ph = 110;
+  game.js:2430:                const px2 = x + (TILE_SIZE - pw) / 2;
+  game.js:2431:                const py2 = y - ph + TILE_SIZE;
+  game.js:2432:
+  game.js:2433:                // --- 2-frame color-dodge glow animation ---
+  game.js:2434:                // Frame 0 (ticks 0-19): base hot-red glow
+  game.js:2435:                // Frame 1 (ticks 20-39): bright energy surge with lighter blend
+  game.js:2436:                const glowFrame = Math.floor(this.frameCounter / 20) % 2;
+  game.js:2437:
+  game.js:2438:                // Smooth pulse factor using sine wave (010 over 40 ticks)
+  game.js:2439:                const pulseSin = (Math.sin(this.frameCounter * (Math.PI / 20)) + 1) / 2; // 0..1
+  game.js:2440:
+  game.js:2441:                this.ctx.save();
+  game.js:2442:
+  game.js:2443:                // Layer 1 - base portal image with animated shadow glow
+  game.js:2444:                this.ctx.shadowColor = glowFrame === 0 ? '#ff3300' : '#ff9900';
+  game.js:2445:                this.ctx.shadowBlur  = 20 + pulseSin * 30; // pulses 2050
+> game.js:2446:                this.ctx.drawImage(portalImg, px2, py2, pw, ph);
+  game.js:2447:
+  game.js:2448:                // Layer 2 - color-dodge bright inner light overlay on frame 1
+  game.js:2449:                if (glowFrame === 1) {
+  game.js:2450:                    this.ctx.globalCompositeOperation = 'lighter';
+  game.js:2451:                    this.ctx.globalAlpha = 0.18 + pulseSin * 0.22; // 0.180.40
+  game.js:2452:                    // Draw a radial inner-glow ellipse over the portal aperture
+  game.js:2453:                    const grd = this.ctx.createRadialGradient(
+  game.js:2454:                        px2 + pw * 0.42, py2 + ph * 0.52, 2,
+  game.js:2455:                        px2 + pw * 0.42, py2 + ph * 0.52, pw * 0.55
+  game.js:2456:                    );
+  game.js:2457:                    grd.addColorStop(0,   'rgba(255,255,220,1)');
+  game.js:2458:                    grd.addColorStop(0.3, 'rgba(255,160,30,0.8)');
+  game.js:2459:                    grd.addColorStop(0.7, 'rgba(255,40,0,0.4)');
+  game.js:2460:                    grd.addColorStop(1,   'rgba(0,0,0,0)');
+  game.js:2461:                    this.ctx.fillStyle = grd;
+  game.js:2462:                    this.ctx.fillRect(px2, py2, pw, ph);
+  game.js:2463:                }
+  game.js:2464:
+  game.js:2465:                this.ctx.restore();
+  game.js:2466:            } else {
+
+

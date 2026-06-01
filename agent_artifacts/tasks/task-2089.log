@@ -1,0 +1,10 @@
+
+  game.js:113:    'g': '#eae4cb',       /* Bone Gray/White */
+  game.js:114:    's': '#544e47',       /* Warm Basalt Gray (Swapped from Purplish Gray) */
+  game.js:115:    'c': '#3a3530',        /* Dark Shadow Basalt Gray (Swapped from Purplish Gray) */
+> game.js:116:    'e': '#4a2c11',        /* Deep charred brown earth */
+  game.js:117:    'f': '#78441b',        /* Scorched medium brown earth */
+  game.js:118:    'q': '#a06637',        /* Light toasted clay/brown earth surface */
+  game.js:119:    'h': '#241407'         /* Deepest charred blackish-brown cracks */
+
+

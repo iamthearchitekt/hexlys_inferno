@@ -1,0 +1,17 @@
+
+  game.js:2347:
+  game.js:2348:        particles.draw(this.ctx, 0);
+  game.js:2349:
+> game.js:2350:        this.drawHexly();
+  game.js:2351:
+  game.js:2352:        this.ctx.restore();
+  game.js:2353:    }
+  game.js:2456:        }
+  game.js:2457:    }
+  game.js:2458:
+> game.js:2459:    drawHexly() {
+  game.js:2460:        const p = this.player;
+  game.js:2461:        if (p.invulTimer > 0 && Math.floor(p.invulTimer / 4) % 2 === 0) return;
+  game.js:2462:
+
+

@@ -1,0 +1,62 @@
+
+  game.js:1120:        
+  game.js:1121:        // Solve Horizontal (shrink vertical check bounds by 2px to prevent false positive wall hits 
+with the floor when sliding/bouncing!)
+  game.js:1122:        this.x += this.vx;
+> game.js:1123:        let bounds = this.getTileBounds(this.x, this.y + 2, this.width, this.height - 4);
+  game.js:1124:        if (this.isHitSolid(bounds, levelGrid)) {
+  game.js:1125:            this.dead = true;
+  game.js:1126:            // Spawn explosion sparks
+  game.js:1132:
+  game.js:1133:        // Solve Vertical
+  game.js:1134:        this.y += this.vy;
+> game.js:1135:        bounds = this.getTileBounds(this.x, this.y, this.width, this.height);
+  game.js:1136:        
+  game.js:1137:        for (let row = bounds.minY; row <= bounds.maxY; row++) {
+  game.js:1138:            for (let col = bounds.minX; col <= bounds.maxX; col++) {
+  game.js:1196:        return levelGrid[row][col];
+  game.js:1197:    }
+  game.js:1198:
+> game.js:1199:    getTileBounds(x, y, w, h) {
+  game.js:1200:        return {
+  game.js:1201:            minX: Math.floor(x / TILE_SIZE),
+  game.js:1202:            maxX: Math.floor((x + w - 0.01) / TILE_SIZE),
+  game.js:1890:                const testH = 90;
+  game.js:1891:                let blocked = false;
+  game.js:1892:                
+> game.js:1893:                const bounds = this.getTileBounds(p.x, testY, p.width, testH);
+  game.js:1894:                for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:1895:                    for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:1896:                        const t = this.getTile(c, r);
+  game.js:2058:        this.player.x += this.player.vx;
+  game.js:2059:        this.player.grounded = false;
+  game.js:2060:
+> game.js:2061:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2062:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2063:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2064:                const t = this.getTile(c, r);
+  game.js:2075:        }
+  game.js:2076:
+  game.js:2077:        this.player.y += this.player.vy;
+> game.js:2078:        bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2079:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2080:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2081:                const t = this.getTile(c, r);
+  game.js:2266:        });
+  game.js:2267:
+  game.js:2268:        // 4. Portal Goal check
+> game.js:2269:        const bounds = this.getTileBounds(px, py, pw, ph);
+  game.js:2270:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2271:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2272:                if (this.getTile(c, r) === TILES.PORTAL) {
+  game.js:2300:               tile === TILES.SPENT_REWARD;
+  game.js:2301:    }
+  game.js:2302:
+> game.js:2303:    getTileBounds(x, y, w, h) {
+  game.js:2304:        return {
+  game.js:2305:            minX: Math.floor(x / TILE_SIZE),
+  game.js:2306:            maxX: Math.floor((x + w - 0.01) / TILE_SIZE),
+
+

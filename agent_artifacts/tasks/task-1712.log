@@ -1,0 +1,98 @@
+
+  game.js:1618:            height: 90,
+  game.js:1619:            vx: 0,
+  game.js:1620:            vy: 0,
+> game.js:1621:            grounded: false,
+  game.js:1622:            health: 3,
+  game.js:1623:            maxHealth: 3,
+  game.js:1624:            score: 0,
+  game.js:1748:        this.player.score = 0;
+  game.js:1749:        this.player.coins = 0;
+  game.js:1750:        this.player.poweredUp = false; // Reset fireball morph
+> game.js:1751:        this.player.grounded = false;
+  game.js:1752:        this.player.invulTimer = 0;
+  game.js:1753:        this.player.hurtTimer = 0;
+  game.js:1754:        this.player.lastSafeX = 80;
+  game.js:1872:        const input = this.input;
+  game.js:1873:
+  game.js:1874:        // Slow down walk cycle and instantly freeze to static pose when input keys are released
+> game.js:1875:        if ((input.left || input.right) && p.grounded && !p.crouching) {
+  game.js:1876:            p.animTime += 0.012 * Math.abs(p.vx);
+  game.js:1877:        } else {
+  game.js:1878:            p.animTime = 0;
+  game.js:1881:        if (p.animTime > 1000) p.animTime = 0;
+  game.js:1882:
+  game.js:1883:        // Crouch State Machine
+> game.js:1884:        let wantCrouch = input.down && p.grounded;
+  game.js:1885:        
+  game.js:1886:        if (p.crouching) {
+  game.js:1887:            if (!wantCrouch) {
+  game.js:1944:            this.player.jumpBufferTimer = this.physics.jumpBufferDuration;
+  game.js:1945:        }
+  game.js:1946:
+> game.js:1947:        if (!this.player.grounded) {
+  game.js:1948:            this.player.vy += this.physics.gravity;
+  game.js:1949:        } else {
+  game.js:1950:            this.player.vy = 0;
+  game.js:1954:        if (this.player.jumpBufferTimer > 0 && this.player.coyoteTimer > 0) {
+  game.js:1955:            synth.playJump();
+  game.js:1956:            this.player.vy = this.physics.jumpForce;
+> game.js:1957:            this.player.grounded = false;
+  game.js:1958:            this.player.coyoteTimer = 0;
+  game.js:1959:            this.player.jumpBufferTimer = 0;
+  game.js:1960:            particles.spawnJumpDust(this.player.x + this.player.width / 2, this.player.y + 
+this.player.height);
+  game.js:2056:
+  game.js:2057:    resolveCollisions() {
+  game.js:2058:        this.player.x += this.player.vx;
+> game.js:2059:        this.player.grounded = false;
+  game.js:2060:
+  game.js:2061:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2062:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2083:                    if (this.player.vy > 0) {
+  game.js:2084:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2085:                        this.player.vy = 0;
+> game.js:2086:                        this.player.grounded = true;
+  game.js:2087:                        
+  game.js:2088:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+  game.js:2089:                            this.player.lastSafeX = this.player.x;
+  game.js:2147:            this.player.hurtTimer = 25;
+  game.js:2148:            this.player.vy = -6.0;
+  game.js:2149:            this.player.vx = -this.player.direction * 3.5;
+> game.js:2150:            this.player.grounded = false;
+  game.js:2151:            this.showToast("POWER LOST!");
+  game.js:2152:            return;
+  game.js:2153:        }
+  game.js:2160:        
+  game.js:2161:        this.player.vy = -6.0;
+  game.js:2162:        this.player.vx = -this.player.direction * 3.5;
+> game.js:2163:        this.player.grounded = false;
+  game.js:2164:
+  game.js:2165:        const cabinet = document.getElementById('arcade-cabinet');
+  game.js:2166:        cabinet.classList.add('pulse');
+  game.js:2187:                    this.player.vy = 0;
+  game.js:2188:                    this.player.invulTimer = 120; // 2-second grace period
+  game.js:2189:                    this.player.hurtTimer  = 0;
+> game.js:2190:                    this.player.grounded   = false;
+  game.js:2191:                    this.camera.x = 0;
+  game.js:2192:                    this.camera.targetX = 0;
+  game.js:2193:                    this.state = 'PLAYING';
+  game.js:2464:            let currentHexlyImg = hexlyImg;
+  game.js:2465:            if (p.crouching && hexlyCrouchImgLoaded) {
+  game.js:2466:                currentHexlyImg = hexlyCrouchImg;
+> game.js:2467:            } else if (!p.grounded && hexlyJumpImgLoaded) {
+  game.js:2468:                currentHexlyImg = hexlyJumpImg;
+> game.js:2469:            } else if (p.grounded && Math.abs(p.vx) > 0.2 && hexlyWalk2ImgLoaded) {
+  game.js:2470:                const walkFrame = Math.floor(p.animTime) % 2;
+  game.js:2471:                currentHexlyImg = walkFrame === 0 ? hexlyImg : hexlyWalk2Img;
+  game.js:2472:            }
+  game.js:2557:                frame = SPRITES.HEXLY.WIN;
+  game.js:2558:            } else if (p.crouching) {
+  game.js:2559:                frame = SPRITES.HEXLY.JUMP; // Fallback representation of crouching
+> game.js:2560:            } else if (!p.grounded) {
+  game.js:2561:                frame = SPRITES.HEXLY.JUMP;
+  game.js:2562:            } else if (Math.abs(p.vx) > 0.2) {
+  game.js:2563:                const runCycle = Math.floor(p.animTime * 2.5) % 2;
+
+

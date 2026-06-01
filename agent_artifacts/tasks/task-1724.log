@@ -1,0 +1,23 @@
+At line:1 char:6
++ cat << 'EOF' > update_level.py
++      ~
+Missing file specification after redirection operator.
+At line:1 char:5
++ cat << 'EOF' > update_level.py
++     ~
+The '<' operator is reserved for future use.
+At line:1 char:6
++ cat << 'EOF' > update_level.py
++      ~
+The '<' operator is reserved for future use.
+At line:5 char:22
++     content = f.read()
++                      ~
+An expression was expected after '('.
+At line:18 char:28
++     index_content = f.read()
++                            ~
+An expression was expected after '('.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingFileSpecification
+ 

@@ -1,0 +1,69 @@
+
+  game.js:1:/**
+  game.js:2: * HEXLY'S INFERNO ESCAPE - 16-Bit SNES Super Size & Fireball Overhaul
+> game.js:3: * A complete retro platformer engine built in HTML5 Canvas and Web Audio API.
+  game.js:4: * Features 45px tiles (12 rows), skeletal enemies, Fire power-up, and 2-layer parallax.
+  game.js:5: */
+  game.js:6:
+  game.js:448:            "bheeeeeehb",
+  game.js:449:            "bbbbbbbbbb"
+  game.js:450:        ],
+> game.js:451:        PLATFORM: [
+  game.js:452:            "bbbbbbbbbb",
+  game.js:453:            "bqqfffqqfb",
+  game.js:454:            "bqfhhhfheb",
+  game.js:909:const TILES = {
+  game.js:910:    EMPTY: 0,
+  game.js:911:    GROUND: 1,
+> game.js:912:    PLATFORM: 2,
+  game.js:913:    BREAKABLE: 3,
+  game.js:914:    REWARD: 4,
+  game.js:915:    LAVA: 5,
+  game.js:1137:        for (let row = bounds.minY; row <= bounds.maxY; row++) {
+  game.js:1138:            for (let col = bounds.minX; col <= bounds.maxX; col++) {
+  game.js:1139:                const tile = this.getTile(col, row, levelGrid);
+> game.js:1140:                if (tile === TILES.GROUND || tile === TILES.PLATFORM || tile === TILES.BREAKABLE || 
+tile === TILES.REWARD || tile === TILES.SPENT_REWARD) {
+  game.js:1141:                    if (this.vy > 0) {
+  game.js:1142:                        // Falling, bounce up
+  game.js:1143:                        this.y = row * TILE_SIZE - this.height;
+  game.js:1209:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:1210:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:1211:                const t = this.getTile(c, r, levelGrid);
+> game.js:1212:                if (t === TILES.GROUND || t === TILES.PLATFORM || t === TILES.BREAKABLE || t === 
+TILES.REWARD || t === TILES.SPENT_REWARD) {
+  game.js:1213:                    return true;
+  game.js:1214:                }
+  game.js:1215:            }
+  game.js:1396:            if (levelGrid[tileY1] && levelGrid[tileY1][tileX] && levelGrid[tileY1][tileX] !== 
+TILES.EMPTY && levelGrid[tileY1][tileX] !== TILES.LAVA) hitWall = true;
+  game.js:1397:            if (levelGrid[tileY2] && levelGrid[tileY2][tileX] && levelGrid[tileY2][tileX] !== 
+TILES.EMPTY && levelGrid[tileY2][tileX] !== TILES.LAVA) hitWall = true;
+  game.js:1398:
+> game.js:1399:            // Platform Edge Turnaround detection
+  game.js:1400:            let walkingOnLedge = true;
+  game.js:1401:            const footX = this.direction === 1 ? this.x + this.width + 4 : this.x - 4;
+  game.js:1402:            const footY = Math.floor((this.y + this.height + 4) / TILE_SIZE);
+  game.js:2099:                        this.player.vy = 0;
+  game.js:2100:                        this.player.grounded = true;
+  game.js:2101:                        
+> game.js:2102:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+  game.js:2103:                            this.player.lastSafeX = this.player.x;
+  game.js:2104:                            this.player.lastSafeY = this.player.y;
+  game.js:2105:                        }
+  game.js:2308:
+  game.js:2309:    isSolid(tile) {
+  game.js:2310:        return tile === TILES.GROUND || 
+> game.js:2311:               tile === TILES.PLATFORM || 
+  game.js:2312:               tile === TILES.BREAKABLE || 
+  game.js:2313:               tile === TILES.REWARD || 
+  game.js:2314:               tile === TILES.SPENT_REWARD;
+  game.js:2378:    drawSingleTile(x, y, type) {
+  game.js:2379:        let matrix = null;
+  game.js:2380:        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
+> game.js:2381:        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
+  game.js:2382:        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+  game.js:2383:        else if (type === TILES.REWARD) {
+  game.js:2384:            // Draw the ground-brown base tile first
+
+

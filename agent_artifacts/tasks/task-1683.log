@@ -1,0 +1,10 @@
+
+game.js:24:const hexlyJumpImg = new Image();
+game.js:25:let hexlyJumpImgLoaded = false;
+game.js:26:hexlyJumpImg.onload = () => {
+game.js:27:    hexlyJumpImgLoaded = true;
+game.js:29:hexlyJumpImg.src = 'hexly_jump.png';
+game.js:2467:            } else if (!p.grounded && hexlyJumpImgLoaded) {
+game.js:2468:                currentHexlyImg = hexlyJumpImg;
+
+

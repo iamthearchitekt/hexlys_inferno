@@ -1,0 +1,71 @@
+
+  game.js:1222:// ----------------------------------------------------
+  game.js:1223:// 7b. ENEMY FIREBALL - straight left flight, phases through tiles, only hits Hexly
+  game.js:1224:// ----------------------------------------------------
+> game.js:1225:class EnemyFireball {
+  game.js:1226:    constructor(x, y, speed) {
+  game.js:1227:        this.x      = x;
+  game.js:1228:        this.y      = y;
+  game.js:1229:        this.vx     = -speed;   // constant leftward - no gravity, no bouncing
+  game.js:1230:        this.width  = 56;
+  game.js:1231:        this.height = 40;
+  game.js:1232:        this.dead   = false;
+  game.js:1233:    }
+  game.js:1234:
+  game.js:1235:    update(engine) {
+  game.js:1236:        if (this.dead) return;
+  game.js:1237:        const player = engine.player;
+  game.js:1238:
+  game.js:1239:        // Straight left - no physics, no tile checks
+  game.js:1240:        this.x += this.vx;
+  game.js:1241:
+  game.js:1242:        // Ember trail off the right edge
+  game.js:1243:        if (Math.random() < 0.6) {
+  game.js:1244:            const colors = ['#ff4400', '#ff8800', '#ffcc00', '#ff2200'];
+  game.js:1245:            particles.add(new Particle(
+  game.js:1246:                this.x + this.width + Math.random() * 6,
+  game.js:1247:                this.y + this.height / 2 + (Math.random() - 0.5) * 10,
+  game.js:1248:                Math.random() * 1.5 + 0.3,
+  game.js:1249:                (Math.random() - 0.5) * 0.6,
+  game.js:1250:                colors[Math.floor(Math.random() * colors.length)],
+  game.js:1251:                Math.random() * 4 + 2,
+  game.js:1252:                Math.random() * 16 + 8,
+  game.js:1253:                'ember'
+  game.js:1254:            ));
+  game.js:1255:        }
+  game.js:1343:    }
+  game.js:1344:}
+  game.js:1345:
+> game.js:1346:class Enemy {
+  game.js:1347:    constructor(x, y, type) {
+  game.js:1348:        this.x = x;
+  game.js:1349:        this.y = y;
+  game.js:1350:        this.type = type;
+  game.js:1351:        this.vx = type === 'SKULL_BUG' ? 0.9 : type === 'HORNED_BLOB' ? 0.5 : 0;
+  game.js:1352:        this.vy = 0;
+  game.js:1353:        this.direction = 1;
+  game.js:1354:        this.dead = false;
+  game.js:1355:
+  game.js:1356:        // Set dimensions based on type
+  game.js:1357:        if (type === 'SKULL_BUG') {
+  game.js:1358:            this.width  = 54;
+  game.js:1359:            this.height = 68;
+  game.js:1360:        } else if (type === 'HORNED_BLOB') {
+  game.js:1361:            this.width  = 54;  // same skeleton sprite
+  game.js:1362:            this.height = 68;
+  game.js:1363:        } else {
+  game.js:1364:            // FIRE_IMP - flying skeleton is wide with wings
+  game.js:1365:            this.width  = 98; // Larger menacing size
+  game.js:1366:            this.height = 70;
+  game.js:1367:        }
+  game.js:1368:
+  game.js:1369:        if (type === 'FIRE_IMP') {
+  game.js:1370:            this.startY = y;
+  game.js:1371:            this.bounceTimer = Math.random() * Math.PI * 2;
+  game.js:1372:        }
+  game.js:1373:
+  game.js:1374:        // Walk animation state (for ground enemies)
+  game.js:1375:        this.animFrame = 0;   // 0 = walk1, 1 = walk2
+  game.js:1376:        this.animTimer = 0;   // counts up each update tick
+
+

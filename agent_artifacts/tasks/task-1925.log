@@ -1,0 +1,6 @@
+
+  game.js:2004:        this.coins.forEach(coin => coin.update(this.frameCounter));
+> game.js:2005:        this.enemies.forEach(enemy => enemy.update(this.levelGrid));
+  game.js:2006:        this.flowers.forEach(flower => flower.update());
+
+

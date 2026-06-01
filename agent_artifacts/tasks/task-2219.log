@@ -1,0 +1,754 @@
+
+  game.js:675:        this.musicIntervalId = setInterval(() => {
+  game.js:676:            if (!this.musicEnabled || !this.ctx || this.ctx.state !== 'running') return;
+> game.js:677:            this.playSequencerStep();
+  game.js:678:        }, 180);
+  game.js:679:    }
+  game.js:680:
+> game.js:681:    playSequencerStep() {
+  game.js:682:        const time = this.ctx.currentTime;
+  game.js:683:        const bassNote = this.bassSequence[this.step % this.bassSequence.length];
+  game.js:684:        if (bassNote && this.frequencies[bassNote]) {
+> game.js:685:            this.playTone(this.frequencies[bassNote], 'sawtooth', 0.05, 0.16, time);
+  game.js:686:        }
+  game.js:687:
+  game.js:688:        const melodyNote = this.melodySequence[this.step % this.melodySequence.length];
+  game.js:689:        if (melodyNote && this.frequencies[melodyNote]) {
+> game.js:690:            this.playTone(this.frequencies[melodyNote], 'triangle', 0.04, 0.25, time);
+  game.js:691:        }
+  game.js:692:
+  game.js:693:        if (this.step % 4 === 2) {
+> game.js:694:            this.playNoiseTick(0.015, time);
+  game.js:695:        }
+  game.js:696:        this.step++;
+  game.js:697:    }
+  game.js:698:
+> game.js:699:    playTone(freq, type, volume, duration, startTime) {
+  game.js:700:        if (!this.ctx) return;
+  game.js:701:        const osc = this.ctx.createOscillator();
+  game.js:702:        const gain = this.ctx.createGain();
+  game.js:703:        osc.type = type;
+  game.js:704:        osc.frequency.setValueAtTime(freq, startTime);
+  game.js:705:        gain.gain.setValueAtTime(volume, startTime);
+  game.js:706:        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  game.js:707:        osc.connect(gain);
+  game.js:708:        gain.connect(this.ctx.destination);
+  game.js:709:        osc.start(startTime);
+  game.js:711:    }
+  game.js:712:
+> game.js:713:    playNoiseTick(volume, startTime) {
+  game.js:714:        if (!this.ctx) return;
+  game.js:715:        const bufferSize = this.ctx.sampleRate * 0.04;
+  game.js:716:        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+  game.js:717:        const data = buffer.getChannelData(0);
+  game.js:718:        for (let i = 0; i < bufferSize; i++) {
+  game.js:719:            data[i] = Math.random() * 2 - 1;
+  game.js:720:        }
+  game.js:721:
+  game.js:722:        const noise = this.ctx.createBufferSource();
+  game.js:723:        noise.buffer = buffer;
+  game.js:735:    }
+  game.js:736:
+> game.js:737:    playJump() {
+  game.js:738:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:739:        this.resume();
+  game.js:740:        const now = this.ctx.currentTime;
+  game.js:741:        const osc = this.ctx.createOscillator();
+  game.js:742:        const gain = this.ctx.createGain();
+  game.js:743:        osc.type = 'triangle';
+  game.js:744:        osc.frequency.setValueAtTime(200, now);
+  game.js:745:        osc.frequency.exponentialRampToValueAtTime(650, now + 0.15);
+  game.js:746:        gain.gain.setValueAtTime(0.12, now);
+  game.js:747:        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  game.js:752:    }
+  game.js:753:
+> game.js:754:    playCollect() {
+  game.js:755:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:756:        this.resume();
+  game.js:757:        const now = this.ctx.currentTime;
+  game.js:758:        const osc = this.ctx.createOscillator();
+  game.js:759:        const gain = this.ctx.createGain();
+  game.js:760:        osc.type = 'sine';
+  game.js:761:        osc.frequency.setValueAtTime(600, now);
+  game.js:762:        osc.frequency.setValueAtTime(900, now + 0.08);
+  game.js:763:        gain.gain.setValueAtTime(0.12, now);
+  game.js:764:        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+  game.js:769:    }
+  game.js:770:
+> game.js:771:    playStomp() {
+  game.js:772:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:773:        this.resume();
+  game.js:774:        const now = this.ctx.currentTime;
+  game.js:775:        const osc = this.ctx.createOscillator();
+  game.js:776:        const gain = this.ctx.createGain();
+  game.js:777:        osc.type = 'triangle';
+  game.js:778:        osc.frequency.setValueAtTime(180, now);
+  game.js:779:        osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+  game.js:780:        gain.gain.setValueAtTime(0.2, now);
+  game.js:781:        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  game.js:786:    }
+  game.js:787:
+> game.js:788:    playDamage() {
+  game.js:789:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:790:        this.resume();
+  game.js:791:        const now = this.ctx.currentTime;
+  game.js:792:        const osc = this.ctx.createOscillator();
+  game.js:793:        const gain = this.ctx.createGain();
+  game.js:794:        osc.type = 'sawtooth';
+  game.js:795:        osc.frequency.setValueAtTime(500, now);
+  game.js:796:        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+  game.js:797:        gain.gain.setValueAtTime(0.25, now);
+  game.js:798:        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+  game.js:803:    }
+  game.js:804:
+> game.js:805:    playVictory() {
+  game.js:806:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:807:        this.resume();
+  game.js:808:        const now = this.ctx.currentTime;
+  game.js:809:        const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+  game.js:810:        notes.forEach((freq, idx) => {
+  game.js:811:            const osc = this.ctx.createOscillator();
+  game.js:812:            const gain = this.ctx.createGain();
+  game.js:813:            osc.type = 'sine';
+  game.js:814:            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+  game.js:815:            gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+  game.js:822:    }
+  game.js:823:
+> game.js:824:    playFireball() {
+  game.js:825:        if (!this.sfxEnabled || !this.ctx) return;
+  game.js:826:        this.resume();
+  game.js:827:        const now = this.ctx.currentTime;
+  game.js:828:        const osc = this.ctx.createOscillator();
+  game.js:829:        const gain = this.ctx.createGain();
+  game.js:830:        osc.type = 'triangle';
+  game.js:831:        // Snappy short high sweep down
+  game.js:832:        osc.frequency.setValueAtTime(800, now);
+  game.js:833:        osc.frequency.exponentialRampToValueAtTime(250, now + 0.10);
+  game.js:834:        gain.gain.setValueAtTime(0.12, now);
+  game.js:1098:        const levelGrid = engine.levelGrid;
+  game.js:1099:        const enemies = engine.enemies;
+> game.js:1100:        const player = engine.player;
+  game.js:1101:
+  game.js:1102:        this.vy += 0.45; // Snappy fireball gravity
+  game.js:1103:        
+  game.js:1104:        // Spawn realistic flame particle trail (molten embers and rising volcanic smoke!)
+  game.js:1105:        if (Math.random() < 0.65) {
+  game.js:1106:            const colors = ['#f95700', '#f7be00', '#e61e29', '#544e47']; 
+  game.js:1107:            const trailColor = colors[Math.floor(Math.random() * colors.length)];
+  game.js:1108:            const px = this.x + this.width / 2 + (Math.random() - 0.5) * 4;
+  game.js:1109:            const py = this.y + this.height / 2 + (Math.random() - 0.5) * 4;
+  game.js:1110:            particles.add(new Particle(
+  game.js:1164:                enemy.dead = true;
+  game.js:1165:                this.dead = true;
+> game.js:1166:                player.score += 150;
+> game.js:1167:                synth.playStomp();
+  game.js:1168:                engine.updateHUD();
+  game.js:1169:                particles.spawnStompExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+  game.js:1170:            }
+  game.js:1171:        });
+  game.js:1172:
+  game.js:1173:        // Boundary checks
+  game.js:1174:        if (this.y > 540 || this.x < 0 || this.x > levelGrid[0].length * TILE_SIZE) {
+  game.js:1175:            this.dead = true;
+  game.js:1176:        }
+  game.js:1177:    }
+  game.js:1235:    update(engine) {
+  game.js:1236:        if (this.dead) return;
+> game.js:1237:        const player = engine.player;
+  game.js:1238:
+  game.js:1239:        // Straight left - no physics, no tile checks
+  game.js:1240:        this.x += this.vx;
+  game.js:1241:
+  game.js:1242:        // Ember trail off the right edge
+  game.js:1243:        if (Math.random() < 0.6) {
+  game.js:1244:            const colors = ['#ff4400', '#ff8800', '#ffcc00', '#ff2200'];
+  game.js:1245:            particles.add(new Particle(
+  game.js:1246:                this.x + this.width + Math.random() * 6,
+  game.js:1247:                this.y + this.height / 2 + (Math.random() - 0.5) * 10,
+  game.js:1255:        }
+  game.js:1256:
+> game.js:1257:        // Player hit check only
+> game.js:1258:        if (player.invulTimer <= 0) {
+> game.js:1259:            const hitX = this.x < player.x + player.width  && this.x + this.width  > player.x;
+> game.js:1260:            const hitY = this.y < player.y + player.height && this.y + this.height > player.y;
+  game.js:1261:            if (hitX && hitY) {
+  game.js:1262:                this.dead = true;
+  game.js:1263:                this.spawnExplosion();
+> game.js:1264:                engine.damagePlayer();
+  game.js:1265:                return;
+  game.js:1266:            }
+  game.js:1267:        }
+  game.js:1268:
+  game.js:1269:        // Despawn off left edge
+  game.js:1270:        if (this.x + this.width < engine.camera.x - 60) {
+  game.js:1271:            this.dead = true;
+  game.js:1272:        }
+  game.js:1273:    }
+  game.js:1274:
+  game.js:1385:        if (this.dead) return;
+  game.js:1386:        const levelGrid = engine.levelGrid;
+> game.js:1387:        const player = engine.player;
+  game.js:1388:
+  game.js:1389:        if (this.type === 'SKULL_BUG' || this.type === 'HORNED_BLOB') {
+  game.js:1390:            this.vy += 0.8;
+  game.js:1391:            this.x += this.vx * this.direction;
+  game.js:1392:
+  game.js:1393:            // Simple wall collision checking
+  game.js:1394:            const checkX = this.direction === 1 ? this.x + this.width : this.x;
+  game.js:1395:            const tileX = Math.floor(checkX / TILE_SIZE);
+  game.js:1396:            const tileY1 = Math.floor(this.y / TILE_SIZE);
+  game.js:1397:            const tileY2 = Math.floor((this.y + this.height - 2) / TILE_SIZE);
+  game.js:1434:            
+  game.js:1435:            // Look left unless Hexly passes them to the right
+> game.js:1436:            if (player.x > this.x + this.width / 2) {
+  game.js:1437:                this.direction = 1;
+  game.js:1438:            } else {
+  game.js:1439:                this.direction = -1;
+  game.js:1440:            }
+  game.js:1441:        }
+  game.js:1442:
+  game.js:1443:        // Advance walk/flight animation for all enemies
+  game.js:1444:        this.animTimer++;
+  game.js:1445:        if (this.animTimer >= this.animSpeed) {
+  game.js:1446:            this.animTimer = 0;
+  game.js:1451:    }
+  game.js:1452:
+> game.js:1453:    draw(ctx, cameraX, player = null) {
+  game.js:1454:        if (this.dead) return;
+  game.js:1455:
+  game.js:1456:        const drawX = Math.round(this.x);
+  game.js:1457:        const drawY = Math.round(this.y);
+  game.js:1458:
+  game.js:1459:        if (this.type === 'FIRE_IMP') {
+  game.js:1460:            // Flying skeleton demon
+  game.js:1461:            const frame1Ready = flyingSkeletonImgLoaded;
+  game.js:1462:            const frame2Ready = flyingSkeleton2ImgLoaded;
+  game.js:1463:
+  game.js:1464:            let facingScale = 1;
+> game.js:1465:            if (player) {
+> game.js:1466:                // Look left natively (1). If player is to the right, scale -1 (facing right).
+> game.js:1467:                facingScale = (player.x + player.width / 2 > this.x + this.width / 2) ? -1 : 1;
+  game.js:1468:            }
+  game.js:1469:
+  game.js:1470:            if (frame1Ready && frame2Ready) {
+  game.js:1471:                ctx.save();
+  game.js:1472:                ctx.translate(Math.round(this.x + this.width / 2), Math.round(this.y + this.height / 
+2));
+  game.js:1473:                ctx.scale(facingScale, 1);
+  game.js:1474:                const frameImg = this.animFrame === 0 ? flyingSkeletonImg : flyingSkeleton2Img;
+  game.js:1475:                ctx.drawImage(frameImg,
+  game.js:1476:                    -this.width / 2, -this.height / 2,
+  game.js:1477:                    this.width, this.height);
+  game.js:1620:
+  game.js:1621:        // Hexly configuration parameters (Size 78x90px - Super-sized 2 tiles tall!)
+> game.js:1622:        this.player = {
+  game.js:1623:            x: 0,
+  game.js:1624:            y: 0,
+  game.js:1625:            width: 78,
+  game.js:1626:            height: 90,
+  game.js:1627:            vx: 0,
+  game.js:1628:            vy: 0,
+  game.js:1629:            grounded: false,
+  game.js:1630:            health: 3,
+  game.js:1631:            maxHealth: 3,
+  game.js:1632:            score: 0,
+  game.js:1737:
+  game.js:1738:        // Set maximum coin count dynamically based on the actual spawned shards!
+> game.js:1739:        this.player.maxCoins = this.coins.length || 1;
+  game.js:1740:    }
+  game.js:1741:
+  game.js:1742:    startGame() {
+> game.js:1743:        this.state = 'PLAYING';
+  game.js:1744:        this.screens.title.classList.add('hidden');
+  game.js:1745:        this.screens.hud.classList.remove('hidden');
+  game.js:1746:        this.resetGame();
+  game.js:1747:    }
+  game.js:1748:
+  game.js:1749:    resetGame() {
+> game.js:1750:        this.state = 'PLAYING';
+  game.js:1751:        this.screens.gameover.classList.add('hidden');
+  game.js:1752:        this.screens.victory.classList.add('hidden');
+  game.js:1753:        this.screens.pause.classList.add('hidden');
+  game.js:1754:        this.screens.hud.classList.remove('hidden');
+  game.js:1755:
+> game.js:1756:        this.player.x = 80;
+> game.js:1757:        this.player.y = 300;
+> game.js:1758:        this.player.vx = 0;
+> game.js:1759:        this.player.vy = 0;
+> game.js:1760:        this.player.health = 3;
+> game.js:1761:        this.player.score = 0;
+> game.js:1762:        this.player.coins = 0;
+> game.js:1763:        this.player.poweredUp = false; // Reset fireball morph
+> game.js:1764:        this.player.grounded = false;
+> game.js:1765:        this.player.invulTimer = 0;
+> game.js:1766:        this.player.hurtTimer = 0;
+> game.js:1767:        this.player.lastSafeX = 80;
+> game.js:1768:        this.player.lastSafeY = 300;
+  game.js:1769:
+  game.js:1770:        this.camera.x = 0;
+  game.js:1771:        this.camera.targetX = 0;
+  game.js:1772:        this.camera.floatX = 0;
+  game.js:1773:        
+  game.js:1774:        this.timeRemaining = this.timeLimit;
+  game.js:1775:        this.initializeMap();
+  game.js:1776:        this.updateHUD();
+  game.js:1777:
+  game.js:1778:        if (this.timerInterval) clearInterval(this.timerInterval);
+  game.js:1779:        this.timerInterval = setInterval(() => {
+> game.js:1780:            if (this.state === 'PLAYING') {
+  game.js:1781:                this.timeRemaining--;
+  game.js:1782:                this.updateHUD();
+  game.js:1783:                if (this.timeRemaining <= 0) this.triggerGameOver();
+  game.js:1784:            }
+  game.js:1785:        }, 1000);
+  game.js:1786:    }
+  game.js:1787:
+  game.js:1788:    triggerGameOver() {
+  game.js:1789:        this.state = 'GAMEOVER';
+> game.js:1790:        synth.playDamage();
+  game.js:1791:        this.screens.gameover.classList.remove('hidden');
+> game.js:1792:        document.getElementById('go-score').innerText = this.player.score;
+> game.js:1793:        document.getElementById('go-coins').innerText = `${this.player.coins}/${this.player.maxCoins}`;
+  game.js:1794:        if (this.timerInterval) clearInterval(this.timerInterval);
+  game.js:1795:    }
+  game.js:1796:
+  game.js:1797:    triggerVictory() {
+  game.js:1798:        this.state = 'VICTORY';
+> game.js:1799:        synth.playVictory();
+  game.js:1800:        this.screens.victory.classList.remove('hidden');
+  game.js:1801:        
+> game.js:1802:        document.getElementById('vic-score').innerText = String(this.player.score).padStart(6, '0');
+> game.js:1803:        document.getElementById('vic-coins').innerText = `${this.player.coins}/${this.player.maxCoins}`;
+  game.js:1804:        const timeSpent = this.timeLimit - this.timeRemaining;
+  game.js:1805:        const mins = Math.floor(timeSpent / 60);
+  game.js:1806:        const secs = String(timeSpent % 60).padStart(2, '0');
+  game.js:1807:        document.getElementById('vic-time').innerText = `${mins}:${secs}`;
+  game.js:1808:        
+  game.js:1809:        if (this.timerInterval) clearInterval(this.timerInterval);
+  game.js:1810:    }
+  game.js:1811:
+  game.js:1812:    togglePause() {
+> game.js:1813:        if (this.state === 'PLAYING') {
+  game.js:1814:            this.state = 'PAUSED';
+  game.js:1815:            this.screens.pause.classList.remove('hidden');
+  game.js:1816:        } else if (this.state === 'PAUSED') {
+> game.js:1817:            this.state = 'PLAYING';
+  game.js:1818:            this.screens.pause.classList.add('hidden');
+  game.js:1819:            synth.resume();
+  game.js:1820:        }
+  game.js:1821:    }
+  game.js:1822:
+  game.js:1823:    updateHUD() {
+  game.js:1824:        const container = document.getElementById('heart-container');
+  game.js:1825:        if (container) {
+  game.js:1826:            container.innerHTML = '';
+> game.js:1827:            for (let i = 0; i < this.player.health; i++) {
+  game.js:1828:                const heart = document.createElement('div');
+  game.js:1829:                heart.className = 'heart';
+  game.js:1830:                container.appendChild(heart);
+  game.js:1831:            }
+  game.js:1832:        }
+  game.js:1833:        
+  game.js:1834:        const scoreVal = document.getElementById('score-val');
+  game.js:1835:        if (scoreVal) {
+> game.js:1836:            scoreVal.innerText = String(this.player.score).padStart(6, '0');
+  game.js:1837:        }
+  game.js:1838:    }
+  game.js:1839:
+  game.js:1840:    showToast(message) {
+  game.js:1841:        // No-op: Completely disable all bottom in-game toasts as requested by the user
+  game.js:1842:    }
+  game.js:1843:
+  game.js:1844:    // ----------------------------------------------------
+  game.js:1845:    // 11. ENGINE UPDATE CYCLES
+  game.js:1846:    // ----------------------------------------------------
+  game.js:1857:        if (this.input.pausePressed) {
+  game.js:1858:            this.audioSetup();
+> game.js:1859:            if (this.state === 'PLAYING' || this.state === 'PAUSED') this.togglePause();
+  game.js:1860:            this.input.clearFrameTriggers();
+  game.js:1861:            return;
+  game.js:1862:        }
+  game.js:1863:
+> game.js:1864:        // Allow particles + rendering to keep running during DYING (death animation plays out)
+  game.js:1865:        if (this.state === 'DYING') {
+  game.js:1866:            particles.update();
+  game.js:1867:            this.frameCounter++;
+  game.js:1868:            this.input.clearFrameTriggers();
+  game.js:1869:            return;
+  game.js:1870:        }
+  game.js:1871:
+> game.js:1872:        if (this.state !== 'PLAYING') {
+  game.js:1873:            this.input.clearFrameTriggers();
+  game.js:1874:            return;
+  game.js:1875:        }
+  game.js:1876:
+  game.js:1877:        particles.update();
+> game.js:1878:        // 1. Core Player Timers
+> game.js:1879:        if (this.player.invulTimer > 0) this.player.invulTimer--;
+> game.js:1880:        if (this.player.hurtTimer > 0) this.player.hurtTimer--;
+> game.js:1881:        if (this.player.coyoteTimer > 0) this.player.coyoteTimer--;
+> game.js:1882:        if (this.player.jumpBufferTimer > 0) this.player.jumpBufferTimer--;
+  game.js:1883:
+> game.js:1884:        const p = this.player;
+  game.js:1885:        const input = this.input;
+  game.js:1886:
+  game.js:1887:        // Slow down walk cycle and instantly freeze to static pose when input keys are released
+  game.js:1888:        if ((input.left || input.right) && p.grounded && !p.crouching) {
+  game.js:1889:            p.animTime += 0.048 * Math.abs(p.vx); // Quadrupled animation speed for a faster walk cycle
+  game.js:1890:        } else {
+  game.js:1891:            p.animTime = 0;
+  game.js:1892:        }
+  game.js:1893:        // Prevent animTime from growing without bound (which can cause floating-point slowdown)
+  game.js:1894:        if (p.animTime > 1000) p.animTime = 0;
+  game.js:1955:        // 3. Jumps physics calculations
+  game.js:1956:        if (this.input.jumpPressed) {
+> game.js:1957:            this.player.jumpBufferTimer = this.physics.jumpBufferDuration;
+  game.js:1958:        }
+  game.js:1959:
+> game.js:1960:        this.player.vy += this.physics.gravity;
+> game.js:1961:        if (this.player.grounded) {
+> game.js:1962:            this.player.coyoteTimer = this.physics.coyoteDuration;
+  game.js:1963:        } else {
+> game.js:1964:            this.player.coyoteTimer--;
+  game.js:1965:        }
+  game.js:1966:
+> game.js:1967:        if (this.player.jumpBufferTimer > 0 && this.player.coyoteTimer > 0) {
+> game.js:1968:            synth.playJump();
+> game.js:1969:            this.player.vy = this.physics.jumpForce;
+> game.js:1970:            this.player.grounded = false;
+> game.js:1971:            this.player.coyoteTimer = 0;
+> game.js:1972:            this.player.jumpBufferTimer = 0;
+> game.js:1973:            particles.spawnJumpDust(this.player.x + this.player.width / 2, this.player.y + 
+this.player.height);
+  game.js:1974:        }
+  game.js:1975:
+> game.js:1976:        if (!this.input.jump && this.player.vy < -2.0) {
+> game.js:1977:            this.player.vy = -2.0;
+  game.js:1978:        }
+  game.js:1979:
+> game.js:1980:        if (this.player.vy > this.physics.maxFallSpeed) {
+> game.js:1981:            this.player.vy = this.physics.maxFallSpeed;
+  game.js:1982:        }
+  game.js:1983:
+  game.js:1984:        // 4. Bouncing Fireball shooting logic
+> game.js:1985:        if (this.input.shootPressed && this.player.poweredUp) {
+  game.js:1986:            if (this.fireballs.length < 2) { // Max 2 active fireballs
+> game.js:1987:                synth.playFireball();
+> game.js:1988:                const fx = this.player.x + (this.player.direction === 1 ? this.player.width : -12);
+> game.js:1989:                const fy = this.player.y + 15;
+> game.js:1990:                this.fireballs.push(new Fireball(fx, fy, this.player.direction * 6.5, 1.0));
+  game.js:1991:            }
+  game.js:1992:        }
+  game.js:1993:
+  game.js:1994:        this.resolveCollisions();
+  game.js:1995:
+  game.js:1996:        // 5. Ambient embers and bubbling lava
+  game.js:1997:        if (this.frameCounter % 15 === 0) {
+  game.js:1998:            const rColX = Math.floor(Math.random() * this.levelGrid[0].length);
+  game.js:1999:            for (let y = 9; y < 12; y++) {
+  game.js:2000:                if (this.levelGrid[y] && this.levelGrid[y][rColX] === TILES.LAVA) {
+  game.js:2041:                continue;
+  game.js:2042:            }
+> game.js:2043:            // Player fireballs can destroy enemy fireballs
+  game.js:2044:            for (let j = this.fireballs.length - 1; j >= 0; j--) {
+  game.js:2045:                const pf = this.fireballs[j];
+  game.js:2046:                if (pf.dead) continue;
+  game.js:2047:                const hitX = pf.x < ef.x + ef.width && pf.x + pf.width > ef.x;
+  game.js:2048:                const hitY = pf.y < ef.y + ef.height && pf.y + pf.height > ef.y;
+  game.js:2049:                if (hitX && hitY) {
+  game.js:2050:                    ef.dead = true;
+  game.js:2051:                    pf.dead = true;
+> game.js:2052:                    this.player.score += 200;
+  game.js:2053:                    this.updateHUD();
+  game.js:2054:                    ef.spawnExplosion();
+  game.js:2055:                    break;
+  game.js:2056:                }
+  game.js:2057:            }
+  game.js:2058:        }
+  game.js:2059:
+  game.js:2060:        this.resolveInteractions();
+  game.js:2061:
+> game.js:2062:        // 7. Stable Lockstep Camera Follow - Hard-locked to player integer position to mathematically 
+eliminate all pixel judder
+> game.js:2063:        const targetX = Math.round(this.player.x) - 441;
+  game.js:2064:        const maxScroll = (this.levelGrid[0].length * TILE_SIZE) - this.width;
+  game.js:2065:        this.camera.x = Math.max(0, Math.min(targetX, maxScroll));
+  game.js:2066:
+  game.js:2067:        this.input.clearFrameTriggers();
+  game.js:2068:    }
+  game.js:2069:
+  game.js:2070:    resolveCollisions() {
+> game.js:2071:        this.player.x += this.player.vx;
+> game.js:2072:        this.player.grounded = false;
+  game.js:2073:
+> game.js:2074:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2075:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2076:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2077:                const t = this.getTile(c, r);
+  game.js:2078:                if (this.isSolid(t)) {
+> game.js:2079:                    if (this.player.vx > 0) {
+> game.js:2080:                        this.player.x = c * TILE_SIZE - this.player.width;
+> game.js:2081:                        this.player.vx = 0;
+> game.js:2082:                    } else if (this.player.vx < 0) {
+> game.js:2083:                        this.player.x = (c + 1) * TILE_SIZE;
+> game.js:2084:                        this.player.vx = 0;
+  game.js:2085:                    }
+  game.js:2086:                }
+  game.js:2087:            }
+  game.js:2088:        }
+  game.js:2089:
+> game.js:2090:        this.player.y += this.player.vy;
+> game.js:2091:        bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2092:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2093:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2094:                const t = this.getTile(c, r);
+  game.js:2095:                if (this.isSolid(t)) {
+> game.js:2096:                    if (this.player.vy > 0) {
+> game.js:2097:                        this.player.y = r * TILE_SIZE - this.player.height;
+> game.js:2098:                        this.player.vy = 0;
+> game.js:2099:                        this.player.grounded = true;
+  game.js:2100:                        
+  game.js:2101:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+> game.js:2102:                            this.player.lastSafeX = this.player.x;
+> game.js:2103:                            this.player.lastSafeY = this.player.y;
+  game.js:2104:                        }
+> game.js:2105:                    } else if (this.player.vy < 0) {
+> game.js:2106:                        this.player.y = (r + 1) * TILE_SIZE;
+> game.js:2107:                        this.player.vy = 0;
+  game.js:2108:                        this.triggerCeilingBump(c, r);
+  game.js:2109:                    }
+  game.js:2110:                }
+  game.js:2111:            }
+  game.js:2112:        }
+  game.js:2113:
+> game.js:2114:        if (this.player.x < 0) {
+> game.js:2115:            this.player.x = 0;
+> game.js:2116:            this.player.vx = 0;
+  game.js:2117:        }
+> game.js:2118:        if (this.player.y > 540) this.damagePlayer();
+  game.js:2119:    }
+  game.js:2120:
+  game.js:2121:    triggerCeilingBump(col, row) {
+  game.js:2122:        const tile = this.levelGrid[row][col];
+  game.js:2123:        if (tile === TILES.BREAKABLE) {
+  game.js:2124:            this.levelGrid[row][col] = TILES.EMPTY;
+> game.js:2125:            synth.playStomp();
+  game.js:2126:            particles.spawnBlockDebris(col * TILE_SIZE + TILE_SIZE/2, row * TILE_SIZE + TILE_SIZE/2);
+> game.js:2127:            this.player.score += 15;
+  game.js:2128:            this.updateHUD();
+  game.js:2129:        } 
+  game.js:2130:        else if (tile === TILES.REWARD) {
+  game.js:2131:            this.levelGrid[row][col] = TILES.SPENT_REWARD;
+  game.js:2132:            
+  game.js:2133:            // Strike block: pop out Lava Flower powerup (or coin occasionally)
+  game.js:2134:            const cx = col * TILE_SIZE;
+  game.js:2135:            const cy = row * TILE_SIZE;
+  game.js:2136:            
+> game.js:2137:            if (!this.player.poweredUp) {
+> game.js:2138:                synth.playVictory();
+  game.js:2139:                this.flowers.push(new LavaFlower(cx, cy));
+  game.js:2140:                this.showToast("POWERUP RELEASED!");
+  game.js:2141:            } else {
+> game.js:2142:                synth.playCollect();
+> game.js:2143:                this.player.coins++;
+> game.js:2144:                this.player.score += 100;
+  game.js:2145:                for (let i = 0; i < 8; i++) particles.spawnEmber(cx + TILE_SIZE/2, cy);
+  game.js:2146:                this.updateHUD();
+  game.js:2147:                this.showToast("+1 BONUS SOUL!");
+  game.js:2148:            }
+  game.js:2149:        }
+  game.js:2150:    }
+  game.js:2151:
+> game.js:2152:    damagePlayer() {
+> game.js:2153:        if (this.player.invulTimer > 0) return;
+  game.js:2154:
+  game.js:2155:        // If powered up, lose fireball power but stay alive! (Nintendo style)
+> game.js:2156:        if (this.player.poweredUp) {
+> game.js:2157:            this.player.poweredUp = false;
+> game.js:2158:            synth.playDamage();
+> game.js:2159:            this.player.invulTimer = 90;
+> game.js:2160:            this.player.hurtTimer = 25;
+> game.js:2161:            this.player.vy = -6.0;
+> game.js:2162:            this.player.vx = -this.player.direction * 3.5;
+> game.js:2163:            this.player.grounded = false;
+  game.js:2164:            this.showToast("POWER LOST!");
+  game.js:2165:            return;
+  game.js:2166:        }
+  game.js:2167:
+> game.js:2168:        this.player.health--;
+  game.js:2169:        this.updateHUD();
+> game.js:2170:        synth.playDamage();
+> game.js:2171:        this.player.invulTimer = 90;
+> game.js:2172:        this.player.hurtTimer = 25;
+  game.js:2173:        
+> game.js:2174:        this.player.vy = -6.0;
+> game.js:2175:        this.player.vx = -this.player.direction * 3.5;
+> game.js:2176:        this.player.grounded = false;
+  game.js:2177:
+  game.js:2178:        const cabinet = document.getElementById('arcade-cabinet');
+  game.js:2179:        cabinet.classList.add('pulse');
+  game.js:2180:        setTimeout(() => cabinet.classList.remove('pulse'), 400);
+  game.js:2181:
+  game.js:2182:        // Vaporize Hexly!
+  game.js:2183:        for (let i = 0; i < 25; i++) {
+  game.js:2184:            const colors = ['#ff6a00', '#f7be00', '#ff9900', '#f95700'];
+  game.js:2185:            particles.add(new Particle(
+> game.js:2186:                this.player.x + Math.random() * this.player.width,
+> game.js:2187:                this.player.y + Math.random() * this.player.height,
+  game.js:2188:                (Math.random() - 0.5) * 2.0, // Gentle drift
+  game.js:2189:                (Math.random() * -2.5) - 0.5, // Slow upward bias
+  game.js:2190:                colors[Math.floor(Math.random() * colors.length)],
+  game.js:2191:                Math.random() * 5 + 2,
+  game.js:2192:                Math.random() * 40 + 20,
+  game.js:2193:                'ember'
+  game.js:2194:            ));
+  game.js:2195:        }
+  game.js:2196:
+> game.js:2197:        if (this.player.health <= 0) {
+  game.js:2198:            this.triggerGameOver();
+  game.js:2199:        } else {
+  game.js:2200:            // Mario-style: restart the whole level from the beginning after a brief death pause
+  game.js:2201:            this.state = 'DYING';
+  game.js:2202:            setTimeout(() => {
+  game.js:2203:                if (this.state === 'DYING') {
+  game.js:2204:                    // Preserve health & score but reinitialize map and start position
+> game.js:2205:                    const savedHealth = this.player.health;
+> game.js:2206:                    const savedScore  = this.player.score;
+  game.js:2207:                    this.initializeMap();
+> game.js:2208:                    this.player.health = savedHealth;
+> game.js:2209:                    this.player.score  = savedScore;
+> game.js:2210:                    this.player.coins  = 0; // Reset collected coins so they match the fully respawned 
+shards on the map!
+> game.js:2211:                    this.player.poweredUp = false;
+> game.js:2212:                    this.player.x = 80;
+> game.js:2213:                    this.player.y = 300;
+> game.js:2214:                    this.player.vx = 0;
+> game.js:2215:                    this.player.vy = 0;
+> game.js:2216:                    this.player.invulTimer = 120; // 2-second grace period
+> game.js:2217:                    this.player.hurtTimer  = 0;
+> game.js:2218:                    this.player.grounded   = false;
+  game.js:2219:                    this.camera.x = 0;
+  game.js:2220:                    this.camera.targetX = 0;
+> game.js:2221:                    this.state = 'PLAYING';
+  game.js:2222:                    this.updateHUD();
+  game.js:2223:                    this.showToast('BACK TO START!');
+  game.js:2224:                }
+  game.js:2225:            }, 900);
+  game.js:2226:        }
+  game.js:2227:    }
+  game.js:2228:
+  game.js:2229:    resolveInteractions() {
+> game.js:2230:        const px = this.player.x;
+> game.js:2231:        const py = this.player.y;
+> game.js:2232:        const pw = this.player.width;
+> game.js:2233:        const ph = this.player.height;
+  game.js:2234:
+  game.js:2235:        // 1. Soul Shard collections
+  game.js:2236:        this.coins.forEach(coin => {
+  game.js:2237:            if (coin.collected) return;
+  game.js:2238:            // Generous AABB collision detection to make collection feel natural and responsive
+  game.js:2239:            const hitX = px < coin.x + 18 && px + pw > coin.x - 18;
+  game.js:2240:            const hitY = py < coin.y + 24 && py + ph > coin.y - 24;
+  game.js:2241:            if (hitX && hitY) {
+  game.js:2242:                coin.collected = true;
+> game.js:2243:                this.player.coins++;
+> game.js:2244:                this.player.score += 50;
+> game.js:2245:                synth.playCollect();
+  game.js:2246:                this.updateHUD();
+  game.js:2247:                for (let i = 0; i < 6; i++) particles.spawnEmber(coin.x, coin.y);
+  game.js:2248:            }
+  game.js:2249:        });
+  game.js:2250:
+  game.js:2251:        // 2. Lava Flower collections (Fire Suit Power-up)
+  game.js:2252:        this.flowers.forEach(flower => {
+  game.js:2253:            if (flower.collected) return;
+  game.js:2254:            // AABB overlapping
+  game.js:2255:            const hitX = px < flower.x + 30 && px + pw > flower.x;
+  game.js:2257:            if (hitX && hitY) {
+  game.js:2258:                flower.collected = true;
+> game.js:2259:                this.player.poweredUp = true;
+> game.js:2260:                this.player.score += 500;
+> game.js:2261:                synth.playVictory(); // Epic chime chords
+  game.js:2262:                this.updateHUD();
+  game.js:2263:                this.showToast("FIRE HEXLY MORPHED!");
+  game.js:2264:                
+  game.js:2265:                // Spawn sparkling embers
+  game.js:2266:                for (let i = 0; i < 15; i++) {
+  game.js:2267:                    particles.spawnEmber(flower.x + 15, flower.y + 15);
+  game.js:2268:                }
+  game.js:2269:            }
+  game.js:2270:        });
+  game.js:2271:
+  game.js:2272:        // 3. Enemy stomping checking
+  game.js:2273:        this.enemies.forEach(enemy => {
+> game.js:2274:            if (enemy.dead || this.state !== 'PLAYING') return;
+  game.js:2275:
+  game.js:2276:            const hitX = px < enemy.x + enemy.width && px + pw > enemy.x;
+  game.js:2277:            const hitY = py < enemy.y + enemy.height && py + ph > enemy.y;
+  game.js:2278:
+  game.js:2279:            if (hitX && hitY) {
+> game.js:2280:                const falling = this.player.vy > 0;
+> game.js:2281:                const hitTop = (py + ph - this.player.vy) <= (enemy.y + 10);
+  game.js:2282:                
+  game.js:2283:                if (falling && hitTop) {
+  game.js:2284:                    enemy.dead = true;
+> game.js:2285:                    this.player.vy = -7.5;
+> game.js:2286:                    this.player.score += 150;
+> game.js:2287:                    synth.playStomp();
+  game.js:2288:                    this.updateHUD();
+  game.js:2289:                    particles.spawnStompExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+  game.js:2290:                } else {
+> game.js:2291:                    this.damagePlayer();
+  game.js:2292:                }
+  game.js:2293:            }
+  game.js:2294:        });
+  game.js:2295:
+  game.js:2296:        // 4. Portal Goal check
+  game.js:2297:        const bounds = this.getTileBounds(px, py, pw, ph);
+  game.js:2298:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2299:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2300:                if (this.getTile(c, r) === TILES.PORTAL) {
+  game.js:2301:                    this.triggerVictory();
+  game.js:2309:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2310:                if (this.getTile(c, r) === TILES.LAVA) {
+> game.js:2311:                    this.damagePlayer();
+  game.js:2312:                    return;
+  game.js:2313:                }
+  game.js:2314:            }
+  game.js:2315:        }
+  game.js:2316:    }
+  game.js:2317:
+  game.js:2318:    getTile(col, row) {
+  game.js:2319:        if (col < 0 || col >= this.levelGrid[0].length || row < 0 || row >= 12) return TILES.EMPTY;
+  game.js:2320:        return this.levelGrid[row][col];
+  game.js:2321:    }
+  game.js:2366:
+  game.js:2367:        this.enemies.forEach(enemy => {
+> game.js:2368:            if (!enemy.dead) enemy.draw(this.ctx, this.camera.x, this.player);
+  game.js:2369:        });
+  game.js:2370:
+  game.js:2371:        particles.draw(this.ctx, 0);
+  game.js:2372:
+  game.js:2373:        this.drawHexly();
+  game.js:2374:
+  game.js:2375:        this.ctx.restore();
+  game.js:2376:    }
+  game.js:2377:
+  game.js:2378:    drawTiles() {
+  game.js:2502:
+  game.js:2503:    drawHexly() {
+> game.js:2504:        const p = this.player;
+  game.js:2505:        if (this.state === 'DYING' || this.state === 'GAME_OVER') return;
+  game.js:2506:        if (p.invulTimer > 0 && Math.floor(p.invulTimer / 4) % 2 === 0) return;
+  game.js:2507:
+  game.js:2508:        const ctx = this.ctx;
+  game.js:2509:
+  game.js:2510:        if (hexlyImgLoaded) {
+  game.js:2511:            ctx.save();
+  game.js:2512:            
+  game.js:2513:            // 1. Pick the correct animation frame image (custom jump/crouch frames included)
+  game.js:2514:            let currentHexlyImg = hexlyImg;
+
+

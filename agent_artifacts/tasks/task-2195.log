@@ -1,0 +1,415 @@
+
+  game.js:498:            "bheeeeeehb",
+  game.js:499:            "bbbbbbbbbb"
+  game.js:500:        ],
+> game.js:501:        // LAVA_A/B/C: 3-frame downward waterfall animation.
+> game.js:502:        // Each frame shifts the molten texture DOWN 3 rows, creating a slow falling-lava illusion.
+  game.js:503:        // Pattern: bright surface glow at top fading to deep dark red at bottom.
+> game.js:504:        LAVA_A: [
+  game.js:505:            "oYoYoYoYoY",  // Row 0: incandescent hot surface sparks
+  game.js:506:            "YoroYoroYo",  // Row 1: bright swirling glow
+  game.js:507:            "rooroororr",  // Row 2: orange-red flow
+  game.js:508:            "orrdorrdrr",  // Row 3: flowing red with darker veins
+  game.js:509:            "rrddrrddrr",  // Row 4: mid-depth red
+  game.js:510:            "rdddrdddrd",  // Row 5: deeper, darker
+  game.js:511:            "ddrdddrddd",  // Row 6: deep dark red flows
+  game.js:512:            "dddddddddd",  // Row 7: dark red depth
+  game.js:513:            "dddddddddd",  // Row 8: dark red depth
+  game.js:514:            "dddrdddrddd".substring(0,10)  // Row 9: dark red depth
+  game.js:515:        ],
+> game.js:516:        LAVA_B: [
+> game.js:517:            "rdddrdddrd",  // Row 0 shifted: deeper layer now at top (lava fell down)
+  game.js:518:            "ddrdddrddd",  // Row 1
+  game.js:519:            "dddddddddd",  // Row 2
+  game.js:520:            "dddddddddd",  // Row 3
+> game.js:521:            "oYoYoYoYoY",  // Row 4: glow wraps around (new lava surface)
+  game.js:522:            "YoroYoroYo",  // Row 5
+  game.js:523:            "rooroororr",  // Row 6
+  game.js:524:            "orrdorrdrr",  // Row 7
+  game.js:525:            "rrddrrddrr",  // Row 8
+  game.js:526:            "rdddrdddrd"   // Row 9
+  game.js:527:        ],
+> game.js:528:        LAVA_C: [
+  game.js:529:            "dddddddddd",  // Row 0 shifted further
+  game.js:530:            "oYoYoYoYoY",  // Row 1: glow band
+  game.js:531:            "YoroYoroYo",  // Row 2
+  game.js:532:            "rooroororr",  // Row 3
+  game.js:533:            "orrdorrdrr",  // Row 4
+  game.js:534:            "rrddrrddrr",  // Row 5
+  game.js:535:            "rdddrdddrd",  // Row 6
+  game.js:536:            "ddrdddrddd",  // Row 7
+  game.js:537:            "dddddddddd",  // Row 8
+  game.js:538:            "dddddddddd"   // Row 9
+  game.js:539:        ],
+  game.js:540:        PORTAL: [
+  game.js:541:            "bbbbbbbbbb",
+  game.js:542:            "bppppppppb",
+  game.js:543:            "bpwpmwpmpb",
+  game.js:544:            "bpmwpmwpbb",
+  game.js:545:            "bpwpmwpmbb",
+  game.js:546:            "bpmwpmwpbb",
+  game.js:547:            "bpwpmwpmpb",
+  game.js:548:            "bppppppppb",
+  game.js:565:        ".........."
+  game.js:566:    ],
+  game.js:567:
+> game.js:568:    // LAVA FLOWER POWERUP: Size 10 cols x 10 rows. Scale 3.0 = 30x30px
+  game.js:569:    FLOWER: [
+  game.js:570:        "....bb....",
+  game.js:571:        "...byyb...",
+  game.js:572:        "..bywwyb..",
+  game.js:573:        "..boywyob.",
+  game.js:574:        ".boowwoob.",
+  game.js:575:        ".brroorrb.",
+  game.js:576:        "brdddddrb.",
+  game.js:577:        "bdddddddb.",
+  game.js:578:        "bbbbbbbbb.",
+  game.js:579:        ".........."
+  game.js:580:    ],
+  game.js:581:
+  game.js:582:    // FIREBALL Entity: Size 6 cols x 6 rows. Scale 2.0 = 12x12px
+  game.js:583:    FIREBALL: [
+  game.js:584:        "..bb..",
+  game.js:585:        ".byyob.",
+  game.js:586:        "bywwob",
+  game.js:587:        "bywwob",
+  game.js:588:        ".brrb.",
+  game.js:912:    PLATFORM: 2,
+  game.js:913:    BREAKABLE: 3,
+  game.js:914:    REWARD: 4,
+> game.js:915:    LAVA: 5,
+  game.js:916:    PORTAL: 6,
+  game.js:917:    SPENT_REWARD: 11
+  game.js:918:};
+  game.js:919:
+> game.js:920:// 12-Row Map Data (7 = Coin, 8 = Skelly Bug, 9 = Winged Skull, 10 = Spine Crawler, 12 = Lava Flower 
+Powerup)
+  game.js:921:const LEVEL_DATA = [
+  game.js:922:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  game.js:923:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  game.js:924:    [0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,7,7,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,7,7,0,
+0,0,0,0,0,0,0,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0
+,0,0,0,0,0,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7,0,0,0,0,0,0,7,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,7,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,0,7,7,0],
+  game.js:925:    [0,0,0,0,0,0,3,4,3,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,3,4,3,0,0,0,0,0,0,2,2,2,0,0,0,9,0,0,0,0,0,0,3,3,3,3,
+0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,3,0,0,0
+,0,0,3,4,3,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,2,2,2,2,0,0,0,2,2,2,2,2,0,0,0,2,2,2,2,2,0,0,0,2,
+2,2,2,2,0,0,0,0,0,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0],
+  game.js:926:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  game.js:927:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,8,0,0,7,0,0,0,0,10,0,0,0,0,8,0,9,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,10,
+0,0,7,0,0,0,8,0,0,9,0,0,0,0,0,0,0,7,7,0,0,0,0,0,0,0,8,0,0,0,0,0,0,9,0,0,0,0,0,10,8,1,1,1,1,1,1,1,1,1,0,0,0,0,8,0,0,0,0,
+0,0,10,0,0,0,0,8,0,0,0,0,0,0,8,0,9,0,10,0,0,0,0,0,0,0,0,0,0,9,0,0,9,0,0,0,0,9,0,0,9,0,0,0,9,0,0,9,0,0,0,9,0,0,9,0,0,0,9
+,0,0,9,0,0,10,0,0,0,0,10,0,0,8,0,0,10,1,1,1,1,1,1,1,1,1],
+  game.js:928:    [0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,1,1,1,1,0,2,2,2,2,2,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,
+1,1,1,1,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  game.js:929:    [0,0,0,0,0,0,0,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  game.js:930:    [1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  game.js:931:    [1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+5,5,5,5,5,5,1,1,1,5,5,5,1,1,1,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  game.js:932:    [1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+5,5,5,5,5,5,1,1,1,5,5,5,1,1,1,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  game.js:933:    [1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+5,5,5,5,5,5,1,1,1,5,5,5,1,1,1,5,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  game.js:934:];
+  game.js:935:
+  game.js:936:// ----------------------------------------------------
+  game.js:937:// 6. RETRO DYNAMIC PARTICLES ENGINE
+  game.js:938:// ----------------------------------------------------
+  game.js:939:class Particle {
+  game.js:940:    constructor(x, y, vx, vy, color, size, life, type = 'ember') {
+  game.js:990:        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.8, -Math.random() * 0.7 - 0.3, 
+colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 1, Math.random() * 80 + 40, 'ember'));
+  game.js:991:    }
+  game.js:992:
+> game.js:993:    spawnLavaBubble(x, y) {
+  game.js:994:        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.3, -Math.random() * 0.4 - 0.2, '#f95700', 
+Math.random() * 4 + 2, Math.random() * 50 + 20, 'dust'));
+  game.js:995:    }
+  game.js:996:
+  game.js:997:    spawnStompExplosion(x, y) {
+  game.js:998:        const colors = ['#ffffff', '#f7be00', '#e61e29'];
+  game.js:999:        for (let i = 0; i < 12; i++) {
+  game.js:1000:            const angle = Math.random() * Math.PI * 2;
+  game.js:1001:            const speed = Math.random() * 2.5 + 1.5;
+  game.js:1002:            this.add(new Particle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed, 
+colors[Math.floor(Math.random() * colors.length)], Math.random() * 4 + 2, Math.random() * 25 + 15, 'dust'));
+  game.js:1003:        }
+  game.js:1004:    }
+  game.js:1005:
+  game.js:1006:    spawnBlockDebris(x, y) {
+  game.js:1007:        const colors = ['#1a110a', '#e61e29', '#f95700'];
+  game.js:1008:        for (let i = 0; i < 8; i++) {
+  game.js:1009:            this.add(new Particle(x, y, (Math.random() - 0.5) * 4, -Math.random() * 3 - 2, 
+colors[Math.floor(Math.random() * colors.length)], Math.random() * 6 + 3, Math.random() * 30 + 15, 'debris'));
+  game.js:1010:        }
+  game.js:1011:    }
+  game.js:1012:
+  game.js:1013:    spawnJumpDust(x, y) {
+  game.js:1041:
+  game.js:1042:
+  game.js:1043:// ----------------------------------------------------
+> game.js:1044:// 7. FIREBALL & LAVA FLOWER ENTITIES (Power-up Core)
+  game.js:1045:// ----------------------------------------------------
+> game.js:1046:class LavaFlower {
+  game.js:1047:    constructor(x, y) {
+  game.js:1048:        this.x = x + TILE_SIZE / 2 - 15;
+  game.js:1049:        this.y = y;
+  game.js:1050:        this.startY = y;
+  game.js:1051:        this.collected = false;
+  game.js:1052:        this.vy = -1.5; // Pop up slowly
+  game.js:1053:        this.floatingTimer = 0;
+  game.js:1054:    }
+  game.js:1055:
+  game.js:1056:    update() {
+  game.js:1057:        // Pop out of block then float in place
+  game.js:1058:        if (this.y > this.startY - 35) {
+  game.js:1059:            this.y += this.vy;
+  game.js:1060:        } else {
+  game.js:1061:            this.floatingTimer += 0.08;
+  game.js:1062:            this.y = (this.startY - 35) + Math.sin(this.floatingTimer) * 3;
+  game.js:1063:        }
+  game.js:1064:    }
+  game.js:1065:
+  game.js:1066:    draw(ctx, cameraX) {
+  game.js:1397:            const tileY2 = Math.floor((this.y + this.height - 2) / TILE_SIZE);
+  game.js:1398:
+  game.js:1399:            let hitWall = false;
+> game.js:1400:            if (levelGrid[tileY1] && levelGrid[tileY1][tileX] && levelGrid[tileY1][tileX] !== 
+TILES.EMPTY && levelGrid[tileY1][tileX] !== TILES.LAVA) hitWall = true;
+> game.js:1401:            if (levelGrid[tileY2] && levelGrid[tileY2][tileX] && levelGrid[tileY2][tileX] !== 
+TILES.EMPTY && levelGrid[tileY2][tileX] !== TILES.LAVA) hitWall = true;
+  game.js:1402:
+  game.js:1403:            // Platform Edge Turnaround detection
+  game.js:1404:            let walkingOnLedge = true;
+  game.js:1405:            const footX = this.direction === 1 ? this.x + this.width + 4 : this.x - 4;
+  game.js:1406:            const footY = Math.floor((this.y + this.height + 4) / TILE_SIZE);
+  game.js:1407:            const nextTileX = Math.floor(footX / TILE_SIZE);
+  game.js:1408:            
+> game.js:1409:            if (levelGrid[footY] && (levelGrid[footY][nextTileX] === TILES.EMPTY || 
+levelGrid[footY][nextTileX] === TILES.LAVA)) {
+  game.js:1410:                walkingOnLedge = false;
+  game.js:1411:            }
+  game.js:1412:
+  game.js:1413:            if (hitWall || !walkingOnLedge) {
+  game.js:1414:                this.direction *= -1;
+  game.js:1415:            }
+  game.js:1416:
+  game.js:1417:            this.y += this.vy;
+  game.js:1418:            const checkTileY = Math.floor((this.y + this.height) / TILE_SIZE);
+  game.js:1419:            const checkTileX1 = Math.floor(this.x / TILE_SIZE);
+  game.js:1420:            const checkTileX2 = Math.floor((this.x + this.width - 1) / TILE_SIZE);
+  game.js:1421:
+  game.js:1422:            if (levelGrid[checkTileY]) {
+  game.js:1423:                const t1 = levelGrid[checkTileY][checkTileX1];
+  game.js:1424:                const t2 = levelGrid[checkTileY][checkTileX2];
+> game.js:1425:                if ((t1 && t1 !== TILES.EMPTY && t1 !== TILES.LAVA) || (t2 && t2 !== TILES.EMPTY && t2 
+!== TILES.LAVA)) {
+  game.js:1426:                    this.y = checkTileY * TILE_SIZE - this.height;
+  game.js:1427:                    this.vy = 0;
+  game.js:1428:                }
+  game.js:1429:            }
+  game.js:1430:        } 
+  game.js:1431:        else if (this.type === 'FIRE_IMP') {
+  game.js:1432:            this.bounceTimer += 0.05;
+  game.js:1433:            this.y = this.startY + Math.sin(this.bounceTimer) * 55;
+  game.js:1434:            
+  game.js:1435:            // Look left unless Hexly passes them to the right
+  game.js:1436:            if (player.x > this.x + this.width / 2) {
+  game.js:1437:                this.direction = 1;
+  game.js:1438:            } else {
+  game.js:1439:                this.direction = -1;
+  game.js:1440:            }
+  game.js:1441:        }
+  game.js:1442:
+  game.js:1443:        // Advance walk/flight animation for all enemies
+  game.js:1444:        this.animTimer++;
+  game.js:1445:        if (this.animTimer >= this.animSpeed) {
+  game.js:1993:
+  game.js:1994:        this.resolveCollisions();
+  game.js:1995:
+> game.js:1996:        // 5. Ambient embers and bubbling lava
+  game.js:1997:        if (this.frameCounter % 15 === 0) {
+  game.js:1998:            const rColX = Math.floor(Math.random() * this.levelGrid[0].length);
+  game.js:1999:            for (let y = 9; y < 12; y++) {
+> game.js:2000:                if (this.levelGrid[y] && this.levelGrid[y][rColX] === TILES.LAVA) {
+> game.js:2001:                    particles.spawnLavaBubble(rColX * TILE_SIZE + Math.random() * TILE_SIZE, y * 
+TILE_SIZE + 2);
+  game.js:2002:                    break;
+  game.js:2003:                }
+  game.js:2004:            }
+  game.js:2005:        }
+  game.js:2006:        if (this.frameCounter % 6 === 0) {
+  game.js:2007:            const sX = this.camera.x + Math.random() * this.width;
+  game.js:2008:            particles.spawnEmber(sX, 100 + Math.random() * 300);
+  game.js:2009:        }
+  game.js:2010:
+  game.js:2011:        // 6. Entity Updates
+  game.js:2012:        this.coins.forEach(coin => coin.update(this.frameCounter));
+  game.js:2013:        this.enemies.forEach(enemy => enemy.update(this));
+  game.js:2014:        this.flowers.forEach(flower => flower.update());
+  game.js:2015:        
+  game.js:2016:        for (let i = this.fireballs.length - 1; i >= 0; i--) {
+  game.js:2017:            const fb = this.fireballs[i];
+  game.js:2018:            fb.update(this);
+  game.js:2019:            if (fb.dead) this.fireballs.splice(i, 1);
+  game.js:2020:        }
+  game.js:2021:
+  game.js:2098:                        this.player.vy = 0;
+  game.js:2099:                        this.player.grounded = true;
+  game.js:2100:                        
+> game.js:2101:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+  game.js:2102:                            this.player.lastSafeX = this.player.x;
+  game.js:2103:                            this.player.lastSafeY = this.player.y;
+  game.js:2104:                        }
+  game.js:2105:                    } else if (this.player.vy < 0) {
+  game.js:2106:                        this.player.y = (r + 1) * TILE_SIZE;
+  game.js:2107:                        this.player.vy = 0;
+  game.js:2108:                        this.triggerCeilingBump(c, r);
+  game.js:2109:                    }
+  game.js:2110:                }
+  game.js:2111:            }
+  game.js:2112:        }
+  game.js:2113:
+  game.js:2114:        if (this.player.x < 0) {
+  game.js:2115:            this.player.x = 0;
+  game.js:2116:            this.player.vx = 0;
+  game.js:2117:        }
+  game.js:2118:        if (this.player.y > 540) this.damagePlayer();
+  game.js:2119:    }
+  game.js:2120:
+  game.js:2121:    triggerCeilingBump(col, row) {
+  game.js:2130:        else if (tile === TILES.REWARD) {
+  game.js:2131:            this.levelGrid[row][col] = TILES.SPENT_REWARD;
+  game.js:2132:            
+> game.js:2133:            // Strike block: pop out Lava Flower powerup (or coin occasionally)
+  game.js:2134:            const cx = col * TILE_SIZE;
+  game.js:2135:            const cy = row * TILE_SIZE;
+  game.js:2136:            
+  game.js:2137:            if (!this.player.poweredUp) {
+  game.js:2138:                synth.playVictory();
+> game.js:2139:                this.flowers.push(new LavaFlower(cx, cy));
+  game.js:2140:                this.showToast("POWERUP RELEASED!");
+  game.js:2141:            } else {
+  game.js:2142:                synth.playCollect();
+  game.js:2143:                this.player.coins++;
+  game.js:2144:                this.player.score += 100;
+  game.js:2145:                for (let i = 0; i < 8; i++) particles.spawnEmber(cx + TILE_SIZE/2, cy);
+  game.js:2146:                this.updateHUD();
+  game.js:2147:                this.showToast("+1 BONUS SOUL!");
+  game.js:2148:            }
+  game.js:2149:        }
+  game.js:2150:    }
+  game.js:2151:
+  game.js:2152:    damagePlayer() {
+  game.js:2153:        if (this.player.invulTimer > 0) return;
+  game.js:2154:
+  game.js:2155:        // If powered up, lose fireball power but stay alive! (Nintendo style)
+  game.js:2156:        if (this.player.poweredUp) {
+  game.js:2157:            this.player.poweredUp = false;
+  game.js:2158:            synth.playDamage();
+  game.js:2159:            this.player.invulTimer = 90;
+  game.js:2248:            }
+  game.js:2249:        });
+  game.js:2250:
+> game.js:2251:        // 2. Lava Flower collections (Fire Suit Power-up)
+  game.js:2252:        this.flowers.forEach(flower => {
+  game.js:2253:            if (flower.collected) return;
+  game.js:2254:            // AABB overlapping
+  game.js:2255:            const hitX = px < flower.x + 30 && px + pw > flower.x;
+  game.js:2256:            const hitY = py < flower.y + 30 && py + ph > flower.y;
+  game.js:2257:            if (hitX && hitY) {
+  game.js:2258:                flower.collected = true;
+  game.js:2259:                this.player.poweredUp = true;
+  game.js:2260:                this.player.score += 500;
+  game.js:2261:                synth.playVictory(); // Epic chime chords
+  game.js:2262:                this.updateHUD();
+  game.js:2263:                this.showToast("FIRE HEXLY MORPHED!");
+  game.js:2264:                
+  game.js:2265:                // Spawn sparkling embers
+  game.js:2266:                for (let i = 0; i < 15; i++) {
+  game.js:2267:                    particles.spawnEmber(flower.x + 15, flower.y + 15);
+  game.js:2268:                }
+  game.js:2269:            }
+  game.js:2270:        });
+  game.js:2271:
+  game.js:2304:            }
+  game.js:2305:        }
+  game.js:2306:
+> game.js:2307:        // 5. Lava Hazard intersection checks
+  game.js:2308:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2309:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+> game.js:2310:                if (this.getTile(c, r) === TILES.LAVA) {
+  game.js:2311:                    this.damagePlayer();
+  game.js:2312:                    return;
+  game.js:2313:                }
+  game.js:2314:            }
+  game.js:2315:        }
+  game.js:2316:    }
+  game.js:2317:
+  game.js:2318:    getTile(col, row) {
+  game.js:2319:        if (col < 0 || col >= this.levelGrid[0].length || row < 0 || row >= 12) return TILES.EMPTY;
+  game.js:2320:        return this.levelGrid[row][col];
+  game.js:2321:    }
+  game.js:2322:
+  game.js:2323:    isSolid(tile) {
+  game.js:2324:        return tile === TILES.GROUND || 
+  game.js:2325:               tile === TILES.PLATFORM || 
+  game.js:2326:               tile === TILES.BREAKABLE || 
+  game.js:2327:               tile === TILES.REWARD || 
+  game.js:2328:               tile === TILES.SPENT_REWARD;
+  game.js:2329:    }
+  game.js:2330:
+  game.js:2420:            return;
+  game.js:2421:        }
+  game.js:2422:        else if (type === TILES.SPENT_REWARD) matrix = SPRITES.TILES.SPENT;
+> game.js:2423:        else if (type === TILES.LAVA) {
+> game.js:2424:            // Slow 3-frame downward waterfall animation (18 ticks per frame = sluggish lava)
+  game.js:2425:            const frame = Math.floor(this.frameCounter / 18) % 3;
+> game.js:2426:            if (frame === 0) matrix = SPRITES.TILES.LAVA_A;
+> game.js:2427:            else if (frame === 1) matrix = SPRITES.TILES.LAVA_B;
+> game.js:2428:            else matrix = SPRITES.TILES.LAVA_C;
+  game.js:2429:        }
+  game.js:2430:        else if (type === TILES.PORTAL) {
+  game.js:2431:            if (portalImgLoaded) {
+  game.js:2432:                const pw = 150;
+  game.js:2433:                const ph = 240;
+  game.js:2434:                const px2 = x + (TILE_SIZE - pw) / 2;
+  game.js:2435:                const py2 = y - ph + TILE_SIZE + 20; // push down visually to touch the ground
+  game.js:2436:
+  game.js:2437:                // --- 2-frame color-dodge glow animation ---
+  game.js:2438:                // Frame 0 (ticks 0-19): base hot-red glow
+  game.js:2439:                // Frame 1 (ticks 20-39): bright energy surge with lighter blend
+  game.js:2440:                const glowFrame = Math.floor(this.frameCounter / 20) % 2;
+  game.js:2441:
+  game.js:2442:                // Smooth pulse factor using sine wave (010 over 40 ticks)
+  game.js:2443:                const pulseSin = (Math.sin(this.frameCounter * (Math.PI / 20)) + 1) / 2; // 0..1
+  game.js:2444:
+  game.js:2445:                this.ctx.save();
+  game.js:2446:
+  game.js:2447:                // Layer 1 - base portal image with animated shadow glow
+  game.js:2448:                this.ctx.shadowColor = glowFrame === 0 ? '#ff3300' : '#ff9900';
+
+

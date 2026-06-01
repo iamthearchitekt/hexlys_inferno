@@ -1,0 +1,44 @@
+At line:1 char:6
++ cat << 'EOF' > revert_level.js
++      ~
+Missing file specification after redirection operator.
+At line:1 char:5
++ cat << 'EOF' > revert_level.js
++     ~
+The '<' operator is reserved for future use.
+At line:1 char:6
++ cat << 'EOF' > revert_level.js
++      ~
+The '<' operator is reserved for future use.
+At line:6 char:48
++ gameCode = gameCode.replace(/this\.height = 630;/g, 'this.height = 54 ...
++                                                ~
+Missing closing ')' in expression.
+At line:6 char:51
++ gameCode = gameCode.replace(/this\.height = 630;/g, 'this.height = 54 ...
++                                                   ~
+Missing argument in parameter list.
+At line:6 char:73
++ ... ode = gameCode.replace(/this\.height = 630;/g, 'this.height = 540;');
++                                                                        ~
+Unexpected token ')' in expression or statement.
+At line:8 char:32
++ gameCode = gameCode.replace(/r < 14/g, 'r < 12');
++                                ~
+The '<' operator is reserved for future use.
+At line:8 char:38
++ gameCode = gameCode.replace(/r < 14/g, 'r < 12');
++                                      ~
+Missing argument in parameter list.
+At line:9 char:39
++ gameCode = gameCode.replace(/y > 630/g, 'y > 540');
++                                       ~
+Missing argument in parameter list.
+At line:10 char:45
++ gameCode = gameCode.replace(/this\.y > 630/g, 'this.y > 540');
++                                             ~
+Missing argument in parameter list.
+Not all parse errors were reported.  Correct the reported errors and try again.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingFileSpecification
+ 

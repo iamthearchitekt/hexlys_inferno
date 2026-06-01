@@ -1,0 +1,127 @@
+
+  game.js:1259:            const hitX = this.x < player.x + player.width  && this.x + this.width  > player.x;
+  game.js:1260:            const hitY = this.y < player.y + player.height && this.y + this.height > player.y;
+  game.js:1261:            if (hitX && hitY) {
+  game.js:1262:                this.dead = true;
+  game.js:1263:                this.spawnExplosion();
+> game.js:1264:                engine.damagePlayer();
+  game.js:1265:                return;
+  game.js:1266:            }
+  game.js:1267:        }
+  game.js:1268:
+  game.js:1269:        // Despawn off left edge
+  game.js:1270:        if (this.x + this.width < engine.camera.x - 60) {
+  game.js:1271:            this.dead = true;
+  game.js:1272:        }
+  game.js:1273:    }
+  game.js:1274:
+  game.js:1275:    spawnExplosion() {
+  game.js:1276:        for (let i = 0; i < 12; i++) {
+  game.js:1277:            const angle = Math.random() * Math.PI * 2;
+  game.js:1278:            const spd   = Math.random() * 3.5 + 1;
+  game.js:1279:            particles.add(new Particle(
+  game.js:1280:                this.x + this.width  / 2,
+  game.js:1281:                this.y + this.height / 2,
+  game.js:1282:                Math.cos(angle) * spd,
+  game.js:1283:                Math.sin(angle) * spd,
+  game.js:1284:                ['#ff4400', '#ff8800', '#ffdd00', '#ffffff'][Math.floor(Math.random() * 4)],
+  game.js:2109:
+  game.js:2110:        if (this.player.x < 0) {
+  game.js:2111:            this.player.x = 0;
+  game.js:2112:            this.player.vx = 0;
+  game.js:2113:        }
+> game.js:2114:        if (this.player.y > 540) this.damagePlayer();
+  game.js:2115:    }
+  game.js:2116:
+  game.js:2117:    triggerCeilingBump(col, row) {
+  game.js:2118:        const tile = this.levelGrid[row][col];
+  game.js:2119:        if (tile === TILES.BREAKABLE) {
+  game.js:2120:            this.levelGrid[row][col] = TILES.EMPTY;
+  game.js:2121:            synth.playStomp();
+  game.js:2122:            particles.spawnBlockDebris(col * TILE_SIZE + TILE_SIZE/2, row * TILE_SIZE + TILE_SIZE/2);
+  game.js:2123:            this.player.score += 15;
+  game.js:2124:            this.updateHUD();
+  game.js:2125:        } 
+  game.js:2126:        else if (tile === TILES.REWARD) {
+  game.js:2127:            this.levelGrid[row][col] = TILES.SPENT_REWARD;
+  game.js:2128:            
+  game.js:2129:            // Strike block: pop out Lava Flower powerup (or coin occasionally)
+  game.js:2130:            const cx = col * TILE_SIZE;
+  game.js:2131:            const cy = row * TILE_SIZE;
+  game.js:2132:            
+  game.js:2133:            if (!this.player.poweredUp) {
+  game.js:2134:                synth.playVictory();
+  game.js:2143:                this.showToast("+1 BONUS SOUL!");
+  game.js:2144:            }
+  game.js:2145:        }
+  game.js:2146:    }
+  game.js:2147:
+> game.js:2148:    damagePlayer() {
+  game.js:2149:        if (this.player.invulTimer > 0) return;
+  game.js:2150:
+  game.js:2151:        // If powered up, lose fireball power but stay alive! (Nintendo style)
+  game.js:2152:        if (this.player.poweredUp) {
+  game.js:2153:            this.player.poweredUp = false;
+  game.js:2154:            synth.playDamage();
+  game.js:2155:            this.player.invulTimer = 90;
+  game.js:2156:            this.player.hurtTimer = 25;
+  game.js:2157:            this.player.vy = -6.0;
+  game.js:2158:            this.player.vx = -this.player.direction * 3.5;
+  game.js:2159:            this.player.grounded = false;
+  game.js:2160:            this.showToast("POWER LOST!");
+  game.js:2161:            return;
+  game.js:2162:        }
+  game.js:2163:
+  game.js:2164:        this.player.health--;
+  game.js:2165:        this.updateHUD();
+  game.js:2166:        synth.playDamage();
+  game.js:2167:        this.player.invulTimer = 90;
+  game.js:2168:        this.player.hurtTimer = 25;
+  game.js:2267:                    this.player.score += 150;
+  game.js:2268:                    synth.playStomp();
+  game.js:2269:                    this.updateHUD();
+  game.js:2270:                    particles.spawnStompExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+  game.js:2271:                } else {
+> game.js:2272:                    this.damagePlayer();
+  game.js:2273:                }
+  game.js:2274:            }
+  game.js:2275:        });
+  game.js:2276:
+  game.js:2277:        // 4. Portal Goal check
+  game.js:2278:        const bounds = this.getTileBounds(px, py, pw, ph);
+  game.js:2279:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2280:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2281:                if (this.getTile(c, r) === TILES.PORTAL) {
+  game.js:2282:                    this.triggerVictory();
+  game.js:2283:                    return;
+  game.js:2284:                }
+  game.js:2285:            }
+  game.js:2286:        }
+  game.js:2287:
+  game.js:2288:        // 5. Lava Hazard intersection checks
+  game.js:2289:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2290:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2291:                if (this.getTile(c, r) === TILES.LAVA) {
+> game.js:2292:                    this.damagePlayer();
+  game.js:2293:                    return;
+  game.js:2294:                }
+  game.js:2295:            }
+  game.js:2296:        }
+  game.js:2297:    }
+  game.js:2298:
+  game.js:2299:    getTile(col, row) {
+  game.js:2300:        if (col < 0 || col >= this.levelGrid[0].length || row < 0 || row >= 12) return TILES.EMPTY;
+  game.js:2301:        return this.levelGrid[row][col];
+  game.js:2302:    }
+  game.js:2303:
+  game.js:2304:    isSolid(tile) {
+  game.js:2305:        return tile === TILES.GROUND || 
+  game.js:2306:               tile === TILES.PLATFORM || 
+  game.js:2307:               tile === TILES.BREAKABLE || 
+  game.js:2308:               tile === TILES.REWARD || 
+  game.js:2309:               tile === TILES.SPENT_REWARD;
+  game.js:2310:    }
+  game.js:2311:
+  game.js:2312:    getTileBounds(x, y, w, h) {
+
+

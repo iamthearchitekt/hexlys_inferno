@@ -1,0 +1,17 @@
+
+  game.js:2317:    // ----------------------------------------------------
+  game.js:2318:    // 12. CANVAS DRAW RENDER PIPELINE
+  game.js:2319:    // ----------------------------------------------------
+> game.js:2320:    render() {
+  game.js:2321:        this.ctx.fillStyle = '#000000';
+  game.js:2322:        this.ctx.fillRect(0, 0, this.width, this.height);
+  game.js:2323:
+  game.js:2324:        // 2-Layer Wasteland Background scrolling
+  game.js:2325:        this.background.draw(this.ctx, Math.round(this.camera.x));
+  game.js:2326:
+  game.js:2327:        this.ctx.save();
+  game.js:2328:        this.ctx.translate(-Math.round(this.camera.x), 0);
+  game.js:2329:
+  game.js:2330:        // Draw physical grid blocks (Scale 4.5x = 45px grids!)
+
+

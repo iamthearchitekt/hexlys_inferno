@@ -1,0 +1,21 @@
+
+game.js:1376:        this.animTimer = 0;   // counts up each update tick
+game.js:1431:        this.animTimer++;
+game.js:1432:        if (this.animTimer >= this.animSpeed) {
+game.js:1433:            this.animTimer = 0;
+game.js:1436:        // Guard against overflow of animTimer (unlikely but safe)
+game.js:1437:        if (this.animTimer > 1000) this.animTimer = 0;
+game.js:1634:            animTime: 0,
+game.js:1876:            p.animTime += 0.012 * Math.abs(p.vx);
+game.js:1878:            p.animTime = 0;
+game.js:1880:        // Prevent animTime from growing without bound (which can cause floating-point slowdown)
+game.js:1881:        if (p.animTime > 1000) p.animTime = 0;
+game.js:2470:                const walkFrame = Math.floor(p.animTime) % 2;
+game.js:2523:                const bounce = Math.abs(Math.sin(p.animTime * 2.2)) * 8;
+game.js:2532:                ctx.shadowBlur = 12 + Math.sin(p.animTime * 1.2) * 8;
+game.js:2558:                ctx.globalAlpha = 0.28 + Math.sin(p.animTime * 1.2) * 0.18;
+game.js:2561:                const pulseScale = 1.04 + Math.sin(p.animTime * 1.2) * 0.02;
+game.js:2589:                const runCycle = Math.floor(p.animTime * 2.5) % 2;
+game.js:2603:                ctx.globalAlpha = 0.28 + Math.sin(p.animTime * 6) * 0.18;
+
+

@@ -1,0 +1,39 @@
+
+  game.js:1749:        this.player.coins = 0;
+  game.js:1750:        this.player.poweredUp = false; // Reset fireball morph
+> game.js:1751:        this.player.grounded = false;
+  game.js:1752:        this.player.invulTimer = 0;
+  game.js:1753:        this.player.hurtTimer = 0;
+  game.js:1955:            synth.playJump();
+  game.js:1956:            this.player.vy = this.physics.jumpForce;
+> game.js:1957:            this.player.grounded = false;
+  game.js:1958:            this.player.coyoteTimer = 0;
+  game.js:1959:            this.player.jumpBufferTimer = 0;
+  game.js:2057:    resolveCollisions() {
+  game.js:2058:        this.player.x += this.player.vx;
+> game.js:2059:        this.player.grounded = false;
+  game.js:2060:
+  game.js:2061:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2084:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2085:                        this.player.vy = 0;
+> game.js:2086:                        this.player.grounded = true;
+  game.js:2087:                        
+  game.js:2088:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM) {
+  game.js:2148:            this.player.vy = -6.0;
+  game.js:2149:            this.player.vx = -this.player.direction * 3.5;
+> game.js:2150:            this.player.grounded = false;
+  game.js:2151:            this.showToast("POWER LOST!");
+  game.js:2152:            return;
+  game.js:2161:        this.player.vy = -6.0;
+  game.js:2162:        this.player.vx = -this.player.direction * 3.5;
+> game.js:2163:        this.player.grounded = false;
+  game.js:2164:
+  game.js:2165:        const cabinet = document.getElementById('arcade-cabinet');
+  game.js:2188:                    this.player.invulTimer = 120; // 2-second grace period
+  game.js:2189:                    this.player.hurtTimer  = 0;
+> game.js:2190:                    this.player.grounded   = false;
+  game.js:2191:                    this.camera.x = 0;
+  game.js:2192:                    this.camera.targetX = 0;
+
+

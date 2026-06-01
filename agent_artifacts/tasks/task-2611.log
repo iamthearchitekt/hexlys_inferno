@@ -1,0 +1,9 @@
+Get-Content : Cannot find path 'C:\Users\Michael\.gemini\antigravity\brain\17c2b188-c1e8-41c3-8b2a-6ec026076445\.system
+_generated\tasks\task-2605.log' because it does not exist.
+At line:1 char:1
++ Get-Content C:\Users\Michael\.gemini\antigravity\brain\17c2b188-c1e8- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\Michae...s\task-2605.log:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 

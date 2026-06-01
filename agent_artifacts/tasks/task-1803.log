@@ -1,0 +1,44 @@
+At line:1 char:6
++ cat << 'EOF' > patch_debug.js
++      ~
+Missing file specification after redirection operator.
+At line:1 char:5
++ cat << 'EOF' > patch_debug.js
++     ~
+The '<' operator is reserved for future use.
+At line:1 char:6
++ cat << 'EOF' > patch_debug.js
++      ~
+The '<' operator is reserved for future use.
+At line:9 char:41
++         this.ctx.fillText("Grounded: " + p.grounded + " VY: " + p.vy. ...
++                                         ~
+You must provide a value expression following the '+' operator.
+At line:9 char:42
++         this.ctx.fillText("Grounded: " + p.grounded + " VY: " + p.vy. ...
++                                          ~~~~~~~~~~
+Unexpected token 'p.grounded' in expression or statement.
+At line:9 char:41
++         this.ctx.fillText("Grounded: " + p.grounded + " VY: " + p.vy. ...
++                                         ~
+Missing closing ')' in expression.
+At line:9 char:111
++ ... grounded + " VY: " + p.vy.toFixed(2), p.x - this.camera.x, p.y - 20);
++                                                                        ~
+Unexpected token ')' in expression or statement.
+At line:10 char:137
++ ... MP" : (currentHexlyImg === hexlyWalk2Img ? "WALK" : "IDLE")), p.x - t ...
++                                                                  ~
+Missing expression after ','.
+At line:10 char:138
++ ... : (currentHexlyImg === hexlyWalk2Img ? "WALK" : "IDLE")), p.x - this. ...
++                                                               ~~~
+Unexpected token 'p.x' in expression or statement.
+At line:10 char:137
++ ... MP" : (currentHexlyImg === hexlyWalk2Img ? "WALK" : "IDLE")), p.x - t ...
++                                                                  ~
+Missing closing ')' in expression.
+Not all parse errors were reported.  Correct the reported errors and try again.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingFileSpecification
+ 

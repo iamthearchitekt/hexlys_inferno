@@ -1,0 +1,10 @@
+
+  game.js:1914:            if (wantCrouch) {
+  game.js:1915:                p.crouching = true;
+  game.js:1916:                p.height = 45;
+> game.js:1917:                p.y += 45;
+  game.js:1918:            }
+  game.js:1919:        }
+  game.js:1920:
+
+

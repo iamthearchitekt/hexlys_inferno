@@ -1,0 +1,24 @@
+
+> game.js:102:const PALETTE = {
+  game.js:103:    '.': 'transparent',
+  game.js:104:    'b': '#000000',       /* Pitch Black */
+  game.js:105:    'w': '#ffffff',       /* Bright Retro White */
+  game.js:106:    'r': '#e61e29',       /* Molten Red */
+  game.js:107:    'd': '#990012',       /* Dark Shadow Red */
+  game.js:108:    'l': '#ff5a67',       /* Highlight Pink-Red */
+  game.js:109:    'y': '#f7be00',       /* Glowing Yellow */
+  game.js:110:    'o': '#f95700',       /* Hot Ember Orange */
+  game.js:111:    'p': '#c4001a',       /* Volcanic Demonic Red (Swapped from Purple) */
+  game.js:112:    'm': '#ff6a00',       /* Hot Magma Orange (Swapped from Purple) */
+  game.js:113:    'g': '#eae4cb',       /* Bone Gray/White */
+  game.js:114:    's': '#544e47',       /* Warm Basalt Gray (Swapped from Purplish Gray) */
+  game.js:115:    'c': '#3a3530',        /* Dark Shadow Basalt Gray (Swapped from Purplish Gray) */
+  game.js:116:    'e': '#4a2c11',        /* Deep charred brown earth */
+  game.js:117:    'f': '#78441b',        /* Scorched medium brown earth */
+  game.js:118:    'q': '#a06637',        /* Light toasted clay/brown earth surface */
+  game.js:119:    'h': '#241407'         /* Deepest charred blackish-brown cracks */
+  game.js:120:};
+  game.js:121:
+  game.js:122:/**
+
+

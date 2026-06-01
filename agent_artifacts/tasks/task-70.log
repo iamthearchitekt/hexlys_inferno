@@ -1,0 +1,210 @@
+::1 - - [01/Jun/2026 11:57:07] "GET / HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 11:57:07] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 11:57:07] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 11:57:08] code 404, message File not found
+::1 - - [01/Jun/2026 11:57:08] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 11:57:10] code 404, message File not found
+::1 - - [01/Jun/2026 11:57:10] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:04:36] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:04:36] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:04:36] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:04:39] code 404, message File not found
+::1 - - [01/Jun/2026 12:04:39] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:08:21] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:08:21] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:08:21] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:09:46] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:09:46] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:11:41] code 404, message File not found
+::1 - - [01/Jun/2026 12:11:41] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:12:26] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:12:26] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:12:26] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:12:28] code 404, message File not found
+::1 - - [01/Jun/2026 12:12:28] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:13:40] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:13:40] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:13:40] "GET /hexly.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:13:42] code 404, message File not found
+::1 - - [01/Jun/2026 12:13:42] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:14:20] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:14:20] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:14:20] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:14:20] "GET /background.jpg HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:14:21] code 404, message File not found
+::1 - - [01/Jun/2026 12:14:21] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:14:45] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:14:45] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:14:45] "GET /background.jpg HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:14:46] code 404, message File not found
+::1 - - [01/Jun/2026 12:14:46] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:18:18] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:18:18] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:18:18] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:18:18] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:18:18] "GET /background.jpg HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:18:19] code 404, message File not found
+::1 - - [01/Jun/2026 12:18:19] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:21:09] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:21:09] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:21:09] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:21:09] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:21:09] "GET /background.jpg HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:21:10] code 404, message File not found
+::1 - - [01/Jun/2026 12:21:10] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:34:52] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:34:52] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:34:52] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:34:52] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:34:52] "GET /skeleton.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:34:52] "GET /background.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:34:54] code 404, message File not found
+::1 - - [01/Jun/2026 12:34:54] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:35:52] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:35:52] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:35:52] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:35:52] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:35:54] code 404, message File not found
+::1 - - [01/Jun/2026 12:35:54] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:36:19] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:36:19] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:36:19] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:36:20] code 404, message File not found
+::1 - - [01/Jun/2026 12:36:20] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:36:59] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:36:59] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:36:59] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:00] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:00] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:01] code 404, message File not found
+::1 - - [01/Jun/2026 12:37:01] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:37:29] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:29] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:29] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:37:29] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:39:40] code 404, message File not found
+::1 - - [01/Jun/2026 12:39:40] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:40:07] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:07] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:07] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:40:07] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:07] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:07] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:08] code 404, message File not found
+::1 - - [01/Jun/2026 12:40:08] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:40:39] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:39] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:40:50] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:50] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:50] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:40:52] code 404, message File not found
+::1 - - [01/Jun/2026 12:40:52] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:45:48] "GET / HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:45:48] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:45:48] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:45:48] "GET /start.mp4 HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:45:48] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:45:48] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:45:48] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:46:35] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:46:35] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:46:35] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:46:35] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:46:38] "GET / HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:46:38] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:40] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:40] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:50:40] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:50:40] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:40] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:40] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:40] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:50:43] code 404, message File not found
+::1 - - [01/Jun/2026 12:50:43] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:51:40] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:51:40] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:51:40] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:51:40] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:51:42] code 404, message File not found
+::1 - - [01/Jun/2026 12:51:42] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:55:37] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:40] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:40] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:40] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:55:40] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:40] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:40] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:55:41] code 404, message File not found
+::1 - - [01/Jun/2026 12:55:41] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 12:59:06] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:59:06] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:59:06] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 12:59:06] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:59:06] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:59:06] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 12:59:09] code 404, message File not found
+::1 - - [01/Jun/2026 12:59:09] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:00:07] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:00:07] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:00:08] "GET /flame.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:00:10] code 404, message File not found
+::1 - - [01/Jun/2026 13:00:10] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:11:44] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:11:52] "GET / HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:11:52] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:11:52] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:11:52] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:11:52] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:11:52] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:11:52] "GET /flame.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:11:53] code 404, message File not found
+::1 - - [01/Jun/2026 13:11:53] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:13:35] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:13:35] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:13:35] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:13:35] "GET /flame.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:13:35] "GET /portal.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:13:35] "GET /fireball.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:13:35] "GET /enemy_fireball.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:13:35] "GET /powerup.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:13:40] code 404, message File not found
+::1 - - [01/Jun/2026 13:13:40] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:15:06] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:15:08] "GET /flame.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /portal.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /fireball.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /enemy_fireball.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:08] "GET /powerup.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:15:10] code 404, message File not found
+::1 - - [01/Jun/2026 13:15:10] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:19:22] "GET /start.mp4 HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:19:24] "GET /flame.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /skeleton.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /portal.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /hexly.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /background.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /fireball.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /powerup.png HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:19:24] "GET /enemy_fireball.png HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:19:25] code 404, message File not found
+::1 - - [01/Jun/2026 13:19:25] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [01/Jun/2026 13:20:33] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:20:33] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:21:17] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:21:17] "GET /style.css HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:21:17] "GET /game.js HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:21:22] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:18] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:18] "GET /game.js HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:22:19] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:19] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:20] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:53] "GET / HTTP/1.1" 304 -
+::1 - - [01/Jun/2026 13:22:53] "GET /style.css HTTP/1.1" 200 -
+::1 - - [01/Jun/2026 13:22:53] "GET /game.js HTTP/1.1" 200 -

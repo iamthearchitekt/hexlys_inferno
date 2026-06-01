@@ -1,0 +1,130 @@
+
+  game.js:1951:            this.player.coyoteTimer = this.physics.coyoteDuration;
+  game.js:1952:        }
+  game.js:1953:
+  game.js:1954:        if (this.player.jumpBufferTimer > 0 && this.player.coyoteTimer > 0) {
+  game.js:1955:            synth.playJump();
+  game.js:1956:            this.player.vy = this.physics.jumpForce;
+  game.js:1957:            this.player.grounded = false;
+  game.js:1958:            this.player.coyoteTimer = 0;
+  game.js:1959:            this.player.jumpBufferTimer = 0;
+  game.js:1960:            particles.spawnJumpDust(this.player.x + this.player.width / 2, this.player.y + 
+this.player.height);
+  game.js:1961:        }
+  game.js:1962:
+  game.js:1963:        if (!this.input.jump && this.player.vy < -2.0) {
+  game.js:1964:            this.player.vy = -2.0;
+  game.js:1965:        }
+  game.js:1966:
+  game.js:1967:        if (this.player.vy > this.physics.maxFallSpeed) {
+  game.js:1968:            this.player.vy = this.physics.maxFallSpeed;
+  game.js:1969:        }
+  game.js:1970:
+  game.js:1971:        // 4. Bouncing Fireball shooting logic
+  game.js:1972:        if (this.input.shootPressed && this.player.poweredUp) {
+  game.js:1973:            if (this.fireballs.length < 2) { // Max 2 active fireballs
+  game.js:1974:                synth.playFireball();
+  game.js:1975:                const fx = this.player.x + (this.player.direction === 1 ? this.player.width : -12);
+  game.js:1976:                const fy = this.player.y + 15;
+  game.js:1977:                this.fireballs.push(new Fireball(fx, fy, this.player.direction * 6.5, 1.0));
+  game.js:1978:            }
+  game.js:1979:        }
+  game.js:1980:
+> game.js:1981:        this.resolveCollisions();
+  game.js:1982:
+  game.js:1983:        // 5. Ambient embers and bubbling lava
+  game.js:1984:        if (this.frameCounter % 15 === 0) {
+  game.js:1985:            const rColX = Math.floor(Math.random() * this.levelGrid[0].length);
+  game.js:1986:            for (let y = 9; y < 12; y++) {
+  game.js:1987:                if (this.levelGrid[y] && this.levelGrid[y][rColX] === TILES.LAVA) {
+  game.js:1988:                    particles.spawnLavaBubble(rColX * TILE_SIZE + Math.random() * TILE_SIZE, y * 
+TILE_SIZE + 2);
+  game.js:1989:                    break;
+  game.js:1990:                }
+  game.js:1991:            }
+  game.js:1992:        }
+  game.js:1993:        if (this.frameCounter % 6 === 0) {
+  game.js:1994:            const sX = this.camera.x + Math.random() * this.width;
+  game.js:1995:            particles.spawnEmber(sX, 100 + Math.random() * 300);
+  game.js:1996:        }
+  game.js:1997:
+  game.js:1998:        // 6. Entity Updates
+  game.js:1999:        this.coins.forEach(coin => coin.update(this.frameCounter));
+  game.js:2000:        this.enemies.forEach(enemy => enemy.update(this.levelGrid));
+  game.js:2001:        this.flowers.forEach(flower => flower.update());
+  game.js:2002:        
+  game.js:2003:        for (let i = this.fireballs.length - 1; i >= 0; i--) {
+  game.js:2004:            const fb = this.fireballs[i];
+  game.js:2005:            fb.update(this);
+  game.js:2006:            if (fb.dead) this.fireballs.splice(i, 1);
+  game.js:2007:        }
+  game.js:2008:
+  game.js:2009:        // 6b. Enemy fireball spawning (Bowser-style, every 4-8 seconds)
+  game.js:2010:        this.enemyFireballTimer--;
+  game.js:2011:        if (this.enemyFireballTimer <= 0) {
+  game.js:2027:                this.enemyFireballs.splice(i, 1);
+  game.js:2028:                continue;
+  game.js:2029:            }
+  game.js:2030:            // Player fireballs can destroy enemy fireballs
+  game.js:2031:            for (let j = this.fireballs.length - 1; j >= 0; j--) {
+  game.js:2032:                const pf = this.fireballs[j];
+  game.js:2033:                if (pf.dead) continue;
+  game.js:2034:                const hitX = pf.x < ef.x + ef.width && pf.x + pf.width > ef.x;
+  game.js:2035:                const hitY = pf.y < ef.y + ef.height && pf.y + pf.height > ef.y;
+  game.js:2036:                if (hitX && hitY) {
+  game.js:2037:                    ef.dead = true;
+  game.js:2038:                    pf.dead = true;
+  game.js:2039:                    this.player.score += 200;
+  game.js:2040:                    this.updateHUD();
+  game.js:2041:                    ef.spawnExplosion();
+  game.js:2042:                    break;
+  game.js:2043:                }
+  game.js:2044:            }
+  game.js:2045:        }
+  game.js:2046:
+  game.js:2047:        this.resolveInteractions();
+  game.js:2048:
+  game.js:2049:        // 7. Stable Lockstep Camera Follow - Hard-locked to player integer position to mathematically 
+eliminate all pixel judder
+  game.js:2050:        const targetX = Math.round(this.player.x) - 441;
+  game.js:2051:        const maxScroll = (this.levelGrid[0].length * TILE_SIZE) - this.width;
+  game.js:2052:        this.camera.x = Math.max(0, Math.min(targetX, maxScroll));
+  game.js:2053:
+  game.js:2054:        this.input.clearFrameTriggers();
+  game.js:2055:    }
+  game.js:2056:
+> game.js:2057:    resolveCollisions() {
+  game.js:2058:        this.player.x += this.player.vx;
+  game.js:2059:        this.player.grounded = false;
+  game.js:2060:
+  game.js:2061:        let bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2062:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2063:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2064:                const t = this.getTile(c, r);
+  game.js:2065:                if (this.isSolid(t)) {
+  game.js:2066:                    if (this.player.vx > 0) {
+  game.js:2067:                        this.player.x = c * TILE_SIZE - this.player.width;
+  game.js:2068:                        this.player.vx = 0;
+  game.js:2069:                    } else if (this.player.vx < 0) {
+  game.js:2070:                        this.player.x = (c + 1) * TILE_SIZE;
+  game.js:2071:                        this.player.vx = 0;
+  game.js:2072:                    }
+  game.js:2073:                }
+  game.js:2074:            }
+  game.js:2075:        }
+  game.js:2076:
+  game.js:2077:        this.player.y += this.player.vy;
+  game.js:2078:        bounds = this.getTileBounds(this.player.x, this.player.y, this.player.width, 
+this.player.height);
+  game.js:2079:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:2080:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:2081:                const t = this.getTile(c, r);
+  game.js:2082:                if (this.isSolid(t)) {
+  game.js:2083:                    if (this.player.vy > 0) {
+  game.js:2084:                        this.player.y = r * TILE_SIZE - this.player.height;
+  game.js:2085:                        this.player.vy = 0;
+  game.js:2086:                        this.player.grounded = true;
+  game.js:2087:                        
+
+

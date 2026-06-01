@@ -1,0 +1,45 @@
+
+> game.js:1605:        this.levelGrid = [];
+  game.js:1606:        this.enemies = [];
+  game.js:1607:        this.coins = [];
+  game.js:1608:        this.fireballs = [];
+  game.js:1609:        this.enemyFireballs = [];  // Bowser-style hazard fireballs
+  game.js:1610:        this.flowers = []; // Collectible powerups array
+  game.js:1611:        this.enemyFireballTimer = 0;  // Countdown to next enemy fireball spawn
+  game.js:1612:
+  game.js:1613:        // Hexly configuration parameters (Size 78x90px - Super-sized 2 tiles tall!)
+  game.js:1614:        this.player = {
+  game.js:1615:            x: 0,
+  game.js:1616:            y: 0,
+  game.js:1617:            width: 78,
+  game.js:1618:            height: 90,
+  game.js:1619:            vx: 0,
+  game.js:1620:            vy: 0,
+  game.js:1621:            grounded: false,
+  game.js:1622:            health: 3,
+  game.js:1623:            maxHealth: 3,
+  game.js:1624:            score: 0,
+  game.js:1625:            coins: 0,
+> game.js:1688:        this.levelGrid = [];
+  game.js:1689:        this.enemies = [];
+  game.js:1690:        this.coins = [];
+  game.js:1691:        this.fireballs = [];
+  game.js:1692:        this.enemyFireballs = [];
+  game.js:1693:        this.flowers = [];
+  game.js:1694:        this.enemyFireballTimer = 300; // First spawn after 5 seconds
+  game.js:1695:
+  game.js:1696:        let shardCount = 0;
+  game.js:1697:        for (let r = 0; r < LEVEL_DATA.length; r++) {
+  game.js:1698:            this.levelGrid[r] = [];
+  game.js:1699:            for (let c = 0; c < LEVEL_DATA[r].length; c++) {
+  game.js:1700:                const cell = LEVEL_DATA[r][c];
+  game.js:1701:                
+  game.js:1702:                if (cell === 7) {
+  game.js:1703:                    // Spawns 33% of the mapped shards in a 100% deterministic pattern,
+  game.js:1704:                    // ensuring they always spawn in the exact same spots on restart!
+  game.js:1705:                    if (shardCount % 3 === 0) {
+  game.js:1706:                        this.coins.push(new SoulCoin(c * TILE_SIZE, r * TILE_SIZE));
+  game.js:1707:                    }
+  game.js:1708:                    shardCount++;
+
+

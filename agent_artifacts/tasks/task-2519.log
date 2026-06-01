@@ -1,0 +1,59 @@
+
+  game.js:1202:        for (let row = bounds.minY; row <= bounds.maxY; row++) {
+  game.js:1203:            for (let col = bounds.minX; col <= bounds.maxX; col++) {
+  game.js:1204:                const tile = this.getTile(col, row, levelGrid);
+> game.js:1205:                if (tile === TILES.GROUND || tile === TILES.PLATFORM || tile === TILES.BREAKABLE || 
+tile === TILES.REWARD || tile === TILES.SPENT_REWARD) {
+  game.js:1206:                    if (this.vy > 0) {
+  game.js:1207:                        // Falling, bounce up
+  game.js:1208:                        this.y = row * TILE_SIZE - this.height;
+  game.js:1209:                        this.vy = -4.5; // Snappy bouncy!
+  game.js:1210:                        this.bounces++;
+  game.js:1274:        for (let r = bounds.minY; r <= bounds.maxY; r++) {
+  game.js:1275:            for (let c = bounds.minX; c <= bounds.maxX; c++) {
+  game.js:1276:                const t = this.getTile(c, r, levelGrid);
+> game.js:1277:                if (t === TILES.GROUND || t === TILES.PLATFORM || t === TILES.BREAKABLE || t === 
+TILES.REWARD || t === TILES.SPENT_REWARD) {
+  game.js:1278:                    return true;
+  game.js:1279:                }
+  game.js:1280:            }
+  game.js:1281:        }
+  game.js:1282:        return false;
+  game.js:1674:        if (this.y > 700) this.dead = true;
+  game.js:1675:    }
+  game.js:1676:    draw(ctx) {
+> game.js:1677:        drawPixelMatrix(ctx, this.x, this.y, SPRITES.TILES.PLATFORM, false, 4.5);
+  game.js:1678:    }
+  game.js:1679:}
+  game.js:1680:
+  game.js:1681:class Boss {
+  game.js:1682:    constructor(x, y) {
+  game.js:2285:                            this.platformTimers[`${c},${r}`] = 120; // 2 seconds
+  game.js:2286:                        }
+  game.js:2287:
+> game.js:2288:                        if (t !== TILES.LAVA && t !== TILES.PLATFORM && t !== TILES.FALLING_PLATFORM) {
+  game.js:2289:                            this.player.lastSafeX = this.player.x;
+  game.js:2290:                            this.player.lastSafeY = this.player.y;
+  game.js:2291:                        }
+  game.js:2292:                    } else if (this.player.vy < 0) {
+  game.js:2293:                        this.player.y = (r + 1) * TILE_SIZE;
+  game.js:2520:
+  game.js:2521:    isSolid(tile) {
+  game.js:2522:        return tile === TILES.GROUND || 
+> game.js:2523:               tile === TILES.PLATFORM || 
+  game.js:2524:               tile === TILES.BREAKABLE || 
+  game.js:2525:               tile === TILES.REWARD || 
+  game.js:2526:               tile === TILES.SPENT_REWARD;
+  game.js:2527:    }
+  game.js:2528:
+  game.js:2590:    drawSingleTile(x, y, type) {
+  game.js:2591:        let matrix = null;
+  game.js:2592:        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
+> game.js:2593:        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
+  game.js:2594:        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+  game.js:2595:        else if (type === TILES.REWARD) {
+  game.js:2596:            // Draw the ground-brown base tile first
+  game.js:2597:            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
+  game.js:2598:            // Pulsing orange-red glow overlay using 'lighter' composite (sin wave 0..1)
+
+
