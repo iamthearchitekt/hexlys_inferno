@@ -1,7 +1,7 @@
 class AudioSynth {
     constructor() {
         this.ctx = null;
-        this._musicEnabled = false; // Temporarily muted for development
+        this._musicEnabled = true; // Re-enabled for production!
         this.sfxEnabled = true;
         this.sfxBuffers = {};
         this.musicBuffer = null;

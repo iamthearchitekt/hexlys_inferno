@@ -1300,6 +1300,10 @@ class GameEngine {
         particles.spawnHexlyVaporizeBlast(this.player.x, this.player.y, this.player.width, this.player.height);
         this.state = 'DYING';
         
+        // Disable star mode if active
+        this.player.superPowered = false;
+        if (typeof synth !== 'undefined' && synth.stopStarMusic) synth.stopStarMusic();
+        
         setTimeout(() => {
             if (this.state === 'DYING') {
                 if (this.player.health <= 0) {
