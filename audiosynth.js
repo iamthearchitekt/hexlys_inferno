@@ -38,6 +38,12 @@ class AudioSynth {
         }
     }
 
+    pause() {
+        if (this.ctx && this.ctx.state === 'running') {
+            this.ctx.suspend();
+        }
+    }
+
     _loadAllSfx() {
         const files = {
             jump:    'sfx/jump.wav',

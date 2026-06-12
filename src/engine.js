@@ -716,12 +716,10 @@ class GameEngine {
     togglePause() {
         if (this.state === 'PLAYING' && !this.isDevMode) {
             this.state = 'PAUSED';
-            // No overlays or text per user request
-            // this.screens.pause.classList.remove('hidden');
+            if (typeof synth !== 'undefined' && synth.pause) synth.pause();
         } else if (this.state === 'PAUSED') {
             this.state = 'PLAYING';
-            // this.screens.pause.classList.add('hidden');
-            synth.resume();
+            if (typeof synth !== 'undefined' && synth.resume) synth.resume();
         }
     }
 
