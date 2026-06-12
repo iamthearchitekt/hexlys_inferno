@@ -1,0 +1,29 @@
+{
+  "name": "hexlys-inferno",
+  "version": "1.0.0",
+  "description": "Retro 2D Platformer Desktop Game",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win"
+  },
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "jimp": "^1.6.1",
+    "puppeteer": "^25.1.0"
+  },
+  "build": {
+    "appId": "com.hexlysinferno.game",
+    "productName": "Hexlys Inferno",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "electron": "^42.4.0",
+    "electron-builder": "^26.15.3"
+  }
+}

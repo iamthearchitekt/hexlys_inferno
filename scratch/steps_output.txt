@@ -1,0 +1,249 @@
+
+================================================================================
+STEP 1919
+================================================================================
+STEP 1919: Tool: multi_replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"1. Add randomized floor tile variations (cracked and stony) to break up the repetitive brick-like look.\\n2. Fix a critical collision bug I discovered where the player could become completely invincible to the Boss if they had a fire flower, because the damage callback was accidentally gated.\"",
+  "Instruction": "\"Add GROUND2 and GROUND3 to SPRITES.TILES, update drawTiles to select between them deterministically using coordinates, and fix the boss collision damage check.\""
+}
+Content size: 2316 chars, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":576,\"ReplacementContent\":\"        GROUND: [\\n            \\\"bbbbbbbbbb\\\",\\n            \\\"bqqfffqqeb\\\",\\n            \\\"bqfhhhfheb\\\",\\n            \\\"bqfheehfeb\\\",\\n            \\\"bqfhhhfheb\\\",\\n            \\\"bqfeeeffeb\\\",\\n            \\\"bqfhhhhheb\\\",\\n            \\\"bqfeeeeeeb\\\",\\n            \\\"bheeeeeehb\\\",\\n            \\\"bbbbbbbbbb\\\"\\n        ],\\n        GROUND2: [\\n            \\\"bbbbbbbbbb\\\",\\n            \\\"bqqfeeebqb\\\",\\n            \\\"bqfeehfeeb\\\",\\n            \\\"bqhhhfeeeb\\\",\\n            \\\"bfeeebbffb\\\",\\n            \\\"bfhbbhhhfb\\\",\\n            \\\"bfehfffeeb\\\",\\n            \\\"bqfehheeeb\\\",\\n            \\\"bheebeehhb\\\",\\n            \\\"bbbbbbbbbb\\\"\\n        ],\\n        GROUND3: [\\n            \\\"bbbbbbbbbb\\\",\\n            \\\"beeeeeeeeb\\\",\\n            \\\"befhhhhfeb\\\",\\n            \\\"behhqqhheb\\\",\\n            \\\"befhqhhfeb\\\",\\n            \\\"behhqqhheb\\\",\\n            \\\"befhhhhfeb\\\",\\n            \\\"beeeeeeeeb\\\",\\n            \\\"bheeeeeehb\\\",\\n            \\\"bbbbbbbbbb\\\"\\n        ],\",\"StartLine\":565,\"TargetContent\":\"        GROUND: [\\n            \\\"bbbbbbbbbb\\\",\\n            \\\"bqqfffqqeb\\\",\\n            \\\"bqfhhhfheb\\\",\\n            \\\"bqfheehfeb\\\",\\n            \\\"bqfhhhfheb\\\",\\n            \\\"bqfeeeffeb\\\",\\n            \\\"bqfhhhhheb\\\",\\n            \\\"bqfeeeeeeb\\\",\\n            \\\"bheeeeeehb\\\",\\n            \\\"bbbbbbbbbb\\\"\\n        ],\"},{\"AllowMultiple\":false,\"EndLine\":3415,\"ReplacementContent\":\"                    // Draw standard tiles\\n                    let matrix = null;\\n                    if (type === TILES.GROUND) {\\n                        const hash = (c * 17 + r * 31) % 3;\\n                        if (hash === 0) matrix = SPRITES.TILES.GROUND;\\n                        else if (hash === 1) matrix = SPRITES.TILES.GROUND2;\\n                        else matrix = SPRITES.TILES.GROUND3;\\n                    }\",\"StartLine\":3413,\"TargetContent\":\"                    // Draw standard tiles\\n                    let matrix = null;\\n                    if (type === TILES.GROUND) matrix = SPRITES.\n<truncated 1269 bytes>"
+--- Content End ---
+
+================================================================================
+STEP 1226
+================================================================================
+STEP 1226: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Implement the spawnSlideDust method in the Particles class in game.js. It creates volcanic sliding hot sparks and dust that trail behind Hexly during a slide.\"",
+  "Instruction": "\"Insert spawnSlideDust right below spawnJumpDust in game.js\"",
+  "StartLine": "1325",
+  "EndLine": "1326"
+}
+Content size: 793 chars, 1 lines.
+--- Content Start ---
+"    }\n    \n    spawnSlideDust(x, y) {\n        // Volcanic hot sliding friction dust sparks!\n        for (let i = 0; i < 2; i++) {\n            this.add(new Particle(\n                x, y - 2, \n                (Math.random() - 0.5) * 1.5, \n                -Math.random() * 0.8, \n                'rgba(255, 90, 0, 0.6)', \n                Math.random() * 5 + 3, \n                Math.random() * 15 + 10, \n                'dust'\n            ));\n            this.add(new Particle(\n                x, y - 2, \n                (Math.random() - 0.5) * 1.2, \n                -Math.random() * 0.4, \n                'rgba(255, 200, 50, 0.7)', \n                Math.random() * 3 + 1, \n                Math.random() * 10 + 5, \n                'ember'\n            ));\n        }\n    }"
+--- Content End ---
+
+================================================================================
+STEP 1234
+================================================================================
+STEP 1234: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Implement crouch sliding physics in game.js. When crouching on the ground with horizontal velocity, friction is reduced (p.vx *= 0.965) to slide a long distance, spawning volcanic slide sparks. In mid-air, crouching preserves momentum without friction.\"",
+  "Instruction": "\"Replace standard crouch friction with run + jump + crouch sliding physics\"",
+  "StartLine": "2463",
+  "EndLine": "2465"
+}
+Content size: 709 chars, 1 lines.
+--- Content Start ---
+"        if (p.crouching) {\n            if (p.grounded) {\n                if (Math.abs(p.vx) > 1.0) {\n                    // Crouch Slide: low friction (glide further!)\n                    p.vx *= 0.965;\n                    \n                    // Spawn cool volcanic slide sparks/dust at feet!\n                    if (this.frameCounter % 3 === 0) {\n                        particles.spawnSlideDust(p.x + p.width / 2, p.y + p.height);\n                    }\n                } else {\n                    p.vx *= 0.82; // normal heavy crouch friction\n                }\n            }\n            // If in mid-air (!p.grounded), we don't apply crouch friction, preserving momentum!\n        } else {"
+--- Content End ---
+
+================================================================================
+STEP 1577
+================================================================================
+STEP 1577: Tool: multi_replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Strips all visual pixel effects — wind ash, jump dust, slide dust, ambient embers, and the GUSTING text — leaving only the physics forces and gust state machine intact.\"",
+  "Instruction": "\"1. Remove wind ash dust particle spawning block. 2. Remove jump dust on launch. 3. Remove slide dust on crouch-slide. 4. Remove ambient floating ember spawns. 5. Remove the GUSTING text overlay.\""
+}
+Content size: 2179 chars, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":2712,\"ReplacementContent\":\"        if (p.crouching) {\\r\\n            if (p.grounded) {\\r\\n                if (Math.abs(p.vx) > 1.0) {\\r\\n                    // Crouch Slide: low friction (glide further!)\\r\\n                    p.vx *= 0.965;\\r\\n                } else {\\r\\n                    p.vx *= 0.82; // normal heavy crouch friction\\r\\n                }\\r\\n            }\",\"StartLine\":2705,\"TargetContent\":\"        if (p.crouching) {\\r\\n            if (p.grounded) {\\r\\n                if (Math.abs(p.vx) > 1.0) {\\r\\n                    // Crouch Slide: low friction (glide further!)\\r\\n                    p.vx *= 0.965;\\r\\n                    \\r\\n                    // Spawn cool volcanic slide sparks/dust at feet!\\r\\n                    if (this.frameCounter % 3 === 0) {\\r\\n                        particles.spawnSlideDust(p.x + p.width / 2, p.y + p.height);\\r\\n                    }\\r\\n                } else {\\r\\n                    p.vx *= 0.82; // normal heavy crouch friction\\r\\n                }\\r\\n            }\"},{\"AllowMultiple\":false,\"EndLine\":2780,\"ReplacementContent\":\"            }\\r\\n        } else {\\r\\n            this.gustActive = false;\\r\\n            this.gustStrength = 0;\\r\\n        }\",\"StartLine\":2755,\"TargetContent\":\"            }\\r\\n            \\r\\n            // Spawn wind dust particles blowing leftward!\\r\\n            // During a strong gust, particles spawn every single frame, move much faster, and are denser!\\r\\n            const spawnRate = this.gustActive ? 1 : 3;\\r\\n            const baseSpeed = this.gustActive ? -10.5 : -5.5;\\r\\n            const particleAlpha = this.gustActive ? 0.45 : 0.22;\\r\\n            const extraSpread = this.gustActive ? 4.0 : 3.0;\\r\\n\\r\\n            if (this.frameCounter % spawnRate === 0) {\\r\\n                const sX = this.camera.x + this.width + 10;\\r\\n                const sY = 20 + Math.random() * 480;\\r\\n                particles.add(new Particle(\\r\\n                    sX, sY, \\r\\n                    baseSpeed - Math.rando\n<truncated 2281 bytes>"
+--- Content End ---
+
+================================================================================
+STEP 2035
+================================================================================
+STEP 2035: Tool: multi_replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"1. Define TILES.SWAMP and SWAMP_COLORS\\n2. Update resolveCollisions to handle swamp intersections (applying heavy drag on velocity)\\n3. Render TILES.SWAMP using the animated lava matrix with SWAMP_COLORS overrides and a toxic green glow.\"",
+  "Instruction": "\"Apply Swamp liquid mechanics (Tile ID, Color overrides, Physics drag, and rendering)\""
+}
+Content size: 2160 chars, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":1239,\"ReplacementContent\":\"    PORTAL: 6,\\n    SPENT_REWARD: 11,\\n    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15,\\n    SWAMP: 16\\n};\\n\\nconst SWAMP_COLORS = {\\n    'r': '#22aa22', // Molten red -> Mid green\\n    'd': '#003300', // Dark shadow -> Dark green\\n    'l': '#55dd55', // Highlight -> Bright green\\n    'y': '#bbff22', // Yellow -> Toxic yellow-green\\n    'o': '#55cc22'  // Orange -> Slime green\\n};\",\"StartLine\":1234,\"TargetContent\":\"    PORTAL: 6,\\n    SPENT_REWARD: 11,\\n    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15\\n};\"},{\"AllowMultiple\":false,\"EndLine\":3308,\"ReplacementContent\":\"        let inSwamp = false;\\n\\n        // 5. Hazard intersection checks\\n        for (let r = bounds.minY; r <= bounds.maxY; r++) {\\n            for (let c = bounds.minX; c <= bounds.maxX; c++) {\\n                const tileType = this.getTile(c, r);\\n                if (tileType === TILES.LAVA) {\\n                    this.damagePlayer(true); // Instant kill!\\n                    return;\\n                } else if (tileType === TILES.SWAMP) {\\n                    inSwamp = true;\\n                }\\n            }\\n        }\\n\\n        if (inSwamp) {\\n            this.player.vx *= 0.6; // Heavy horizontal drag\\n            if (this.player.vy > 0) {\\n                this.player.vy *= 0.7; // Fall slower (thick liquid)\\n            } else if (this.player.vy < 0) {\\n                this.player.vy *= 0.85; // Rise slower (resists jumps)\\n            }\\n        }\\n    }\",\"StartLine\":3299,\"TargetContent\":\"        // 5. Lava Hazard intersection checks (Lava is always instantly fatal!)\\n        for (let r = bounds.minY; r <= bounds.maxY; r++) {\\n            for (let c = bounds.minX; c <= bounds.maxX; c++) {\\n                if (this.getTile(c, r) === TILES.LAVA) {\\n                    this.damagePlayer(true); // Instant kill!\\n                    return;\\n                }\\n            }\\n        }\\n    }\"},{\"AllowMultiple\":false,\"EndLine\":3475,\"ReplacementContent\":\"        else if (typ\n<truncated 1576 bytes>"
+--- Content End ---
+
+================================================================================
+STEP 2153
+================================================================================
+STEP 2153: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Add spawnSwampGas method to ParticleSystem.\"",
+  "Instruction": "\"Add a new particle spawner for the swamp gas effect.\"",
+  "StartLine": "1318",
+  "EndLine": "1320"
+}
+Content size: 772 chars, 1 lines.
+--- Content Start ---
+"    spawnLavaBubble(x, y) {\n        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.3, -Math.random() * 0.4 - 0.2, '#f95700', Math.random() * 4 + 2, Math.random() * 50 + 20, 'dust'));\n    }\n\n    spawnSwampGas(x, y) {\n        const colors = ['rgba(150, 255, 50, 0.4)', 'rgba(50, 200, 0, 0.3)', 'rgba(200, 255, 100, 0.5)'];\n        this.add(new Particle(\n            x, y, \n            (Math.random() - 0.5) * 0.5, // Slow horizontal drift\n            -Math.random() * 0.8 - 0.2,  // Slow upward drift\n            colors[Math.floor(Math.random() * colors.length)], \n            Math.random() * 8 + 4,       // Medium to large size\n            Math.random() * 120 + 60,    // Long life so it floats high into the air\n            'gas'\n        ));\n    }"
+--- Content End ---
+
+================================================================================
+STEP 2168
+================================================================================
+STEP 2168: Tool: multi_replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Add gas update logic to the Particle class, and randomly spawn gas particles from swamp tiles in drawTiles.\"",
+  "Instruction": "\"Add gas update logic to Particle class and spawn it from SWAMP tiles.\""
+}
+Content size: 1963 chars, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":1282,\"ReplacementContent\":\"        if (this.type === 'ember') {\\n            this.vy -= 0.02;\\n            this.vx += (Math.random() - 0.5) * 0.1;\\n        } else if (this.type === 'debris') {\\n            this.vy += 0.25;\\n        } else if (this.type === 'dust') {\\n            this.vx *= 0.95;\\n            this.vy *= 0.95;\\n        } else if (this.type === 'gas') {\\n            this.vx += (Math.random() - 0.5) * 0.05; // Wobbly drift\\n            this.size *= 1.01; // Expand slightly as it rises\\n        }\\n    }\",\"StartLine\":1273,\"TargetContent\":\"        if (this.type === 'ember') {\\n            this.vy -= 0.02;\\n            this.vx += (Math.random() - 0.5) * 0.1;\\n        } else if (this.type === 'debris') {\\n            this.vy += 0.25;\\n        } else if (this.type === 'dust') {\\n            this.vx *= 0.95;\\n            this.vy *= 0.95;\\n        }\\n    }\"},{\"AllowMultiple\":false,\"EndLine\":3546,\"ReplacementContent\":\"            grd.addColorStop(1,   'rgba(0, 100, 0, 0)');\\n            this.ctx.fillStyle = grd;\\n            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\\n            this.ctx.restore();\\n            \\n            // Randomly spawn gas particles from the swamp\\n            if (Math.random() < 0.03) {\\n                particles.spawnSwampGas(x + Math.random() * TILE_SIZE, y + Math.random() * (TILE_SIZE / 2));\\n            }\\n            return;\\n        }\\n        else if (type === TILES.LAVA) {\",\"StartLine\":3539,\"TargetContent\":\"            grd.addColorStop(0,   'rgba(150, 255, 50, 1)');\\n            grd.addColorStop(0.5, 'rgba(50, 200, 0, 0.8)');\\n            grd.addColorStop(1,   'rgba(0, 100, 0, 0)');\\n            this.ctx.fillStyle = grd;\\n            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\\n            this.ctx.restore();\\n            return;\\n        }\\n        else if (type === TILES.LAVA) {\"}]"
+--- Content End ---
+
+================================================================================
+STEP 2187
+================================================================================
+STEP 2187: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Upgrade the gas particles from blocky retro squares to smooth, glowing radial-gradient vapor clouds.\"",
+  "Instruction": "\"Update gas particle rendering.\"",
+  "StartLine": "1284",
+  "EndLine": "1340"
+}
+Content size: 2070 chars, 2 lines.
+--- Content Start ---
+"    draw(ctx, cameraX) {\n        const alpha = Math.max(0, this.life / this.maxLife);\n        ctx.save();\n        ctx.globalAlpha = alpha;\n        \n        const drawX = Math.floor(this.x - cameraX);\n        const drawY = Math.floor(this.y);\n\n        if (this.type === 'gas') {\n            // Render smooth, glowing vapor clouds instead of blocky pixels\n            ctx.globalCompositeOperation = 'lighter';\n            const grd = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, this.size);\n            grd.addColorStop(0, `rgba(${this.color}, 0.6)`);\n            grd.addColorStop(1, `rgba(${this.color}, 0)`);\n            ctx.fillStyle = grd;\n            ctx.beginPath();\n            ctx.arc(drawX, drawY, this.size, 0, Math.PI * 2);\n            ctx.fill();\n        } else {\n            // Standard retro blocky particles\n            ctx.fillStyle = this.color;\n            ctx.fillRect(drawX - this.size / 2, drawY - this.size / 2, this.size, this.size);\n        }\n        \n        ctx.restore();\n    }\n}\n\nclass ParticleSystem {\n    constructor() {\n        this.particles = [];\n    }\n\n    add(p) {\n        if (this.particles.length > 200) this.particles.shift();\n        this.particles.push(p);\n    }\n\n    spawnEmber(x, y) {\n        const colors = ['#f95700', '#f7be00', '#e61e29'];\n        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.8, -Math.random() * 0.7 - 0.3, colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 1, Math.random() * 80 + 40, 'ember'));\n    }\n\n    spawnOneUpEmber(x, y) {\n        const colors = ['#00ff66', '#aeff00', '#00ffcc'];\n        for (let i = 0; i < 12; i++) {\n            const angle = Math.random() * Math.PI * 2;\n            const speed = Math.random() * 1.5 + 0.5;\n            this.add(new Particle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed, colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 2, Math.random() * 60 + 30, 'dust'));\n        }\n    }\n\n    spawnLavaBubble(x, y) {\n        this.
+<truncated 714 bytes>
+--- Content End ---
+
+================================================================================
+STEP 2449
+================================================================================
+STEP 2449: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Render Level 5's swamp liquid as dark red blood instead of toxic green.\"",
+  "Instruction": "\"Add an `isLevel5` boolean to branch the colors for the pixel matrix, the glow, and the gas particles.\"",
+  "StartLine": "3607",
+  "EndLine": "3628"
+}
+Content size: 1555 chars, 1 lines.
+--- Content Start ---
+"            const isLevel5 = this.currentLevelIndex === 4;\n            drawPixelMatrix(this.ctx, x, y, matrix, false, 4.5, isLevel5 ? BLOOD_COLORS : SWAMP_COLORS);\n            \n            // Add a toxic/blood glowing pulse\n            const pulse = (Math.sin(this.frameCounter * 0.05) + 1) / 2;\n            this.ctx.save();\n            this.ctx.globalCompositeOperation = 'lighter';\n            this.ctx.globalAlpha = 0.1 + pulse * 0.15;\n            const grd = this.ctx.createRadialGradient(\n                x + TILE_SIZE / 2, y + TILE_SIZE / 2, 2,\n                x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE * 0.8\n            );\n            \n            if (isLevel5) {\n                grd.addColorStop(0,   'rgba(255, 50, 50, 1)');\n                grd.addColorStop(0.5, 'rgba(200, 0, 0, 0.8)');\n                grd.addColorStop(1,   'rgba(100, 0, 0, 0)');\n            } else {\n                grd.addColorStop(0,   'rgba(150, 255, 50, 1)');\n                grd.addColorStop(0.5, 'rgba(50, 200, 0, 0.8)');\n                grd.addColorStop(1,   'rgba(0, 100, 0, 0)');\n            }\n            \n            this.ctx.fillStyle = grd;\n            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\n            this.ctx.restore();\n            \n            // Randomly spawn gas particles from the swamp (low rate to avoid overloading particle engine)\n            if (Math.random() < 0.002) {\n                particles.spawnSwampGas(x + Math.random() * TILE_SIZE, y + Math.random() * (TILE_SIZE / 2), isLevel5);\n            }"
+--- Content End ---
+
+================================================================================
+STEP 3115
+================================================================================
+STEP 3115: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Populate trees in Level 5 initializeMap.\"",
+  "Instruction": "\"Add logic to spawn trees on top of ground/swamp tiles for Level 5.\"",
+  "StartLine": "2461",
+  "EndLine": "2463"
+}
+Content size: 1414 chars, 1 lines.
+--- Content Start ---
+"        // Set maximum coin count dynamically based on the actual spawned shards!\n        this.player.maxCoins = this.coins.length || 1;\n\n        // Populate background trees for Level 5 (Swamp)\n        this.trees = [];\n        if (this.currentLevelIndex === 4) {\n            for (let c = 0; c < this.levelGrid[0].length; c++) {\n                // Find the highest ground tile in this column\n                for (let r = 0; r < this.levelGrid.length; r++) {\n                    const tile = this.levelGrid[r][c];\n                    if (tile === TILES.GROUND || tile === TILES.SWAMP) {\n                        // 15% chance to spawn a tree\n                        if (Math.random() < 0.15) {\n                            // Ensure trees aren't grouped too tightly (min 4 tiles apart)\n                            if (this.trees.length === 0 || c - this.trees[this.trees.length - 1].col > 4) {\n                                this.trees.push({\n                                    col: c,\n                                    x: c * TILE_SIZE,\n                                    y: r * TILE_SIZE,\n                                    type: Math.random() < 0.5 ? 1 : 2\n                                });\n                            }\n                        }\n                        break; // Stop going deeper in this column\n                    }\n                }\n            }\n        }"
+--- Content End ---
+
+================================================================================
+STEP 3118
+================================================================================
+STEP 3118: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Draw trees behind tiles in render() loop.\"",
+  "Instruction": "\"Insert the tree drawing logic right before drawTiles() inside render().\"",
+  "StartLine": "3610",
+  "EndLine": "3615"
+}
+Content size: 1059 chars, 1 lines.
+--- Content Start ---
+"        this.ctx.save();\n        this.ctx.translate(-Math.round(this.camera.x), 0);\n\n        // --- DRAW DECORATIVE TREES (Behind Tiles) ---\n        if (this.currentLevelIndex === 4 && this.trees) {\n            this.trees.forEach(tree => {\n                const img = tree.type === 1 ? tree1Img : tree2Img;\n                const loaded = tree.type === 1 ? tree1ImgLoaded : tree2ImgLoaded;\n                if (loaded) {\n                    const tw = 240; // 4 tiles wide\n                    const th = 240; // 4 tiles tall\n                    // Anchor bottom center of the tree to the top center of the tile\n                    const tx = tree.x + (TILE_SIZE / 2) - (tw / 2);\n                    // Push down by 30px so roots seamlessly overlap the swamp ground tiles\n                    const ty = tree.y - th + 30; \n                    \n                    this.ctx.drawImage(img, tx, ty, tw, th);\n                }\n            });\n        }\n\n        // Draw physical grid blocks (Scale 4.5x = 45px grids!)\n        this.drawTiles();"
+--- Content End ---
+
+================================================================================
+STEP 3127
+================================================================================
+STEP 3127: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Make trees very sparse and prevent them from spawning on blood lava.\"",
+  "Instruction": "\"Update tree spawning logic to only spawn on TILES.GROUND, reduce chance to 3%, and increase spacing.\"",
+  "StartLine": "2464",
+  "EndLine": "2486"
+}
+Content size: 1519 chars, 1 lines.
+--- Content Start ---
+"        // Populate background trees for Level 5 (Swamp)\n        this.trees = [];\n        if (this.currentLevelIndex === 4) {\n            for (let c = 0; c < this.levelGrid[0].length; c++) {\n                // Find the highest ground tile in this column\n                for (let r = 0; r < this.levelGrid.length; r++) {\n                    const tile = this.levelGrid[r][c];\n                    // ONLY spawn on solid ground, NEVER on blood lava (TILES.SWAMP)\n                    if (tile === TILES.GROUND) {\n                        // Very, very sparse: 3% chance\n                        if (Math.random() < 0.03) {\n                            // Ensure extreme spacing between trees (min 12 tiles apart)\n                            if (this.trees.length === 0 || c - this.trees[this.trees.length - 1].col > 12) {\n                                this.trees.push({\n                                    col: c,\n                                    x: c * TILE_SIZE,\n                                    y: r * TILE_SIZE,\n                                    type: Math.random() < 0.5 ? 1 : 2\n                                });\n                            }\n                        }\n                        break; // Stop going deeper in this column\n                    } else if (tile !== TILES.EMPTY) {\n                        // If it's swamp or any other solid block, skip this column entirely\n                        break; \n                    }\n                }\n            }\n        }"
+--- Content End ---
+
+================================================================================
+STEP 3163
+================================================================================
+STEP 3163: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Make tree placement deterministic.\"",
+  "Instruction": "\"Replace the random tree generation logic with a deterministic array of target columns that lock onto the nearest valid ground.\"",
+  "StartLine": "2464",
+  "EndLine": "2490"
+}
+Content size: 2070 chars, 2 lines.
+--- Content Start ---
+"        // Populate background trees for Level 5 (Swamp)\n        this.trees = [];\n        if (this.currentLevelIndex === 4) {\n            // Commit to exactly 5 deterministic tree placements evenly spaced across the level\n            const treePlacements = [\n                { targetCol: 35, type: 1 },\n                { targetCol: 100, type: 2 },\n                { targetCol: 165, type: 1 },\n                { targetCol: 225, type: 2 },\n                { targetCol: 290, type: 1 }\n            ];\n            \n            for (const placement of treePlacements) {\n                let foundCol = -1;\n                let foundRow = -1;\n                \n                // Search near the target column for the closest solid ground floor tile\n                for (let offset = 0; offset <= 20; offset++) {\n                    for (const sign of [1, -1]) {\n                        if (offset === 0 && sign === -1) continue;\n                        \n                        const c = placement.targetCol + (offset * sign);\n                        if (c < 0 || c >= this.levelGrid[0].length) continue;\n                        \n                        for (let r = 0; r < this.levelGrid.length; r++) {\n                            const tile = this.levelGrid[r][c];\n                            if (tile === TILES.GROUND && r >= 8) {\n                                foundCol = c;\n                                foundRow = r;\n                                break;\n                            } else if (tile !== TILES.EMPTY) {\n                                break; // Hit swamp or platform, column invalid\n                            }\n                        }\n                        if (foundCol !== -1) break;\n                    }\n                    if (foundCol !== -1) break;\n                }\n                \n                if (foundCol !== -1) {\n                    this.trees.push({\n                        col: foundCol,\n                        x: foundCol * TILE_SIZE,\n                        y: 
+<truncated 138 bytes>
+--- Content End ---
+
+================================================================================
+STEP 2538
+================================================================================
+STEP 2538: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Apply a vibrant blood soaked red rendering filter to Level 5 ground blocks.\"",
+  "Instruction": "\"Add an else if block for Level 5 that applies a red color filter and a dark red multiply layer to the ground blocks.\"",
+  "StartLine": "3757",
+  "EndLine": "3758"
+}
+Content size: 760 chars, 1 lines.
+--- Content Start ---
+"            }\n            // Level 5 — blood soaked red ground\n            else if (type === TILES.GROUND && this.currentLevelIndex === 4) {\n                this.ctx.save();\n                this.ctx.globalCompositeOperation = 'color';\n                this.ctx.fillStyle = '#ff2222'; // Vibrant red\n                this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\n                \n                // Add a darkening multiply layer to make it look like wet, dark blood\n                this.ctx.globalCompositeOperation = 'multiply';\n                this.ctx.globalAlpha = 0.6;\n                this.ctx.fillStyle = '#770000';\n                this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\n                this.ctx.restore();\n            }\n        }"
+--- Content End ---
+
+================================================================================
+STEP 2589
+================================================================================
+STEP 2589: Tool: replace_file_content | Target: game.js
+Arguments:
+{
+  "TargetFile": "C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js",
+  "Description": "\"Apply a dark charcoal grey filter to the ground blocks for Level 6.\"",
+  "Instruction": "\"Add the rendering logic for Level 6 blocks below Level 5.\"",
+  "StartLine": "3771",
+  "EndLine": "3772"
+}
+Content size: 770 chars, 1 lines.
+--- Content Start ---
+"            }\n            // Level 6 — dark charcoal grey stone\n            else if (type === TILES.GROUND && this.currentLevelIndex === 5) {\n                this.ctx.save();\n                this.ctx.globalCompositeOperation = 'color';\n                this.ctx.fillStyle = '#888888'; // Desaturate\n                this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\n                \n                // Add a heavy darkening multiply layer for dark gothic stone\n                this.ctx.globalCompositeOperation = 'multiply';\n                this.ctx.globalAlpha = 0.85;\n                this.ctx.fillStyle = '#2a2a2a'; // Heavy charcoal\n                this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);\n                this.ctx.restore();\n            }\n        }"
+--- Content End ---

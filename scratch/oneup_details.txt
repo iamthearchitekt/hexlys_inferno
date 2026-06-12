@@ -1,0 +1,192 @@
+================================================================================
+
+STEP 456: Tool: replace_file_content | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Swap chiptune music loop and 8-bit synthesized SFX with external WAV files (sfx/*.wav and game_music.wav), with solid retro synths as fallback. Also implements custom playOneUp() sound for the new 1up tile.\"",
+  "Instruction": "\"Replace AudioSynth class with the new WAV-powered AudioSynth class.\"",
+  "StartLine": "762",
+  "EndLine": "1020"
+}
+Content size: 2071 characters, 2 lines.
+--- Content Start ---
+"class AudioSynth {\n    constructor() {\n        this.ctx = null;\n        this._musicEnabled = true;\n        this.sfxEnabled = true;\n        this.sfxBuffers = {};\n        this.musicBuffer = null;\n        this.musicSource = null;\n        this.musicGain = null;\n    }\n\n    get musicEnabled() {\n        return this._musicEnabled;\n    }\n\n    set musicEnabled(val) {\n        this._musicEnabled = val;\n        if (val) {\n            this.startMusic();\n        } else {\n            this.stopMusic();\n        }\n    }\n\n    init() {\n        if (this.ctx) return;\n        const AudioContextClass = window.AudioContext || window.webkitAudioContext;\n        this.ctx = new AudioContextClass();\n        this._loadAllSfx();\n        this._loadMusic();\n    }\n\n    _loadAllSfx() {\n        const files = {\n            jump:    'sfx/jump.wav',\n            fireball:'sfx/fireball.wav',\n            stomp:   'sfx/stompswim.wav',\n            collect: 'sfx/coin.wav',\n            crunch:  'sfx/brick.wav',\n            victory: 'sfx/powerup.wav',\n            damage:  'sfx/pipepowerdown.wav',\n            oneup:   'sfx/1up.wav'\n        };\n        Object.entries(files).forEach(([key, path]) => {\n            fetch(path)\n                .then(r => r.arrayBuffer())\n                .then(ab => this.ctx.decodeAudioData(ab))\n                .then(buf => { this.sfxBuffers[key] = buf; })\n                .catch(err => console.warn(\"Failed to load SFX:\", key, err));\n        });\n    }\n\n    _loadMusic() {\n        fetch('game_music.wav')\n            .then(r => r.arrayBuffer())\n            .then(ab => this.ctx.decodeAudioData(ab))\n            .then(buf => {\n                this.musicBuffer = buf;\n                if (this._musicEnabled) {\n                    this.startMusic();\n                }\n            })\n            .catch(err => console.warn(\"Failed to load game music:\", err));\n    }\n\n    startMusic() {\n        if (!this.ctx || !this.musicBuffer || !this._musicEnabled) return;\n        if (this.mu
+<truncated 8382 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 535: Tool: write_to_file | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\brain\\\\66c7c09e-41be-43ad-9516-b8a09e16285c\\\\walkthrough.md\"",
+  "Description": "\"Updates walkthrough.md with the newly added SFX integration, music swap, and 1-UP block logic details.\""
+}
+Content size: 2071 characters, 2 lines.
+--- Content Start ---
+"# Walkthrough - game.js Updates\n\nWe have successfully implemented and refined all of the retro-adjustments to Hexly's Inferno Escape! Here is a summary of what was accomplished and verified.\n\n## Summary of Recent Changes\n\n### 1. High-Quality WAV SFX Integration\n- **Obvious Choices Replaced:**\n  - `playJump()` -> backed by `sfx/jump.wav`\n  - `playFireball()` -> backed by `sfx/fireball.wav`\n  - `playStomp()` -> backed by `sfx/stompswim.wav`\n  - `playCollect()` -> backed by `sfx/coin.wav`\n  - `playCrunch()` -> backed by `sfx/brick.wav`\n  - `playVictory()` -> backed by `sfx/powerup.wav`\n  - `playDamage()` -> backed by `sfx/pipepowerdown.wav`\n- **Fallback Design:** All methods feature a robust synthesized fallback to guarantee sound continues seamlessly even if WAV loading fails or is delayed.\n- **Unreplaced SFX Files:**\n  - `beep.wav`\n  - `billfirework.wav`\n  - `bowserfall.wav`\n  - `bump.wav`\n  - `fire.wav`\n  - `flagpole.wav`\n  - `hurryup.wav`\n  - `item.wav`\n  - `jumpsmall.wav`\n  - `kickkill.wav`\n  - `pause.wav`\n  - `vine.wav`\n\n### 2. WAV Background Music Swap\n- **Music Replaced:** Swapped the chiptune sequencer loop with your custom high-quality `game_music.wav`.\n- **Audio Context Management:** The soundtrack is decoded into a Web Audio API buffer and played via a looping buffer source node. \n- **Volume Optimization:** Standardized the gain level to `0.4` for an ideal retro soundtrack balance that doesn't overpower the sfx.\n- **Pause & Resume Cohesion:** The background track automatically suspends and resumes when the game transitions into/out of the pause state.\n\n### 3. Red 1-UP Block with Black Pentagram\n- **Visual Design:** Added `TILES.ONEUP` (ID 15) styled as a gorgeous retro red block featuring a dark black pentagram star on its surface.\n- **Placement:** Positioned at the very start of the level (replacing the first question block) and at a few hidden spots along the level so it's super fast to test.\n- **Mechanics & Rewards:**\n  - Striking it from below plays `sfx/1up.w
+<truncated 1569 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 539: Tool: write_to_file | Matched: [brick, game over]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\brain\\\\66c7c09e-41be-43ad-9516-b8a09e16285c\\\\task.md\"",
+  "Description": "\"Updates task.md to include audio integration, game over polished screen, and 1-UP red pentagram block milestones as fully completed.\""
+}
+Content size: 2046 characters, 1 lines.
+--- Content Start ---
+"# Task List - game.js Updates\n\n- `[x]` 1. Implement Surgical Sprite Preprocessor\n  - `[x]` Create `cleanSpriteCanvas` utility function.\n  - `[x]` Integrate and cache cleaned canvases in `drawSpriteAutoTrimmed`.\n- `[x]` 2. Update Falling Platform Width & Delay in `LEVEL_DATA`\n  - `[x]` Replace single `14` tiles with adjacent `14, 14` tiles in `LEVEL_DATA` rows 3, 4, 5.\n  - `[x]` Update `platformTimers` delay to 150 frames.\n  - `[x]` Implement cohesive adjacent platform trigger in `resolveCollisions`.\n  - `[x]` Implement cohesive platform expiry in `update`.\n- `[x]` 3. Enlarge Winged Imp Sprites\n  - `[x]` Change `width` to `120` and `height` to `86` for `FIRE_IMP` in `Enemy` constructor.\n- `[x]` 4. Restrict Boss Arena & Invisibility\n  - `[x]` Update `Boss.update` to require `engine.player.x >= 8000` and restrict minimum `x` to `8450`.\n  - `[x]` Update `Boss.draw` to hide boss if `player.x < 8000`.\n- `[x]` 5. Seamless Parallax Background Stitching\n  - `[x]` Apply `this.width + 1` and overlapping drawing coordinates in `ParallaxBackground.draw`.\n- `[x]` 6. Game Over Screen Polishing\n  - `[x]` Remove black boxes and adjust margins.\n  - `[x]` Replace \"Try Again\" button with blinking `\"press any button to continue\"` text.\n  - `[x]` Implement any-key event listener to trigger restart.\n- `[x]` 7. WAV SFX and Background Music integration\n  - `[x]` Map `jump.wav`, `fireball.wav`, `stompswim.wav`, `coin.wav`, `brick.wav`, `powerup.wav`, `pipepowerdown.wav` to their actions with synthesized fallbacks.\n  - `[x]` Load and play looping `game_music.wav` via Web Audio API, adjusting gain to `0.4` and handling pause/resume state.\n- `[x]` 8. 1-UP Red Pentagram block\n  - `[x]` Add `TILES.ONEUP` block design (red tile with a black pentagram).\n  - `[x]` Implement hit-from-below logic to play `1up.wav`, restore full health (or give 1000 points if already full), and trigger a green spark explosion.\n  - `[x]` Implement Mario-style crushing of any enemy standing directly on top of the block when struck.\n"
+--- Content End ---
+
+================================================================================
+
+STEP 557: Tool: multi_replace_file_content | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Add playFire method to AudioSynth loading fire.wav from sfx folder, and trigger it whenever Bowser-style EnemyFireball spawns.\"",
+  "Instruction": "\"Add fire sfx loading, playFire audio player, and invoke it when spawning EnemyFireball.\""
+}
+Content size: 2142 characters, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":816,\"ReplacementContent\":\"        const files = {\\n            jump:    'sfx/jump.wav',\\n            fireball:'sfx/fireball.wav',\\n            stomp:   'sfx/stompswim.wav',\\n            collect: 'sfx/coin.wav',\\n            crunch:  'sfx/brick.wav',\\n            victory: 'sfx/powerup.wav',\\n            damage:  'sfx/pipepowerdown.wav',\\n            oneup:   'sfx/1up.wav',\\n            fire:    'sfx/fire.wav'\\n        };\",\"StartLine\":807,\"TargetContent\":\"        const files = {\\n            jump:    'sfx/jump.wav',\\n            fireball:'sfx/fireball.wav',\\n            stomp:   'sfx/stompswim.wav',\\n            collect: 'sfx/coin.wav',\\n            crunch:  'sfx/brick.wav',\\n            victory: 'sfx/powerup.wav',\\n            damage:  'sfx/pipepowerdown.wav',\\n            oneup:   'sfx/1up.wav'\\n        };\"},{\"AllowMultiple\":false,\"EndLine\":1054,\"ReplacementContent\":\"    playOneUp() {\\n        if (!this.sfxEnabled || !this.ctx) return;\\n        this.resume();\\n        if (this._playBuffer('oneup', 0.8)) return;\\n        // Synth fallback (magical chime arpeggio)\\n        const now = this.ctx.currentTime;\\n        const osc = this.ctx.createOscillator();\\n        const gain = this.ctx.createGain();\\n        osc.type = 'sine';\\n        osc.frequency.setValueAtTime(330, now);\\n        osc.frequency.exponentialRampToValueAtTime(660, now + 0.2);\\n        gain.gain.setValueAtTime(0.15, now);\\n        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);\\n        osc.connect(gain);\\n        gain.connect(this.ctx.destination);\\n        osc.start(now);\\n        osc.stop(now + 0.3);\\n    }\\n\\n    playFire() {\\n        if (!this.sfxEnabled || !this.ctx) return;\\n        this.resume();\\n        if (this._playBuffer('fire', 0.8)) return;\\n        // Synth fallback (deep burning low pitch sweep)\\n        const now = this.ctx.currentTime;\\n        const osc = this.ctx.createOscillator();\\n        const gain = this.ctx.createGain();\\n        osc.type = 'sawtooth';\\n        osc.frequency.setV\n<truncated 1668 bytes>"
+--- Content End ---
+
+================================================================================
+
+STEP 617: Tool: write_to_file | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\brain\\\\66c7c09e-41be-43ad-9516-b8a09e16285c\\\\walkthrough.md\"",
+  "Description": "\"Updates walkthrough.md to document the full implementation of Star Mode mechanics and Boss health/damage systems.\""
+}
+Content size: 2071 characters, 2 lines.
+--- Content Start ---
+"# Walkthrough - game.js Updates\n\nWe have successfully implemented and refined all of the retro-adjustments to Hexly's Inferno Escape! Here is a summary of what was accomplished and verified.\n\n## Summary of Recent Changes\n\n### 1. High-Quality WAV SFX Integration\n- **Obvious Choices Replaced:**\n  - `playJump()` -> backed by `sfx/jump.wav`\n  - `playFireball()` -> backed by `sfx/fireball.wav`\n  - `playStomp()` -> backed by `sfx/stompswim.wav`\n  - `playCollect()` -> backed by `sfx/coin.wav`\n  - `playCrunch()` -> backed by `sfx/brick.wav`\n  - `playVictory()` -> backed by `sfx/powerup.wav` (when powerups release)\n  - `playDamage()` -> backed by `sfx/pipepowerdown.wav`\n  - `playFire()` -> backed by `sfx/fire.wav` (triggered when Bowser-style enemy fireballs spawn)\n- **Fallback Design:** All methods feature a robust synthesized fallback to guarantee sound continues seamlessly even if WAV loading fails or is delayed.\n- **Unreplaced SFX Files:**\n  - `beep.wav`, `billfirework.wav`, `bowserfall.wav`, `bump.wav`, `flagpole.wav`, `hurryup.wav`, `item.wav`, `jumpsmall.wav`, `kickkill.wav`, `pause.wav`, `vine.wav`\n\n### 2. WAV Background Music Swap\n- **Music Replaced:** Swapped the chiptune sequencer loop with your custom high-quality `game_music.wav`.\n- **Audio Context Management:** The soundtrack is decoded into a Web Audio API buffer and played via a looping buffer source node. \n- **Volume Optimization:** Standardized the gain level to `0.4` for an ideal retro soundtrack balance that doesn't overpower the sfx.\n- **Pause & Resume Cohesion:** The background track automatically suspends and resumes when the game transitions into/out of the pause state.\n\n### 3. Red 1-UP Block with Black Pentagram\n- **Visual Design:** Added `TILES.ONEUP` (ID 15) styled as a gorgeous retro red block featuring a dark black pentagram star on its surface.\n- **Placement:** Positioned at the very start of the level (replacing the first question block) and at a few hidden spots along the level so it's super fast to test.\n- **M
+<truncated 3327 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 633: Tool: replace_file_content | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Implements star_music.wav playback inside AudioSynth: loads the file, plays it dynamically for the duration of the star powerup, automatically restarts the regular loop upon completion, and manages resume() states correctly.\"",
+  "Instruction": "\"Add star_music loading, playStarMusic, stopStarMusic, and star-aware resume handling inside AudioSynth.\"",
+  "StartLine": "774",
+  "EndLine": "886"
+}
+Content size: 2071 characters, 2 lines.
+--- Content Start ---
+"class AudioSynth {\n    constructor() {\n        this.ctx = null;\n        this._musicEnabled = true;\n        this.sfxEnabled = true;\n        this.sfxBuffers = {};\n        this.musicBuffer = null;\n        this.musicSource = null;\n        this.musicGain = null;\n        this.starMusicBuffer = null;\n        this.starMusicSource = null;\n    }\n\n    get musicEnabled() {\n        return this._musicEnabled;\n    }\n\n    set musicEnabled(val) {\n        this._musicEnabled = val;\n        if (val) {\n            if (this.starMusicSource) {\n                // Keep playing star music if active\n            } else {\n                this.startMusic();\n            }\n        } else {\n            this.stopMusic();\n            this.stopStarMusic();\n        }\n    }\n\n    init() {\n        if (this.ctx) return;\n        const AudioContextClass = window.AudioContext || window.webkitAudioContext;\n        this.ctx = new AudioContextClass();\n        this._loadAllSfx();\n        this._loadMusic();\n    }\n\n    _loadAllSfx() {\n        const files = {\n            jump:    'sfx/jump.wav',\n            fireball:'sfx/fireball.wav',\n            stomp:   'sfx/stompswim.wav',\n            collect: 'sfx/coin.wav',\n            crunch:  'sfx/brick.wav',\n            victory: 'sfx/powerup.wav',\n            damage:  'sfx/pipepowerdown.wav',\n            oneup:   'sfx/1up.wav',\n            fire:    'sfx/fire.wav'\n        };\n        Object.entries(files).forEach(([key, path]) => {\n            fetch(path)\n                .then(r => r.arrayBuffer())\n                .then(ab => this.ctx.decodeAudioData(ab))\n                .then(buf => { this.sfxBuffers[key] = buf; })\n                .catch(err => console.warn(\"Failed to load SFX:\", key, err));\n        });\n    }\n\n    _loadMusic() {\n        // Load main music\n        fetch('game_music.wav')\n            .then(r => r.arrayBuffer())\n            .then(ab => this.ctx.decodeAudioData(ab))\n            .then(buf => {\n                this.musicBuffer = buf;\n        
+<truncated 3369 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 1386: Tool: write_to_file | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\task.md\"",
+  "Description": "\"Update task.md to mark Level 2 design and fireball spawn control tasks as complete.\""
+}
+Content size: 2069 characters, 2 lines.
+--- Content Start ---
+"# Task List - Hexly's Inferno Escape Development Mode\n\nAll implementation steps for the 9-Level Development workflow, Developer Shortcuts, and Game Complete progression systems have been completed and verified successfully!\n\n---\n\n## 📋 Task Checklist\n\n- `[x]` **1. Define Global Level Data Structure (`levels.js`)**\n  - `[x]` Create centralized `levels.js` file exposing global `LEVELS` array.\n  - `[x]` Migrate original highly polished Level 1 (*Inferno Gate*) layout grid into `LEVELS[0]`.\n  - `[x]` Build playable placeholder layouts for Levels 3 through 9.\n  - `[x]` Configure custom dynamic starting positions (`startX`, `startY`) for all levels.\n\n- `[x]` **2. Custom Full-Length Mario-Style Level 2 Layout**\n  - `[x]` Construct a brand new full-length layout grid of **exactly 290 columns** matching Level 1's dimensions.\n  - `[x]` Place classic Mario platforming structures: floating bricks, reward blocks with powerups, symmetric step pyramids, and lava gaps.\n  - `[x]` Hide a secret 1-UP Red Pentagram block high inside a brick ceiling structure at column 125, Row 3.\n  - `[x]` Place exit portal at column 275 and safe ending zone.\n  - `[x]` Integrate dynamic background image path (`background2.jpg`) for Level 2.\n\n- `[x]` **3. Configurable Enemy Fireball Spawns**\n  - `[x]` Add the custom `disableEnemyFireballs` configuration flag schema in `levels.js`.\n  - `[x]` Set `disableEnemyFireballs: true` specifically for Level 2 (*The Black Gale*).\n  - `[x]` Modify the Bowser-style fireball spawning loop in `game.js` to respect the flag and clear any active fireballs if disabled.\n\n- `[x]` **4. HTML & Script Loading Integration (`index.html`)**\n  - `[x]` Include `<script src=\"levels.js\"></script>` tag directly before `<script src=\"game.js\"></script>`.\n  - `[x]` Build a beautiful **Game Complete screen overlay** (`#game-complete-screen`) with matching typography, stats block, and retro \"PLAY AGAIN\" retry action.\n\n- `[x]` **5. Engine Core Adaptations (`game.js`)**\n  - `[x]` Remove the old massi
+<truncated 2584 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 1388: Tool: write_to_file | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\brain\\\\66c7c09e-41be-43ad-9516-b8a09e16285c\\\\task.md\"",
+  "Description": "\"Update task.md to mark all Level 2 layout and enemy fireball removal tasks as complete.\""
+}
+Content size: 2069 characters, 2 lines.
+--- Content Start ---
+"# Task List - Hexly's Inferno Escape Development Mode\n\nAll implementation steps for the 9-Level Development workflow, Developer Shortcuts, and Game Complete progression systems have been completed and verified successfully!\n\n---\n\n## 📋 Task Checklist\n\n- `[x]` **1. Define Global Level Data Structure (`levels.js`)**\n  - `[x]` Create centralized `levels.js` file exposing global `LEVELS` array.\n  - `[x]` Migrate original highly polished Level 1 (*Inferno Gate*) layout grid into `LEVELS[0]`.\n  - `[x]` Build playable placeholder layouts for Levels 3 through 9.\n  - `[x]` Configure custom dynamic starting positions (`startX`, `startY`) for all levels.\n\n- `[x]` **2. Custom Full-Length Mario-Style Level 2 Layout**\n  - `[x]` Construct a brand new full-length layout grid of **exactly 290 columns** matching Level 1's dimensions.\n  - `[x]` Place classic Mario platforming structures: floating bricks, reward blocks with powerups, symmetric step pyramids, and lava gaps.\n  - `[x]` Hide a secret 1-UP Red Pentagram block high inside a brick ceiling structure at column 125, Row 3.\n  - `[x]` Place exit portal at column 275 and safe ending zone.\n  - `[x]` Integrate dynamic background image path (`background2.jpg`) for Level 2.\n\n- `[x]` **3. Configurable Enemy Fireball Spawns**\n  - `[x]` Add the custom `disableEnemyFireballs` configuration flag schema in `levels.js`.\n  - `[x]` Set `disableEnemyFireballs: true` specifically for Level 2 (*The Black Gale*).\n  - `[x]` Modify the Bowser-style fireball spawning loop in `game.js` to respect the flag and clear any active fireballs if disabled.\n\n- `[x]` **4. HTML & Script Loading Integration (`index.html`)**\n  - `[x]` Include `<script src=\"levels.js\"></script>` tag directly before `<script src=\"game.js\"></script>`.\n  - `[x]` Build a beautiful **Game Complete screen overlay** (`#game-complete-screen`) with matching typography, stats block, and retro \"PLAY AGAIN\" retry action.\n\n- `[x]` **5. Engine Core Adaptations (`game.js`)**\n  - `[x]` Remove the old massi
+<truncated 2584 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 1432: Tool: write_to_file | Matched: [brick]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\brain\\\\66c7c09e-41be-43ad-9516-b8a09e16285c\\\\task.md\"",
+  "Description": "\"Update task.md to mark all Level 2 layout, wind physics, repeating backgrounds, and winged imp tasks as complete.\""
+}
+Content size: 2069 characters, 2 lines.
+--- Content Start ---
+"# Task List - Hexly's Inferno Escape Development Mode\n\nAll implementation steps for the 9-Level Development workflow, Developer Shortcuts, and Game Complete progression systems have been completed and verified successfully!\n\n---\n\n## 📋 Task Checklist\n\n- `[x]` **1. Define Global Level Data Structure (`levels.js`)**\n  - `[x]` Create centralized `levels.js` file exposing global `LEVELS` array.\n  - `[x]` Migrate original highly polished Level 1 (*Inferno Gate*) layout grid into `LEVELS[0]`.\n  - `[x]` Build playable placeholder layouts for Levels 3 through 9.\n  - `[x]` Configure custom dynamic starting positions (`startX`, `startY`) for all levels.\n\n- `[x]` **2. Custom Full-Length Mario-Style Level 2 Layout**\n  - `[x]` Construct a brand new layout grid of **exactly 290 columns** matching Level 1's dimensions.\n  - `[x]` Place classic Mario platforming structures: floating bricks, reward blocks with powerups, symmetric step pyramids, and lava gaps.\n  - `[x]` Hide a secret 1-UP Red Pentagram block high inside a brick ceiling structure at column 125, Row 3.\n  - `[x]` Place exit portal at column 275 and safe ending zone.\n  - `[x]` Integrate dynamic background image path (`background2.jpg`) for Level 2.\n\n- `[x]` **3. Configurable Enemy Fireball Spawns**\n  - `[x]` Add the custom `disableEnemyFireballs` configuration flag schema in `levels.js`.\n  - `[x]` Set `disableEnemyFireballs: true` specifically for Level 2 (*The Black Gale*).\n  - `[x]` Modify the Bowser-style fireball spawning loop in `game.js` to respect the flag and clear any active fireballs if disabled.\n\n- `[x]` **4. Leftward Wind Physics & Speed-Wind Ash Particles**\n  - `[x]` Implement a dynamic leftward `windForce` acceleration drift in `game.js`'s horizontal physics loop.\n  - `[x]` Set `windForce: -0.05` inside Level 2 (*The Black Gale*) in `levels.js`.\n  - `[x]` Generate fast-flying horizontal light ash and smoke wind particles (`rgba(240,220,255,0.22)`) blowing from right to left across the viewport.\n\n- `[x]` **5. Non-Mirrored 
+<truncated 3915 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 2035: Tool: multi_replace_file_content | Matched: [swamp, toxic]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"1. Define TILES.SWAMP and SWAMP_COLORS\\n2. Update resolveCollisions to handle swamp intersections (applying heavy drag on velocity)\\n3. Render TILES.SWAMP using the animated lava matrix with SWAMP_COLORS overrides and a toxic green glow.\"",
+  "Instruction": "\"Apply Swamp liquid mechanics (Tile ID, Color overrides, Physics drag, and rendering)\""
+}
+Content size: 2160 characters, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":1239,\"ReplacementContent\":\"    PORTAL: 6,\\n    SPENT_REWARD: 11,\\n    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15,\\n    SWAMP: 16\\n};\\n\\nconst SWAMP_COLORS = {\\n    'r': '#22aa22', // Molten red -> Mid green\\n    'd': '#003300', // Dark shadow -> Dark green\\n    'l': '#55dd55', // Highlight -> Bright green\\n    'y': '#bbff22', // Yellow -> Toxic yellow-green\\n    'o': '#55cc22'  // Orange -> Slime green\\n};\",\"StartLine\":1234,\"TargetContent\":\"    PORTAL: 6,\\n    SPENT_REWARD: 11,\\n    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15\\n};\"},{\"AllowMultiple\":false,\"EndLine\":3308,\"ReplacementContent\":\"        let inSwamp = false;\\n\\n        // 5. Hazard intersection checks\\n        for (let r = bounds.minY; r <= bounds.maxY; r++) {\\n            for (let c = bounds.minX; c <= bounds.maxX; c++) {\\n                const tileType = this.getTile(c, r);\\n                if (tileType === TILES.LAVA) {\\n                    this.damagePlayer(true); // Instant kill!\\n                    return;\\n                } else if (tileType === TILES.SWAMP) {\\n                    inSwamp = true;\\n                }\\n            }\\n        }\\n\\n        if (inSwamp) {\\n            this.player.vx *= 0.6; // Heavy horizontal drag\\n            if (this.player.vy > 0) {\\n                this.player.vy *= 0.7; // Fall slower (thick liquid)\\n            } else if (this.player.vy < 0) {\\n                this.player.vy *= 0.85; // Rise slower (resists jumps)\\n            }\\n        }\\n    }\",\"StartLine\":3299,\"TargetContent\":\"        // 5. Lava Hazard intersection checks (Lava is always instantly fatal!)\\n        for (let r = bounds.minY; r <= bounds.maxY; r++) {\\n            for (let c = bounds.minX; c <= bounds.maxX; c++) {\\n                if (this.getTile(c, r) === TILES.LAVA) {\\n                    this.damagePlayer(true); // Instant kill!\\n                    return;\\n                }\\n            }\\n        }\\n    }\"},{\"AllowMultiple\":false,\"EndLine\":3475,\"ReplacementContent\":\"        else if (typ\n<truncated 1576 bytes>"
+--- Content End ---
+
+================================================================================
+
+STEP 2187: Tool: replace_file_content | Matched: [swamp]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Upgrade the gas particles from blocky retro squares to smooth, glowing radial-gradient vapor clouds.\"",
+  "Instruction": "\"Update gas particle rendering.\"",
+  "StartLine": "1284",
+  "EndLine": "1340"
+}
+Content size: 2070 characters, 2 lines.
+--- Content Start ---
+"    draw(ctx, cameraX) {\n        const alpha = Math.max(0, this.life / this.maxLife);\n        ctx.save();\n        ctx.globalAlpha = alpha;\n        \n        const drawX = Math.floor(this.x - cameraX);\n        const drawY = Math.floor(this.y);\n\n        if (this.type === 'gas') {\n            // Render smooth, glowing vapor clouds instead of blocky pixels\n            ctx.globalCompositeOperation = 'lighter';\n            const grd = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, this.size);\n            grd.addColorStop(0, `rgba(${this.color}, 0.6)`);\n            grd.addColorStop(1, `rgba(${this.color}, 0)`);\n            ctx.fillStyle = grd;\n            ctx.beginPath();\n            ctx.arc(drawX, drawY, this.size, 0, Math.PI * 2);\n            ctx.fill();\n        } else {\n            // Standard retro blocky particles\n            ctx.fillStyle = this.color;\n            ctx.fillRect(drawX - this.size / 2, drawY - this.size / 2, this.size, this.size);\n        }\n        \n        ctx.restore();\n    }\n}\n\nclass ParticleSystem {\n    constructor() {\n        this.particles = [];\n    }\n\n    add(p) {\n        if (this.particles.length > 200) this.particles.shift();\n        this.particles.push(p);\n    }\n\n    spawnEmber(x, y) {\n        const colors = ['#f95700', '#f7be00', '#e61e29'];\n        this.add(new Particle(x, y, (Math.random() - 0.5) * 0.8, -Math.random() * 0.7 - 0.3, colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 1, Math.random() * 80 + 40, 'ember'));\n    }\n\n    spawnOneUpEmber(x, y) {\n        const colors = ['#00ff66', '#aeff00', '#00ffcc'];\n        for (let i = 0; i < 12; i++) {\n            const angle = Math.random() * Math.PI * 2;\n            const speed = Math.random() * 1.5 + 0.5;\n            this.add(new Particle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed, colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 2, Math.random() * 60 + 30, 'dust'));\n        }\n    }\n\n    spawnLavaBubble(x, y) {\n        this.
+<truncated 714 bytes>
+--- Content End ---
+
+================================================================================
+
+STEP 3233: Tool: replace_file_content | Matched: [swamp]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Add BREAKABLE_GREY to TILES constant.\"",
+  "Instruction": "\"Add BREAKABLE_GREY: 17 to the TILES object.\"",
+  "StartLine": "1252",
+  "EndLine": "1265"
+}
+Content size: 256 characters, 1 lines.
+--- Content Start ---
+"const TILES = {\n    EMPTY: 0,\n    GROUND: 1,\n    PLATFORM: 2,\n    BREAKABLE: 3,\n    REWARD: 4,\n    LAVA: 5,\n    PORTAL: 6,\n    SPENT_REWARD: 11,\n    BOSS: 13,\n    FALLING_PLATFORM: 14,\n    ONEUP: 15,\n    SWAMP: 16,\n    BREAKABLE_GREY: 17\n};"
+--- Content End ---
+
+================================================================================
+
+STEP 3275: Tool: multi_replace_file_content | Matched: [swamp]
+Arguments:
+{
+  "TargetFile": "\"C:\\\\Users\\\\archi\\\\.gemini\\\\antigravity\\\\scratch\\\\hexlys_inferno\\\\game.js\"",
+  "Description": "\"Revert BREAKABLE_GREY additions in game.js.\"",
+  "Instruction": "\"Remove TILES.BREAKABLE_GREY logic from game.js to restore previous state.\""
+}
+Content size: 2166 characters, 1 lines.
+--- Content Start ---
+"[{\"AllowMultiple\":false,\"EndLine\":1265,\"ReplacementContent\":\"    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15,\\n    SWAMP: 16\\n};\",\"StartLine\":1261,\"TargetContent\":\"    BOSS: 13,\\n    FALLING_PLATFORM: 14,\\n    ONEUP: 15,\\n    SWAMP: 16,\\n    BREAKABLE_GREY: 17\\n};\"},{\"AllowMultiple\":false,\"EndLine\":1580,\"ReplacementContent\":\"                if (tile === TILES.GROUND || tile === TILES.PLATFORM || tile === TILES.BREAKABLE || tile === TILES.REWARD || tile === TILES.SPENT_REWARD || tile === TILES.ONEUP) {\",\"StartLine\":1578,\"TargetContent\":\"                if (tile === TILES.GROUND || tile === TILES.PLATFORM || tile === TILES.BREAKABLE || tile === TILES.BREAKABLE_GREY || tile === TILES.REWARD || tile === TILES.SPENT_REWARD || tile === TILES.ONEUP) {\"},{\"AllowMultiple\":false,\"EndLine\":1671,\"ReplacementContent\":\"                if (t === TILES.GROUND || t === TILES.PLATFORM || t === TILES.BREAKABLE || t === TILES.REWARD || t === TILES.SPENT_REWARD || t === TILES.ONEUP) {\",\"StartLine\":1669,\"TargetContent\":\"                if (t === TILES.GROUND || t === TILES.PLATFORM || t === TILES.BREAKABLE || t === TILES.BREAKABLE_GREY || t === TILES.REWARD || t === TILES.SPENT_REWARD || t === TILES.ONEUP) {\"},{\"AllowMultiple\":false,\"EndLine\":3264,\"ReplacementContent\":\"        if (tile === TILES.BREAKABLE) {\",\"StartLine\":3264,\"TargetContent\":\"        if (tile === TILES.BREAKABLE || tile === TILES.BREAKABLE_GREY) {\"},{\"AllowMultiple\":false,\"EndLine\":3610,\"ReplacementContent\":\"               tile === TILES.BREAKABLE ||\",\"StartLine\":3610,\"TargetContent\":\"               tile === TILES.BREAKABLE || tile === TILES.BREAKABLE_GREY || \"},{\"AllowMultiple\":false,\"EndLine\":3793,\"ReplacementContent\":\"        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;\",\"StartLine\":3789,\"TargetContent\":\"        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;\\n        else if (type === TILES.BREAKABLE_GREY) {\\n            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.BREAKABLE, false, 4.5, {'q': PALETTE['s'], 'f'\n<truncated 52 bytes>"
+--- Content End ---
+

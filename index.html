@@ -8,11 +8,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
     <div id="arcade-cabinet">
         <div id="game-container">
+            <!-- Dev Mode Toolbar -->
+            <div id="dev-toolbar" style="position: absolute; top: 10px; right: 10px; z-index: 100; display: flex; gap: 10px; align-items: center;">
+                <select id="dev-palette" style="background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #aaa; padding: 5px; font-family: 'Press Start 2P', monospace; font-size: 10px; display: none;">
+                    <option value="7">Soul Shard</option>
+                    <option value="1">Floor Tile</option>
+                    <option value="3">Breakable Block</option>
+                    <option value="4">Reward Block</option>
+                    <option value="2">Chain Platform</option>
+                    <option value="14">Falling Platform</option>
+                    <option value="5">Lava</option>
+                    <option value="16">Toxic Swamp</option>
+                    <option value="18">1-Up Block</option>
+                    <option value="0">-- None --</option>
+                </select>
+                <select id="dev-enemy-palette" style="background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #aaa; padding: 5px; font-family: 'Press Start 2P', monospace; font-size: 10px; display: none;">
+                    <option value="0">-- Enemies --</option>
+                    <option value="8">Skelly Bug</option>
+                    <option value="9">Winged Skull</option>
+                    <option value="15">Ghost</option>
+                    <option value="17">Bog Zombie</option>
+                </select>
+                <button id="dev-toggle-btn" style="background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #ff4400; padding: 5px 10px; cursor: pointer; font-family: 'Press Start 2P', monospace; font-size: 10px;">DEV MODE: OFF</button>
+                <button id="dev-export-btn" style="background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #00ffaa; padding: 5px 10px; cursor: pointer; font-family: 'Press Start 2P', monospace; font-size: 10px; display: none;">EXPORT LAYOUT</button>
+            </div>
+
             <!-- HTML5 Game Canvas -->
             <canvas id="gameCanvas" width="960" height="540"></canvas>
 
@@ -39,7 +64,7 @@
 
                 <div class="menu-actions">
                     <button id="start-btn" class="arcade-btn start-img-btn pulse">
-                        <img src="start_btn.png" alt="START" class="start-btn-img">
+                        <img src="game ui/start_btn.png" alt="START" class="start-btn-img">
                     </button>
                 </div>
 
@@ -66,8 +91,8 @@
             <!-- Game Over Screen Overlay -->
             <div id="game-over-screen" class="overlay-screen hidden">
                 <div class="game-over-box">
-                    <img src="game_over.png" alt="GAME OVER" class="game-over-img">
-                    <button id="retry-btn" class="arcade-btn pulse">TRY AGAIN (R)</button>
+                    <img src="game ui/game_over.png" alt="GAME OVER" class="game-over-img">
+                    <p class="blink" style="color: white; font-size: 16px; margin-top: 20px;">PRESS SPACE TO PLAY AGAIN</p>
                     <!-- Hidden elements for backward compatibility with game.js updating -->
                     <div style="display: none;">
                         <span id="go-score"></span>
@@ -76,28 +101,28 @@
                 </div>
             </div>
 
-            <!-- Victory Screen Overlay -->
-            <div id="victory-screen" class="overlay-screen hidden">
+            <!-- Tally Screen Overlay -->
+            <div id="tally-screen" class="overlay-screen hidden">
                 <div class="victory-box">
-                    <h2 class="screen-heading success-text">INFERNO ESCAPED!</h2>
-                    <p class="victory-subtext">Hexly successfully leaped out of the underworld!</p>
+                    <h2 id="tally-heading" class="screen-heading success-text">CIRCLE CLEARED</h2>
+                    <p id="tally-subtext" class="victory-subtext">Hexly successfully leaped out of the underworld!</p>
                     
                     <div class="stats-container">
                         <div class="stat-card">
                             <span class="stat-lbl">TOTAL SCORE</span>
-                            <span class="stat-val" id="vic-score">000000</span>
+                            <span class="stat-val" id="v-score">000000</span>
                         </div>
                         <div class="stat-card">
                             <span class="stat-lbl">SOULS SAVED</span>
-                            <span class="stat-val" id="vic-coins">0/30</span>
+                            <span class="stat-val" id="v-coins">0</span>
                         </div>
                         <div class="stat-card">
                             <span class="stat-lbl">ESCAPE TIME</span>
-                            <span class="stat-val" id="vic-time">0:00</span>
+                            <span class="stat-val" id="v-time">0</span>
                         </div>
                     </div>
 
-                    <button id="victory-retry-btn" class="arcade-btn pulse">PLAY AGAIN (R)</button>
+                    <p class="blink" style="color: #00ffaa; font-size: 16px; margin-top: 20px;">PRESS SPACE TO PLAY AGAIN</p>
                 </div>
             </div>
 
@@ -107,6 +132,13 @@
     </div>
 
     <!-- Load the modular retro-platformer code -->
-    <script src="game.js?v=3"></script>
+    <script src="levels.js?v=70"></script>
+    <script src="audiosynth.js?v=17"></script>
+    <script src="src/assets.js?v=8"></script>
+    <script src="src/constants.js?v=6"></script>
+    <script src="src/particles.js?v=9"></script>
+    <script src="src/entities.js?v=34"></script>
+    <script src="src/input.js?v=4"></script>
+    <script src="src/engine.js?v=1001"></script>
 </body>
 </html>
