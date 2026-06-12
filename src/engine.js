@@ -460,10 +460,13 @@ class GameEngine {
         this.screens.hud.classList.remove('hidden');
         
         // Ensure ambience starts if it's the first level
-        if (synth) {
+        if (typeof synth !== 'undefined') {
             synth.playBellToll();
             if (this.currentLevelIndex === 0 || this.currentLevelIndex === 1) {
                 synth.playAmbience(this.currentLevelIndex);
+            }
+            if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
+                synth.startMusic(LEVELS[this.currentLevelIndex].music);
             }
         }
         
@@ -524,6 +527,12 @@ class GameEngine {
         if (this.currentLevelIndex >= LEVELS.length) {
             this.triggerTallyScreen(true);
             return;
+        }
+        
+        if (typeof synth !== 'undefined') {
+            if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
+                synth.startMusic(LEVELS[this.currentLevelIndex].music);
+            }
         }
         
         const lvl = LEVELS[this.currentLevelIndex];
@@ -788,6 +797,17 @@ class GameEngine {
                 if (i-1 < LEVELS.length) {
                     this.currentLevelIndex = i-1;
                     this.resetGame();
+                    
+                    // Update ambience and music for new level
+                    if (typeof synth !== 'undefined') {
+                        if (this.currentLevelIndex === 1) {
+                            synth.playAmbience(1);
+                        }
+                        if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
+                            synth.startMusic(LEVELS[this.currentLevelIndex].music);
+                        }
+                    }
+                    
                     const lvl = LEVELS[this.currentLevelIndex];
                     this.disableEnemyFireballs = lvl.disableEnemyFireballs || false;
                     if (lvl.background) {

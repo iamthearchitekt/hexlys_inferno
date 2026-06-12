@@ -25,6 +25,7 @@ const LEVELS = [
     {
         "id": 2,
         "name": "The Ashen Wastes",
+        "music": "music_level2",
         "background": "backgrounds/background_lvl2.png",
         "mirrorBackground": false,
         "startX": 80,
@@ -47,6 +48,8 @@ const LEVELS = [
     {
         "id": 3,
         "name": "Toxic Swamp",
+        "music": "music_level3",
+        "disableEnemyFireballs": true,
         "background": "backgrounds/background3.png",
         "mirrorBackground": false,
         "startX": 80,

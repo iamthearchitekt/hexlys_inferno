@@ -4,7 +4,8 @@ class AudioSynth {
         this._musicEnabled = true; // Re-enabled for production!
         this.sfxEnabled = true;
         this.sfxBuffers = {};
-        this.musicBuffer = null;
+        this.musicBuffers = {};
+        this.currentMusicKey = 'music_level1';
         this.musicSource = null;
         this.starMusicBuffer = null;
         this.starMusicSource = null;
@@ -74,16 +75,22 @@ class AudioSynth {
     }
 
     _loadMusic() {
-        fetch('music/game_music.wav')
-            .then(r => r.arrayBuffer())
-            .then(ab => this.ctx.decodeAudioData(ab))
-            .then(buf => {
-                this.musicBuffer = buf;
-                if (this._musicEnabled && !this.starMusicSource) {
-                    this.startMusic();
-                }
-            })
-            .catch(err => console.warn("Failed to load game music:", err));
+        const loadTrack = (path, key) => {
+            fetch(path)
+                .then(r => r.arrayBuffer())
+                .then(ab => this.ctx.decodeAudioData(ab))
+                .then(buf => {
+                    this.musicBuffers[key] = buf;
+                    if (this._musicEnabled && this.currentMusicKey === key && !this.starMusicSource) {
+                        this.startMusic(key);
+                    }
+                })
+                .catch(err => console.warn("Failed to load music track:", key, err));
+        };
+
+        loadTrack('music/game_music.wav', 'music_level1');
+        loadTrack('music/game_musiclvl2.wav', 'music_level2');
+        loadTrack('music/game_musiclvl3.wav', 'music_level3');
             
         fetch('music/star_music.wav')
             .then(r => r.arrayBuffer())
@@ -94,12 +101,15 @@ class AudioSynth {
             .catch(err => console.warn("Failed to load star music:", err));
     }
 
-    startMusic() {
-        if (!this.ctx || !this.musicBuffer || !this._musicEnabled) return;
+    startMusic(key) {
+        if (key) this.currentMusicKey = key;
+        const targetKey = this.currentMusicKey;
+        
+        if (!this.ctx || !this.musicBuffers[targetKey] || !this._musicEnabled) return;
         if (this.musicSource) this.stopMusic();
 
         this.musicSource = this.ctx.createBufferSource();
-        this.musicSource.buffer = this.musicBuffer;
+        this.musicSource.buffer = this.musicBuffers[targetKey];
         this.musicSource.loop = true;
         
         const gain = this.ctx.createGain();
