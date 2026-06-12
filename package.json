@@ -19,7 +19,8 @@
       "output": "dist"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "hexly_icon.png"
     }
   },
   "devDependencies": {
