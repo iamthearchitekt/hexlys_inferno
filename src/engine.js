@@ -546,9 +546,16 @@ class GameEngine {
 
     triggerTallyScreen(isFinalLevel = false) {
         this.state = 'LEVEL_TALLY';
+        
+        // Stop all level music!
+        if (typeof synth !== 'undefined') {
+            if (synth.stopMusic) synth.stopMusic();
+            if (synth.stopStarMusic) synth.stopStarMusic();
+            synth.playVictory();
+        }
+        
         this.screens.tally = document.getElementById('tally-screen');
         this.screens.tally.classList.remove('hidden');
-        synth.playVictory();
         
         const heading = document.getElementById('tally-heading');
         const subtext = document.getElementById('tally-subtext');
@@ -619,7 +626,7 @@ class GameEngine {
                     }, 2000); // 2 second pause
                 }
             }
-        }, 50); // fast tick
+        }, 15); // much faster tick!
     }
 
     resetGame(isSoftReset = false) {
