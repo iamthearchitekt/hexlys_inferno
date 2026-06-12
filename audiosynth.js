@@ -57,7 +57,7 @@ class AudioSynth {
             fire:    'sfx/fire.wav',
             ambience1:'sfx/lvl1_ambience.wav?v=2',
             ambience2:'sfx/lvl2_ambience.wav?v=2',
-            ambience3:'sfx/lvl3_ambience.wav',
+            ambience3:'sfx/lvl3_ambience.wav?v=2',
             belltoll:'sfx/bell_toll.wav?v=2',
             deathbell:'sfx/death_bell.wav',
             loselife:'sfx/loselifesound.wav',
