@@ -1206,7 +1206,7 @@ class GameEngine {
                         this.triggerCeilingBump(c, r);
                     }
                     
-                    if (this.player.crouching && this.player.dropTimer > 15) continue; // Drop through if holding down for a delay!
+                    if (t === TILES.PLATFORM && this.player.crouching && this.player.dropTimer > 15) continue; // Drop through chains if holding down for a delay!
                     
                     // Only collide if falling DOWN, AND previously above the platform
                     if (this.player.vy > 0 && (this.player.y - this.player.vy + this.player.height <= r * TILE_SIZE + 0.1)) {
