@@ -113,7 +113,13 @@ class AudioSynth {
         this.musicSource.loop = true;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.4;
+        
+        // Level 1 music is mastered louder, so we lower it to match 2 & 3
+        if (targetKey === 'music_level1') {
+            gain.gain.value = 0.15; 
+        } else {
+            gain.gain.value = 0.4;
+        }
         
         this.musicSource.connect(gain);
         gain.connect(this.ctx.destination);
@@ -140,7 +146,7 @@ class AudioSynth {
         this.starMusicSource.buffer = this.starMusicBuffer;
         this.starMusicSource.loop = true;
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.5;
+        gain.gain.value = 0.2; // Lowered to be more restrained and match other tracks
         this.starMusicSource.connect(gain);
         gain.connect(this.ctx.destination);
         this.starMusicSource.start();
