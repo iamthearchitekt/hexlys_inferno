@@ -462,7 +462,7 @@ class GameEngine {
         // Ensure ambience starts if it's the first level
         if (typeof synth !== 'undefined') {
             synth.playBellToll();
-            if (this.currentLevelIndex === 0 || this.currentLevelIndex === 1) {
+            if (this.currentLevelIndex <= 2) {
                 synth.playAmbience(this.currentLevelIndex);
             }
             if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
@@ -530,6 +530,9 @@ class GameEngine {
         }
         
         if (typeof synth !== 'undefined') {
+            if (this.currentLevelIndex <= 2) {
+                synth.playAmbience(this.currentLevelIndex);
+            }
             if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
                 synth.startMusic(LEVELS[this.currentLevelIndex].music);
             }
@@ -798,8 +801,8 @@ class GameEngine {
                     
                     // Update ambience and music for new level
                     if (typeof synth !== 'undefined') {
-                        if (this.currentLevelIndex === 1) {
-                            synth.playAmbience(1);
+                        if (this.currentLevelIndex <= 2) {
+                            synth.playAmbience(this.currentLevelIndex);
                         }
                         if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
                             synth.startMusic(LEVELS[this.currentLevelIndex].music);

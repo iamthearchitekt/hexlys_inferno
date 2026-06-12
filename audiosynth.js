@@ -57,6 +57,7 @@ class AudioSynth {
             fire:    'sfx/fire.wav',
             ambience1:'sfx/lvl1_ambience.wav?v=2',
             ambience2:'sfx/lvl2_ambience.wav?v=2',
+            ambience3:'sfx/lvl3_ambience.wav',
             belltoll:'sfx/bell_toll.wav?v=2',
             deathbell:'sfx/death_bell.wav',
             loselife:'sfx/loselifesound.wav',
@@ -218,7 +219,7 @@ class AudioSynth {
             return;
         }
         
-        const trackKey = levelIndex === 1 ? 'ambience2' : 'ambience1';
+        const trackKey = levelIndex === 2 ? 'ambience3' : (levelIndex === 1 ? 'ambience2' : 'ambience1');
         
         if (!this.sfxBuffers[trackKey]) {
             console.log("playAmbience pending: buffer not loaded", trackKey);
@@ -235,7 +236,7 @@ class AudioSynth {
         this.ambienceSource.loop = true;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = trackKey === 'ambience2' ? 0.5 : 1.0; 
+        gain.gain.value = trackKey === 'ambience2' ? 0.5 : (trackKey === 'ambience3' ? 0.7 : 1.0); 
         
         this.ambienceSource.connect(gain);
         gain.connect(this.ctx.destination);
