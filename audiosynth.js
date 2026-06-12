@@ -229,7 +229,7 @@ class AudioSynth {
         this.ambienceSource.loop = true;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = trackKey === 'ambience2' ? 1.5 : 1.0; 
+        gain.gain.value = trackKey === 'ambience2' ? 0.5 : 1.0; 
         
         this.ambienceSource.connect(gain);
         gain.connect(this.ctx.destination);
