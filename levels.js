@@ -26,6 +26,7 @@ const LEVELS = [
         "id": 2,
         "name": "The Ashen Wastes",
         "music": "music_level2",
+        "disableEnemyFireballs": true,
         "background": "backgrounds/background_lvl2.png",
         "mirrorBackground": false,
         "startX": 80,
