@@ -788,6 +788,7 @@ class GameEngine {
     }
 
     update() {
+        this.input.updateGamepad();
         this.updateCursorVisibility();
         this.frameCounter++;
         
