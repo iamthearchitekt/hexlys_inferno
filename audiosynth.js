@@ -132,7 +132,7 @@ class AudioSynth {
         const gain = this.ctx.createGain();
         gain.gain.value = 0.5;
         this.starMusicSource.connect(gain);
-        gain.connect(this.masterGain);
+        gain.connect(this.ctx.destination);
         this.starMusicSource.start();
     }
     
