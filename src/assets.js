@@ -121,7 +121,7 @@ blockTileImg.src = 'tiles/level1-breakble_tile.png';
 const flameImg = new Image();
 let flameImgLoaded = false;
 flameImg.onload = () => { flameImgLoaded = true; };
-flameImg.src = 'power ups/flame.png';
+flameImg.src = 'power_ups/flame.png';
 
 const portalImg = new Image();
 let portalImgLoaded = false;
@@ -151,7 +151,7 @@ enemyFireballImg.src = 'fireballs/enemy_fireball.png';
 const powerupImg = new Image();
 let powerupImgLoaded = false;
 powerupImg.onload = () => { powerupImgLoaded = true; };
-powerupImg.src = 'power ups/powerup.png';
+powerupImg.src = 'power_ups/powerup.png';
 
 const flyingSkeletonImg = new Image();
 let flyingSkeletonImgLoaded = false;
@@ -186,7 +186,7 @@ bogZombie2Img.src = 'sprites/bog_zombie2.png';
 const soulShardImg = new Image();
 let soulShardImgLoaded = false;
 soulShardImg.onload = () => { soulShardImgLoaded = true; };
-soulShardImg.src = 'power ups/soul_shard.png';
+soulShardImg.src = 'power_ups/soul_shard.png';
 
 const PALETTE = {
     '.': 'transparent',
@@ -199,6 +199,8 @@ const PALETTE = {
     'o': '#f95700',       /* Hot Ember Orange */
     'p': '#c4001a',       /* Volcanic Demonic Red (Swapped from Purple) */
     'm': '#ff6a00',       /* Hot Magma Orange (Swapped from Purple) */
+    'v': '#cc00ff',       /* Violet Glow */
+    'V': '#e066ff',       /* Bright Violet Highlight */
     'g': '#eae4cb',       /* Bone Gray/White */
     's': '#544e47',       /* Warm Basalt Gray (Swapped from Purplish Gray) */
     'c': '#3a3530',        /* Dark Shadow Basalt Gray (Swapped from Purplish Gray) */

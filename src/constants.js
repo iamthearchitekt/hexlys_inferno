@@ -358,13 +358,13 @@ const SPRITES = {
     // SOUL COIN: Spinning (Size 10 cols x 10 rows. Scale 3.0 = 30x30px)
     COIN: [
         "..bbbbbb..",
-        ".byyyyyyb.",
-        "byyyooyyyb",
-        "byyooodyyb",
-        "byyododyyb",
-        "byyooodyyb",
-        "byyyooyyyb",
-        ".byyyyyyb.",
+        ".bvvvvvvb.",
+        "bvvvVVvvvb",
+        "bvvVVVvvvb",
+        "bvvVvVvvvb",
+        "bvvVVVvvvb",
+        "bvvvVVvvvb",
+        ".bvvvvvvb.",
         "..bbbbbb..",
         ".........."
     ],
