@@ -84,6 +84,11 @@ class ParticleSystem {
         this.add(new Particle(x, y, (Math.random() - 0.5) * 0.8, -Math.random() * 0.7 - 0.3, colors[Math.floor(Math.random() * colors.length)], Math.random() * 3 + 1, Math.random() * 80 + 40, 'ember'));
     }
 
+    spawnSoulSpark(x, y) {
+        const colors = ['#cc00ff', '#e066ff', '#8a00e6'];
+        this.add(new Particle(x, y, (Math.random() - 0.5) * 1.5, -Math.random() * 1.5 - 0.5, colors[Math.floor(Math.random() * colors.length)], Math.random() * 4 + 2, Math.random() * 50 + 30, 'ember'));
+    }
+
     spawnHaze(x, y) {
         // Sickly mustard-yellow fog colors to match the background sky
         const colors = ['#a3a828', '#868a21', '#656919'];

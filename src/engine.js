@@ -1384,7 +1384,7 @@ class GameEngine {
                 this.player.score += 50;
                 synth.playCollect();
                 this.updateHUD();
-                for (let i = 0; i < 6; i++) particles.spawnEmber(coin.x, coin.y);
+                for (let i = 0; i < 6; i++) particles.spawnSoulSpark(coin.x, coin.y);
             }
         });
 
@@ -2379,7 +2379,7 @@ class GameEngine {
             const drawX = this.draggedTile.mouseX + this.camera.x - TILE_SIZE/2;
             const drawY = this.draggedTile.mouseY - TILE_SIZE/2;
             this.ctx.globalAlpha = 0.8;
-            if (t === 7 && powerupImgLoaded) this.ctx.drawImage(powerupImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
+            if (t === 7 && soulShardImgLoaded) this.ctx.drawImage(soulShardImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
             else if (t === 3 && blockTileImgLoaded) this.ctx.drawImage(blockTileImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
             else if (t === 4 && powerupTileImgLoaded) this.ctx.drawImage(powerupTileImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
             else if (t === 2 && chainTileImgLoaded) this.ctx.drawImage(chainTileImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
