@@ -83,14 +83,24 @@ class DevMenu {
             return;
         }
 
-        // Set the engine to start at this level
-        this.engine.currentLevelIndex = index;
         this.hide();
 
-        // Now actually start the game at this level
+        // Set up audio
         this.engine.audioSetup();
         this.engine.initializeMap();
-        this.engine.startGame();
+
+        // Go straight into the game at the chosen level.
+        // resetGame(isSoftReset=false, forceLevel=index) avoids the
+        // unconditional reset to 0 that startGame() triggers.
+        this.engine.state = 'PLAYING';
+        this.engine.screens.title.classList.add('hidden');
+        this.engine.screens.hud.classList.remove('hidden');
+        if (typeof synth !== 'undefined') {
+            synth.playBellToll();
+            if (index <= 2) synth.playAmbience(index);
+            if (synth.startMusic && LEVELS[index].music) synth.startMusic(LEVELS[index].music);
+        }
+        this.engine.resetGame(false, index);
     }
 
     showLoadError(index, message) {
