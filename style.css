@@ -838,3 +838,54 @@ input:checked + .slider:before {
     border-top: 1px solid rgba(255,255,255,0.1);
     padding-top: 15px;
 }
+
+/* Dev menu: tag on left, close button on right */
+.dev-menu-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* ✕ close button */
+.dev-close-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+}
+.dev-close-btn:hover {
+    background: rgba(255,60,60,0.35);
+    color: #fff;
+    border-color: #ff4444;
+}
+
+/* Keyboard key pill hints in subtitle */
+.dev-menu-subtitle kbd {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11px;
+    font-family: var(--font-retro);
+    color: #fff;
+}
+
+/* In-game dev hint — bottom-right corner */
+#dev-hint {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-size: 10px;
+    font-family: var(--font-retro);
+    color: rgba(255, 200, 0, 0.5);
+    pointer-events: none;
+    z-index: 500;
+    letter-spacing: 0.04em;
+}

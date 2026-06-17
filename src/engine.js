@@ -316,9 +316,11 @@ class GameEngine {
         this.initializeMap();
         this.mapCols = LEVELS[0].layout[0].length;
         
-        // Editor state
-        this.isDevMode = typeof DEV_MODE !== 'undefined' ? DEV_MODE : false;
-        if (this.isDevMode) {
+        // devGodMode: always-on in dev builds — god mode + level-menu access
+        this.devGodMode = typeof DEV_MODE !== 'undefined' ? DEV_MODE : false;
+        // isDevMode: tile-editor mode only (camera pan, palette, Hexly hidden) — starts OFF
+        this.isDevMode = false;
+        if (this.devGodMode) {
             this.devMenu = new DevMenu(this);
         }
         this.draggedTile = null;
@@ -329,7 +331,7 @@ class GameEngine {
         const startBtn = document.getElementById('start-btn');
         if (startBtn) {
             startBtn.addEventListener('click', () => {
-                if (this.isDevMode && this.devMenu) {
+                if (this.devGodMode && this.devMenu) {
                     this.devMenu.show();
                 } else {
                     this.audioSetup();
@@ -345,15 +347,24 @@ class GameEngine {
 
         window.addEventListener('keydown', (e) => {
             if (this.devMenu && this.devMenu.isVisible()) {
-                if (e.code === 'Escape') {
+                if (e.code === 'Escape' || e.code === 'Backquote') {
                     this.devMenu.hide();
+                    this.input.pausePressed = false; // prevent spurious pause on Escape
                 }
+                // Drain any digit keys queued while menu was open so they don't fire after close
+                for (let i = 1; i <= 9; i++) this.input['digit' + i] = false;
+                return;
+            }
+
+            // Backtick (~) — open dev menu from anywhere during play
+            if (e.code === 'Backquote' && this.devGodMode && this.devMenu) {
+                this.devMenu.show();
                 return;
             }
 
             if (e.code === 'Space' || e.code === 'KeyW' || e.code === 'Enter') {
                 if (this.state === 'TITLE') {
-                    if (this.isDevMode && this.devMenu) {
+                    if (this.devGodMode && this.devMenu) {
                         this.devMenu.show();
                     } else {
                         this.audioSetup();
@@ -824,35 +835,37 @@ class GameEngine {
         this.updateCursorVisibility();
         this.frameCounter++;
         
-        // Handle level warping
-        for (let i=1; i<=9; i++) {
-            if (this.input['digit'+i]) {
-                this.input['digit'+i] = false;
-                if (i-1 < LEVELS.length) {
-                    this.resetGame(false, i-1);
-                    
-                    // Update ambience and music for new level
-                    if (typeof synth !== 'undefined') {
-                        if (this.currentLevelIndex <= 2) {
-                            synth.playAmbience(this.currentLevelIndex);
+        // Digit 1-9 level warping — dev builds only
+        if (this.devGodMode) {
+            for (let i=1; i<=9; i++) {
+                if (this.input['digit'+i]) {
+                    this.input['digit'+i] = false;
+                    if (i-1 < LEVELS.length) {
+                        this.resetGame(false, i-1);
+                        
+                        // Update ambience and music for new level
+                        if (typeof synth !== 'undefined') {
+                            if (this.currentLevelIndex <= 2) {
+                                synth.playAmbience(this.currentLevelIndex);
+                            }
+                            if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
+                                synth.startMusic(LEVELS[this.currentLevelIndex].music);
+                            }
                         }
-                        if (synth.startMusic && LEVELS[this.currentLevelIndex].music) {
-                            synth.startMusic(LEVELS[this.currentLevelIndex].music);
+                        
+                        const lvl = LEVELS[this.currentLevelIndex];
+                        this.disableEnemyFireballs = lvl.disableEnemyFireballs || false;
+                        if (lvl.background) {
+                            if (!bgImg.src.includes(lvl.background)) {
+                                bgImgLoaded = false;
+                                bgImg.src = lvl.background;
+                            }
+                            document.getElementById('game-container').style.backgroundImage = 'url("' + lvl.background + '")';
+                        } else {
+                            document.getElementById('game-container').style.backgroundImage = 'none';
                         }
+                        return;
                     }
-                    
-                    const lvl = LEVELS[this.currentLevelIndex];
-                    this.disableEnemyFireballs = lvl.disableEnemyFireballs || false;
-                    if (lvl.background) {
-                        if (!bgImg.src.includes(lvl.background)) {
-                            bgImgLoaded = false;
-                            bgImg.src = lvl.background;
-                        }
-                        document.getElementById('game-container').style.backgroundImage = 'url("' + lvl.background + '")';
-                    } else {
-                        document.getElementById('game-container').style.backgroundImage = 'none';
-                    }
-                    return;
                 }
             }
         }
@@ -1364,7 +1377,7 @@ class GameEngine {
     }
 
     damagePlayer(instantDeath = false) {
-        if (this.isDevMode && this.player.health > 0) return; // God mode active while building levels!
+        if (this.devGodMode && this.player.health > 0) return; // God mode always on in dev builds
         if (!instantDeath && (this.player.invulTimer > 0 || this.player.superPowered)) return;
 
         // If powered up, lose fireball power but stay alive! (Nintendo style)
@@ -2141,6 +2154,13 @@ class GameEngine {
         const enemyPalette = document.getElementById('dev-enemy-palette');
         
         this.selectedDevTool = 7; // Default to Soul Shard
+
+        // Sync button label with actual initial state (isDevMode starts false)
+        toggleBtn.innerText = this.isDevMode ? 'DEV MODE: ON' : 'DEV MODE: OFF';
+        toggleBtn.style.borderColor = this.isDevMode ? '#00ffaa' : '#ff4400';
+        exportBtn.style.display = this.isDevMode ? 'block' : 'none';
+        palette.style.display = this.isDevMode ? 'block' : 'none';
+        enemyPalette.style.display = this.isDevMode ? 'block' : 'none';
 
         palette.addEventListener('change', () => {
             if (palette.value !== "0") {
