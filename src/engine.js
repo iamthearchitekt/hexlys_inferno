@@ -429,6 +429,8 @@ class GameEngine {
         this.fallingPlatforms = [];
         this.bosses = [];
         this.mapCols = activeLevel[0].length;
+        // Clear leftover particles from previous levels (e.g. red embers from level 1 bleeding into level 3)
+        if (typeof particles !== 'undefined') particles.particles = [];
 
         let shardCount = 0;
         

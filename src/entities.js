@@ -208,8 +208,8 @@ class EjectedSoulCoin {
         
         if (typeof soulShardImgLoaded !== 'undefined' && soulShardImgLoaded) {
             ctx.save();
-            ctx.shadowColor = '#cc00ff';
-            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#6600ff';
+            ctx.shadowBlur = 18;
             ctx.drawImage(soulShardImg, 0, 0, soulShardImg.width, soulShardImg.height, dx, dy, dw, dh);
             ctx.restore();
         }
@@ -332,9 +332,9 @@ class SoulCoin {
         
         if (soulShardImgLoaded) {
             ctx.save();
-            ctx.shadowColor = '#cc00ff';
-            ctx.shadowBlur = 15;
-            
+            // #6600ff (deep blue-purple) stays purple on level 3's yellow-green background
+            ctx.shadowColor = '#6600ff';
+            ctx.shadowBlur = 18;
             ctx.drawImage(soulShardImg, dx, dy, dw, dh);
             ctx.restore();
         } else {
