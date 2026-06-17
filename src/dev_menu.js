@@ -85,22 +85,16 @@ class DevMenu {
 
         this.hide();
 
-        // Set up audio
+        // Mirror exactly what the keyboard level-warp does:
+        // audioSetup ensures synth is ready, then resetGame handles
+        // state, screen visibility, initializeMap, and audio internally.
         this.engine.audioSetup();
-        this.engine.initializeMap();
-
-        // Go straight into the game at the chosen level.
-        // resetGame(isSoftReset=false, forceLevel=index) avoids the
-        // unconditional reset to 0 that startGame() triggers.
-        this.engine.state = 'PLAYING';
-        this.engine.screens.title.classList.add('hidden');
-        this.engine.screens.hud.classList.remove('hidden');
-        if (typeof synth !== 'undefined') {
-            synth.playBellToll();
-            if (index <= 2) synth.playAmbience(index);
-            if (synth.startMusic && LEVELS[index].music) synth.startMusic(LEVELS[index].music);
-        }
         this.engine.resetGame(false, index);
+
+        // Start the correct music (resetGame/initializeMap handles ambience)
+        if (typeof synth !== 'undefined' && synth.startMusic && LEVELS[index].music) {
+            synth.startMusic(LEVELS[index].music);
+        }
     }
 
     showLoadError(index, message) {
