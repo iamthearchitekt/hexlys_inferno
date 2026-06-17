@@ -459,7 +459,9 @@ const TILES = {
     FALLING_PLATFORM: 14,
     SWAMP: 16,
     BOG_ZOMBIE: 17,
-    ONE_UP: 18
+    ONE_UP: 18,
+    SOUL_REWARD: 19,
+    SPENT_SOUL_REWARD: 20
 };
 
 // 12-Row Map Data (7 = Coin, 8 = Skelly Bug, 9 = Winged Skull, 10 = Spine Crawler, 12 = Lava Flower Powerup)

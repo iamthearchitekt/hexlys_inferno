@@ -33,8 +33,6 @@ class LavaFlower {
             ctx.restore();
         } else if (flameImgLoaded) {
             ctx.drawImage(flameImg, drawX, drawY, 30, 30);
-        } else {
-            drawPixelMatrix(ctx, drawX, drawY, SPRITES.FLOWER, false, 3.0);
         }
     }
 }
@@ -133,8 +131,10 @@ class Fireball {
                 enemy.dead = true;
                 this.dead = true;
                 player.score += 150;
-                synth.playStomp();
-                particles.spawnFireExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                if (typeof window !== 'undefined' && window.synth && window.synth.playStomp) window.synth.playStomp();
+                for (let i = 0; i < 15; i++) {
+                    particles.spawnEmber(enemy.x + Math.random() * enemy.width, enemy.y + Math.random() * enemy.height);
+                }
                 engine.updateHUD();
             }
         });
@@ -155,8 +155,6 @@ class Fireball {
             // Draw centered on the fireball hitbox
             ctx.drawImage(fireballImg, drawX - 6, drawY - 6, 20, 20);
             ctx.restore();
-        } else {
-            drawPixelMatrix(ctx, drawX, drawY, SPRITES.FIREBALL, false, 2.0);
         }
     }
 
@@ -187,9 +185,39 @@ class Fireball {
     }
 }
 
+class EjectedSoulCoin {
+    constructor(x, y) {
+        this.x = x + TILE_SIZE / 2;
+        this.y = y;
+        this.vy = -8; // Pops upwards
+        this.dead = false;
+    }
+
+    update() {
+        this.y += this.vy;
+        this.vy += 0.5; // Gravity
+        if (this.vy > 8) this.dead = true; // Dies when it falls back down
+    }
+
+    draw(ctx, cameraX) {
+        if (this.dead) return;
+        const dw = 22;
+        const dh = 40;
+        const dx = this.x - dw / 2;
+        const dy = this.y - dh / 2;
+        
+        if (typeof soulShardImgLoaded !== 'undefined' && soulShardImgLoaded) {
+            ctx.save();
+            ctx.shadowColor = '#cc00ff';
+            ctx.shadowBlur = 15;
+            ctx.drawImage(soulShardImg, 0, 0, soulShardImg.width, soulShardImg.height, dx, dy, dw, dh);
+            ctx.restore();
+        }
+    }
+}
 
 // ----------------------------------------------------
-// 7b. ENEMY FIREBALL — straight left flight, phases through tiles, only hits Hexly
+// 7b. ENEMY FIREBALL â€” straight left flight, phases through tiles, only hits Hexly
 // ----------------------------------------------------
 class EnemyFireball {
     constructor(x, y, speed) {
@@ -603,8 +631,6 @@ class Enemy {
                     -this.width / 2, -this.height / 2,
                     this.width, this.height);
                 ctx.restore();
-            } else {
-                drawPixelMatrix(ctx, drawX, drawY, SPRITES.SKELETONS.WINGED_SKULL, facingScale === -1, 3.0);
             }
 
         } else if (this.type === 'BOG_ZOMBIE') {
@@ -679,11 +705,6 @@ class Enemy {
             } else if (skeletonImgLoaded) {
                 // Fallback to static skeleton
                 drawSpriteAutoTrimmed(ctx, skeletonImg, dx, dy, drawW, drawH, this.direction === 1);
-            } else {
-                const matrix = this.type === 'SKULL_BUG'
-                     ? SPRITES.SKELETONS.SKELLY_SCUTTLER
-                     : SPRITES.SKELETONS.SPINE_CRAWLER;
-                drawPixelMatrix(ctx, drawX, drawY, matrix, this.direction === -1, 3.0);
             }
         }
     }

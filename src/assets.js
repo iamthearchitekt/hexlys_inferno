@@ -103,6 +103,16 @@ let powerupTileBrokenImgLoaded = false;
 powerupTileBrokenImg.onload = () => { powerupTileBrokenImgLoaded = true; };
 powerupTileBrokenImg.src = 'tiles/powerup_tile_broken.png';
 
+const powerupShardTileImg = new Image();
+let powerupShardTileImgLoaded = false;
+powerupShardTileImg.onload = () => { powerupShardTileImgLoaded = true; };
+powerupShardTileImg.src = 'tiles/powerup_tile_shard.png';
+
+const powerupBrokenShardTileImg = new Image();
+let powerupBrokenShardTileImgLoaded = false;
+powerupBrokenShardTileImg.onload = () => { powerupBrokenShardTileImgLoaded = true; };
+powerupBrokenShardTileImg.src = 'tiles/powerup_tile_broken_shard.png';
+
 const oneUpTileImg = new Image();
 let oneUpTileImgLoaded = false;
 oneUpTileImg.onload = () => { oneUpTileImgLoaded = true; };

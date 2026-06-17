@@ -26,6 +26,7 @@
                     <option value="5">Lava</option>
                     <option value="16">Toxic Swamp</option>
                     <option value="18">1-Up Block</option>
+                    <option value="19">Soul Reward Block</option>
                     <option value="0">-- None --</option>
                 </select>
                 <select id="dev-enemy-palette" style="background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #aaa; padding: 5px; font-family: 'Press Start 2P', monospace; font-size: 10px; display: none;">
@@ -68,15 +69,6 @@
                         <img src="game ui/start_btn.png" alt="START" class="start-btn-img">
                     </button>
                 </div>
-
-                <div class="control-legend">
-                    <div class="control-column">
-                        <h3>CONTROLS</h3>
-                        <p><strong>A / D</strong> or <strong>← / →</strong> : MOVE</p>
-                        <p><strong>SPACE</strong> or <strong>W</strong> : JUMP</p>
-                        <p><strong>Z / J</strong> : FIRE &nbsp;|&nbsp; <strong>P</strong> : PAUSE &nbsp;|&nbsp; <strong>R</strong> : RESET</p>
-                    </div>
-                </div>
             </div>
 
             <!-- Pause Screen Overlay -->
@@ -92,8 +84,11 @@
             <!-- Game Over Screen Overlay -->
             <div id="game-over-screen" class="overlay-screen hidden">
                 <div class="game-over-box">
-                    <img src="game ui/game_over.png" alt="GAME OVER" class="game-over-img">
-                    <p class="blink" style="color: white; font-size: 16px; margin-top: 20px;">PRESS SPACE TO PLAY AGAIN</p>
+                    <div class="game-over-frame-container">
+                        <img src="game ui/game_over.png" alt="GAME OVER" class="game-over-frame1">
+                        <img src="game ui/game_over2.png" alt="GAME OVER" class="game-over-frame2">
+                    </div>
+                    <img src="game ui/try_again.png" alt="TRY AGAIN" class="try-again-btn glowing-pulse" style="margin-top: 10px; width: 350px; cursor: pointer;">
                     <!-- Hidden elements for backward compatibility with game.js updating -->
                     <div style="display: none;">
                         <span id="go-score"></span>
@@ -123,7 +118,7 @@
                         </div>
                     </div>
 
-                    <p class="blink" style="color: #00ffaa; font-size: 16px; margin-top: 20px;">PRESS SPACE TO PLAY AGAIN</p>
+                    <img src="try_again_button.png" alt="TRY AGAIN" class="try-again-btn blink" style="margin-top: 20px; width: 250px; cursor: pointer;">
                 </div>
             </div>
 
@@ -132,7 +127,25 @@
         </div>
     </div>
 
+    <!-- Dev Mode Configuration -->
+    <script>
+        const DEV_MODE = true; // Set to false for production to disable dev menu
+    </script>
+
+    <!-- Levels -->
+    <script src="levels/level1.js"></script>
+    <script src="levels/level2.js"></script>
+    <script src="levels/level3.js"></script>
+    <script src="levels/level4.js"></script>
+    <script src="levels/level5.js"></script>
+    <script src="levels/level6.js"></script>
+    <script src="levels/level7.js"></script>
+    <script src="levels/level8.js"></script>
+    <script src="levels/level9.js"></script>
+
     <!-- Core Engine Scripts -->
+    <script src="src/level_validator.js"></script>
+    <script src="src/dev_menu.js"></script>
     <script src="audiosynth.js?v=206"></script>
     <script src="levels.js?v=204"></script>
     <script src="src/constants.js?v=201"></script>

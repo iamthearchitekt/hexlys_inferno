@@ -493,18 +493,47 @@ input:checked + .slider:before {
     margin: auto;
 }
 
-.game-over-img {
+.game-over-frame-container {
+    position: relative;
     width: 95%;
     max-width: 900px;
     height: auto;
+    margin: 0 auto 10px auto;
+}
+.game-over-frame-container img {
+    width: 100%;
+    height: auto;
     display: block;
-    margin: 0 auto 28px auto;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     filter:
         drop-shadow(0 0 32px rgba(255, 60, 0, 0.7))
         drop-shadow(0 0 80px rgba(255, 0, 0, 0.35))
         drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.9));
+}
+.game-over-frame2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: swapFrame 0.3s infinite;
+}
+@keyframes swapFrame {
+    0%, 49.9% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+.glowing-pulse {
+    animation: pulseGlow 1.5s ease-in-out infinite alternate;
+}
+@keyframes pulseGlow {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(255, 100, 0, 0.6)) drop-shadow(0 0 10px rgba(255, 0, 0, 0.4));
+        transform: scale(0.98);
+    }
+    100% {
+        filter: drop-shadow(0 0 15px rgba(255, 150, 50, 1)) drop-shadow(0 0 30px rgba(255, 50, 0, 0.8));
+        transform: scale(1.02);
+    }
 }
 
 .game-over-prompt {
@@ -650,4 +679,162 @@ input:checked + .slider:before {
 #toast-message.hidden {
     opacity: 0;
     transform: translate(-50%, 10px);
+}
+
+/* =========================================
+   DEV MENU STYLES
+   ========================================= */
+#dev-menu-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: var(--font-sans);
+}
+
+#dev-menu-overlay.dev-menu-visible {
+    display: flex;
+}
+
+.dev-menu-inner {
+    width: 90%;
+    max-width: 1000px;
+    background: rgba(20, 10, 10, 0.95);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dev-menu-header {
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 85, 0, 0.3);
+    padding-bottom: 15px;
+}
+
+.dev-tag {
+    background: #ffaa00;
+    color: #000;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: var(--font-retro);
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.dev-menu-title {
+    font-family: var(--font-retro);
+    font-size: 20px;
+    color: var(--highlight);
+    text-shadow: 2px 2px 0px rgba(255, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.dev-menu-subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.dev-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.dev-level-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.dev-level-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dev-card-valid {
+    border-left: 4px solid #00cc44;
+}
+
+.dev-card-stub {
+    border-left: 4px solid #ffcc00;
+    opacity: 0.7;
+}
+
+.dev-card-error {
+    border-left: 4px solid #ff4444;
+}
+
+.dev-card-num {
+    font-family: var(--font-retro);
+    font-size: 24px;
+    color: rgba(255,255,255,0.2);
+    width: 30px;
+    text-align: center;
+}
+
+.dev-card-info {
+    flex-grow: 1;
+}
+
+.dev-card-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.dev-card-status {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.dev-card-btn {
+    background: var(--border-color);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: var(--font-retro);
+    font-size: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dev-card-btn:hover:not([disabled]) {
+    background: var(--highlight);
+    color: #000;
+}
+
+.dev-card-btn[disabled] {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.dev-menu-footer {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 15px;
 }

@@ -55,7 +55,7 @@ class Particle {
             grd.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
             
             ctx.fillStyle = grd;
-            ctx.globalCompositeOperation = 'lighter'; // Adds a nice misty glow when overlapping
+            ctx.globalCompositeOperation = 'screen'; // Soft misty glow when overlapping — won't bleed red into soul shards
             
             // Add a heavy blur filter for true fog/vapor effect
             ctx.filter = 'blur(12px)';
@@ -63,6 +63,10 @@ class Particle {
             ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
         } else {
             ctx.globalAlpha = alpha;
+            if (this.type === 'crystal') {
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 10;
+            }
             ctx.fillRect(Math.floor(this.x - cameraX - this.size / 2), Math.floor(this.y - this.size / 2), this.size, this.size);
         }
         ctx.restore();
@@ -156,6 +160,19 @@ class ParticleSystem {
         for (let i = 0; i < 12; i++) {
             this.add(new Particle(x, y, (Math.random() - 0.5) * 3.5, -Math.random() * 1.5 - 0.2, 'rgba(255, 180, 100, 0.6)', Math.random() * 9 + 6, Math.random() * 25 + 15, 'dust'));
             this.add(new Particle(x, y, (Math.random() - 0.5) * 2.0, -Math.random() * 0.8 - 0.1, 'rgba(200, 70, 0, 0.5)', Math.random() * 7 + 4, Math.random() * 20 + 10, 'dust'));
+        }
+    }
+
+    spawnCrystalExplosion(x, y, isBig = false) {
+        const count = isBig ? 15 : 6;
+        const colors = ['#cc00ff', '#8a2be2', '#da70d6', '#ffffff'];
+        for (let i=0; i<count; i++) {
+            const vx = (Math.random() - 0.5) * (isBig ? 6 : 4);
+            const vy = -Math.random() * (isBig ? 6 : 3) - 1;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 5 + 2;
+            const life = Math.random() * 30 + 15;
+            this.add(new Particle(x, y, vx, vy, color, size, life, 'crystal'));
         }
     }
 

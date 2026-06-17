@@ -1,7 +1,7 @@
 class AudioSynth {
     constructor() {
         this.ctx = null;
-        this._musicEnabled = true; // Re-enabled for production!
+        this._musicEnabled = false; // Muted per user request
         this.sfxEnabled = true;
         this.sfxBuffers = {};
         this.musicBuffers = {};
@@ -51,6 +51,7 @@ class AudioSynth {
             stomp:   'sfx/stompswim.wav',
             collect: 'sfx/coin.wav',
             crunch:  'sfx/brick.wav',
+            falling: 'sfx/falling_tile.wav',
             victory: 'sfx/powerup.wav',
             damage:  'sfx/pipepowerdown.wav',
             oneup:   'sfx/1up.wav',
@@ -195,21 +196,28 @@ class AudioSynth {
     // --- SFX API ---
     playJump()     { this._playBuffer('jump', 0.6); }
     playFireball() { this._playBuffer('fireball', 0.6); }
-    playFire()     { this._playBuffer('fire', 0.7); }
+    playFire()     { this._playBuffer('fire', 0.25); }
     playStomp()    { this._playBuffer('stomp', 0.8); }
-    playCollect()  { this._playBuffer('collect', 0.7); }
+    playCollect() { 
+        const now = Date.now();
+        if (!this.lastCollectTime || now - this.lastCollectTime > 50) {
+            this._playBuffer('collect', 0.7); 
+            this.lastCollectTime = now;
+        }
+    }
     playCrunch()   { this._playBuffer('crunch', 0.8); }
+    playFallingTile() { this._playBuffer('falling', 0.8); }
     playVictory()  { this._playBuffer('victory', 0.8); }
     playDamage()   { this._playBuffer('damage', 0.5); }
     playOneUp()    { this._playBuffer('oneup', 0.8); }
     playLoseLife() { this._playBuffer('loselife', 0.4); }
     playGameOver() { 
         this._playBuffer('gameover', 0.5); 
-        this._playBuffer('deathbell', 1.0);
+        this._playBuffer('deathbell', 0.4);
     }
     playBellToll() { 
         console.log("playBellToll called");
-        this._playBuffer('belltoll', 1.0); 
+        this._playBuffer('belltoll', 0.4); 
     }
     
     playAmbience(levelIndex = 0) {

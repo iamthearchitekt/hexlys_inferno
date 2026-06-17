@@ -317,7 +317,10 @@ class GameEngine {
         this.mapCols = LEVELS[0].layout[0].length;
         
         // Editor state
-        this.isDevMode = false;
+        this.isDevMode = typeof DEV_MODE !== 'undefined' ? DEV_MODE : false;
+        if (this.isDevMode) {
+            this.devMenu = new DevMenu(this);
+        }
         this.draggedTile = null;
         this.setupDevEditor();
     }
@@ -326,8 +329,12 @@ class GameEngine {
         const startBtn = document.getElementById('start-btn');
         if (startBtn) {
             startBtn.addEventListener('click', () => {
-                this.audioSetup();
-                this.startGame();
+                if (this.isDevMode && this.devMenu) {
+                    this.devMenu.show();
+                } else {
+                    this.audioSetup();
+                    this.startGame();
+                }
             });
         }
 
@@ -337,10 +344,21 @@ class GameEngine {
         };
 
         window.addEventListener('keydown', (e) => {
+            if (this.devMenu && this.devMenu.isVisible()) {
+                if (e.code === 'Escape') {
+                    this.devMenu.hide();
+                }
+                return;
+            }
+
             if (e.code === 'Space' || e.code === 'KeyW' || e.code === 'Enter') {
                 if (this.state === 'TITLE') {
-                    this.audioSetup();
-                    this.startGame();
+                    if (this.isDevMode && this.devMenu) {
+                        this.devMenu.show();
+                    } else {
+                        this.audioSetup();
+                        this.startGame();
+                    }
                 } else if (this.state === 'GAMEOVER' || this.state === 'VICTORY' || this.state === 'LEVEL_TALLY') {
                     // Press space/W to restart or advance game
                     if (this.state === 'LEVEL_TALLY') {
@@ -1774,8 +1792,6 @@ class GameEngine {
             this.ctx.shadowBlur = 0;
             this.ctx.globalCompositeOperation = 'source-over';
             this.ctx.globalAlpha = 1;
-            this.ctx.shadowColor = '#cc00ff';
-            this.ctx.shadowBlur = 15;
             this.ctx.drawImage(powerupShardTileImg, x, y, TILE_SIZE, TILE_SIZE);
             this.ctx.restore();
             // Also clear shadow after restore so next tile starts clean
