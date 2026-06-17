@@ -1123,10 +1123,10 @@ class GameEngine {
             if (!currentLevel.disableEmbers) {
                 const sX = this.camera.x + Math.random() * this.width;
                 if (currentLevel.ambientParticle === 'haze') {
-                    // Spawn haze directly on Hexly's level (y = 350 to 450)
+                    // Level 3: spawn haze mist
                     particles.spawnHaze(sX, 350 + Math.random() * 100);
-                } else {
-                    // Spawn embers across the sky
+                } else if (this.currentLevelIndex === 0) {
+                    // Fire embers are level 1 only
                     particles.spawnEmber(sX, 100 + Math.random() * 300);
                 }
             }
