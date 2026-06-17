@@ -250,6 +250,8 @@ class GameEngine {
         this.levelGrid = [];
         this.enemies = [];
         this.coins = [];
+        this.ejectedCoins = [];
+        this.soulRewardHits = {};
         this.fireballs = [];
         this.enemyFireballs = [];  // Bowser-style hazard fireballs
         this.flowers = []; // Collectible powerups array
@@ -293,8 +295,8 @@ class GameEngine {
             gravity: 0.52,
             acceleration: 0.38,
             friction: 0.85,
-            maxSpeedX: 4.2,
-            jumpForce: -15.0,
+            maxSpeedX: 4.7,
+            jumpForce: -16.2,
             maxFallSpeed: 10.0,
             coyoteDuration: 9,
             jumpBufferDuration: 6
@@ -335,12 +337,12 @@ class GameEngine {
         };
 
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
+            if (e.code === 'Space' || e.code === 'KeyW' || e.code === 'Enter') {
                 if (this.state === 'TITLE') {
                     this.audioSetup();
                     this.startGame();
                 } else if (this.state === 'GAMEOVER' || this.state === 'VICTORY' || this.state === 'LEVEL_TALLY') {
-                    // Press space to restart or advance game
+                    // Press space/W to restart or advance game
                     if (this.state === 'LEVEL_TALLY') {
                         this.nextLevel();
                     } else {
@@ -399,6 +401,8 @@ class GameEngine {
         this.levelGrid = [];
         this.enemies = [];
         this.coins = [];
+        this.ejectedCoins = [];
+        this.soulRewardHits = {};
         this.fireballs = [];
         this.enemyFireballs = [];
         this.flowers = [];
@@ -583,8 +587,8 @@ class GameEngine {
         const coinSpan = document.getElementById('v-coins');
         const timeSpan = document.getElementById('v-time');
         
-        // Hide "Press space to play again" temporarily
-        const playAgainBtn = this.screens.tally.querySelector('p.blink');
+        // Hide the try again button temporarily
+        const playAgainBtn = this.screens.tally.querySelector('.try-again-btn');
         if (playAgainBtn) playAgainBtn.style.display = 'none';
         
         let displayScore = this.player.score;
@@ -641,12 +645,20 @@ class GameEngine {
         }, 15); // much faster tick!
     }
 
-    resetGame(isSoftReset = false) {
+    resetGame(isSoftReset = false, forceLevel = null) {
         this.state = 'PLAYING';
+        this.screens.title.classList.add('hidden');
         this.screens.gameover.classList.add('hidden');
         if (this.screens.tally) this.screens.tally.classList.add('hidden');
+        if (this.screens.victory) this.screens.victory.classList.add('hidden');
         this.screens.pause.classList.add('hidden');
         this.screens.hud.classList.remove('hidden');
+
+        if (forceLevel !== null) {
+            this.currentLevelIndex = forceLevel;
+        } else if (!isSoftReset) {
+            this.currentLevelIndex = 0;
+        }
 
         // Preserve state if soft resetting between levels
         const savedScore = isSoftReset ? this.player.score : 0;
@@ -797,8 +809,7 @@ class GameEngine {
             if (this.input['digit'+i]) {
                 this.input['digit'+i] = false;
                 if (i-1 < LEVELS.length) {
-                    this.currentLevelIndex = i-1;
-                    this.resetGame();
+                    this.resetGame(false, i-1);
                     
                     // Update ambience and music for new level
                     if (typeof synth !== 'undefined') {
@@ -826,7 +837,7 @@ class GameEngine {
             }
         }
 
-        if (this.input.restartPressed) {
+        if (this.input.restartPressed || ((this.state === 'TITLE' || this.state === 'GAMEOVER') && (this.input.jumpPressed || this.input.shootPressed))) {
             this.audioSetup();
             this.resetGame();
         }
@@ -1016,11 +1027,18 @@ class GameEngine {
             this.player.dropTimer = 0;
         }
 
-        this.player.vy += this.physics.gravity;
         if (this.player.grounded) {
+            this.player.vy += this.physics.gravity;
             this.player.coyoteTimer = this.physics.coyoteDuration;
         } else {
             this.player.coyoteTimer--;
+            // If sprinting fast, suppress gravity for the first few frames of falling
+            // This allows the player to seamlessly run across 1-tile gaps (like falling platforms)
+            if (this.player.coyoteTimer > 4 && Math.abs(this.player.vx) >= 4.5) {
+                this.player.vy = 0;
+            } else {
+                this.player.vy += this.physics.gravity;
+            }
         }
 
         if (this.player.jumpBufferTimer > 0 && this.player.coyoteTimer > 0) {
@@ -1096,6 +1114,12 @@ class GameEngine {
 
         // 6. Entity Updates
         this.coins.forEach(coin => coin.update(this.frameCounter));
+        if (this.ejectedCoins) {
+            for (let i = this.ejectedCoins.length - 1; i >= 0; i--) {
+                this.ejectedCoins[i].update();
+                if (this.ejectedCoins[i].dead) this.ejectedCoins.splice(i, 1);
+            }
+        }
         this.enemies.forEach(enemy => enemy.update(this));
         this.flowers.forEach(flower => flower.update());
 
@@ -1105,6 +1129,7 @@ class GameEngine {
                 const [c, r] = key.split(',').map(Number);
                 this.levelGrid[r][c] = TILES.EMPTY;
                 this.fallingPlatforms.push(new FallingPlatformEntity(c, r));
+                if (window.synth && window.synth.playFallingTile) synth.playFallingTile();
                 delete this.platformTimers[key];
             }
         }
@@ -1286,11 +1311,36 @@ class GameEngine {
             this.levelGrid[row][col] = TILES.SPENT_REWARD;
             
             synth.playOneUp();
+
             this.player.health = this.player.maxHealth;
             this.player.score += 500;
             this.showToast("1-UP!");
             this.updateHUD();
-        }
+        }        else if (tile === TILES.SOUL_REWARD) {
+            const key = `${col},${row}`;
+            if (!this.soulRewardHits[key]) this.soulRewardHits[key] = 0;
+            
+            this.soulRewardHits[key]++;
+            
+            const cx = col * TILE_SIZE;
+            const cy = row * TILE_SIZE;
+            if (typeof EjectedSoulCoin !== 'undefined') {
+                this.ejectedCoins.push(new EjectedSoulCoin(cx, cy));
+            }
+            this.player.coins++;
+            this.player.score += 100;
+            this.showToast("+1 SHARD");
+            if (typeof synth !== 'undefined' && synth.playCollect) synth.playCollect();
+            this.updateHUD();
+
+            if (this.soulRewardHits[key] >= 6) {
+                this.levelGrid[row][col] = TILES.SPENT_SOUL_REWARD;
+                if (typeof particles !== 'undefined' && particles.spawnCrystalExplosion) particles.spawnCrystalExplosion(cx + TILE_SIZE/2, cy + TILE_SIZE/2, true);
+                if (typeof synth !== 'undefined' && synth.playFallingTile) synth.playFallingTile();
+            } else {
+                if (typeof particles !== 'undefined' && particles.spawnCrystalExplosion) particles.spawnCrystalExplosion(cx + TILE_SIZE/2, cy + TILE_SIZE/2, false);
+            }
+        } 
     }
 
     damagePlayer(instantDeath = false) {
@@ -1446,12 +1496,9 @@ class GameEngine {
                         enemy.dead = true;
                         particles.spawnFireExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
                     } else {
-                        enemy.crushed = true;
-                        enemy.crushedTimer = 15;
-                        if (enemy.type === 'BOG_ZOMBIE') {
-                            particles.spawnSlimeExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height);
-                        } else {
-                            particles.spawnStompExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                        enemy.dead = true;
+                        for (let i = 0; i < 15; i++) {
+                            particles.spawnEmber(enemy.x + Math.random() * enemy.width, enemy.y + Math.random() * enemy.height);
                         }
                     }
                     this.player.score += 200;
@@ -1555,6 +1602,8 @@ class GameEngine {
                tile === TILES.BREAKABLE || 
                tile === TILES.REWARD || 
                tile === TILES.ONE_UP || 
+               tile === TILES.SOUL_REWARD || 
+               tile === TILES.SPENT_SOUL_REWARD || 
                tile === TILES.SPENT_REWARD;
     }
 
@@ -1644,6 +1693,7 @@ class GameEngine {
         this.coins.forEach(coin => {
             if (!coin.collected) coin.draw(this.ctx, this.camera.x);
         });
+        if (this.ejectedCoins) this.ejectedCoins.forEach(coin => coin.draw(this.ctx, this.camera.x));
 
         this.flowers.forEach(flower => {
             if (!flower.collected) flower.draw(this.ctx, this.camera.x);
@@ -1717,6 +1767,32 @@ class GameEngine {
             this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
             return;
         }
+        if (type === TILES.SOUL_REWARD && powerupShardTileImgLoaded) {
+            this.ctx.save();
+            // Explicitly kill any inherited shadow from lava/portal before we set ours
+            this.ctx.shadowColor = 'transparent';
+            this.ctx.shadowBlur = 0;
+            this.ctx.globalCompositeOperation = 'source-over';
+            this.ctx.globalAlpha = 1;
+            this.ctx.shadowColor = '#cc00ff';
+            this.ctx.shadowBlur = 15;
+            this.ctx.drawImage(powerupShardTileImg, x, y, TILE_SIZE, TILE_SIZE);
+            this.ctx.restore();
+            // Also clear shadow after restore so next tile starts clean
+            this.ctx.shadowColor = 'transparent';
+            this.ctx.shadowBlur = 0;
+            this.ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+            return;
+        }
+        if (type === TILES.SPENT_SOUL_REWARD && powerupBrokenShardTileImgLoaded) {
+            this.ctx.drawImage(powerupBrokenShardTileImg, x, y, TILE_SIZE, TILE_SIZE);
+            this.ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+            return;
+        }
         if (type === TILES.SPENT_REWARD && powerupTileBrokenImgLoaded) {
             this.ctx.drawImage(powerupTileBrokenImg, x, y, TILE_SIZE, TILE_SIZE);
             this.ctx.strokeStyle = 'rgba(0,0,0,0.5)';
@@ -1784,9 +1860,8 @@ class GameEngine {
         }
 
         let matrix = null;
-        if (type === TILES.GROUND) matrix = SPRITES.TILES.GROUND;
-        else if (type === TILES.PLATFORM) matrix = SPRITES.TILES.PLATFORM;
-        else if (type === TILES.FALLING_PLATFORM) {
+        
+        if (type === TILES.FALLING_PLATFORM) {
             let dx = x;
             let dy = y;
             const c = Math.round(x / TILE_SIZE);
@@ -1798,42 +1873,17 @@ class GameEngine {
             }
             if (blockTileImgLoaded) {
                 this.ctx.drawImage(blockTileImg, dx, dy, TILE_SIZE, TILE_SIZE);
-            } else {
-                drawPixelMatrix(this.ctx, dx, dy, SPRITES.TILES.PLATFORM, false, 4.5);
             }
             return;
         }
-        else if (type === TILES.BREAKABLE) matrix = SPRITES.TILES.BREAKABLE;
+        
         else if (type === TILES.ONE_UP) {
-            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
             return;
         }
         else if (type === TILES.REWARD) {
-            // Draw the ground-brown base tile first
-            drawPixelMatrix(this.ctx, x, y, SPRITES.TILES.REWARD, false, 4.5);
-
-            const pulse = (Math.sin(this.frameCounter * 0.12) + 1) / 2; // 0..1 oscillation
-            this.ctx.save();
-            this.ctx.globalCompositeOperation = 'lighter';
-            this.ctx.globalAlpha = 0.10 + pulse * 0.22; // 0.10 → 0.32 breathing range
-            const grd = this.ctx.createRadialGradient(
-                x + TILE_SIZE / 2, y + TILE_SIZE / 2, 2,
-                x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE * 0.7
-            );
-            grd.addColorStop(0,   'rgba(255, 220, 80, 1)');
-            grd.addColorStop(0.4, 'rgba(255, 100, 0, 0.9)');
-            grd.addColorStop(1,   'rgba(180, 20, 0, 0)');
-            this.ctx.fillStyle = grd;
-            this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-            // Pulsing border glow
-            this.ctx.globalAlpha = 0.08 + pulse * 0.14;
-            this.ctx.strokeStyle = '#ff8800';
-            this.ctx.lineWidth = 2 + pulse * 2;
-            this.ctx.strokeRect(x + 1, y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-            this.ctx.restore();
             return;
         }
-        else if (type === TILES.SPENT_REWARD) matrix = SPRITES.TILES.SPENT;
+        
         else if (type === TILES.LAVA || type === TILES.SWAMP) {
             // Slow 3-frame downward waterfall animation (18 ticks per frame = sluggish lava/swamp)
             const frame = Math.floor(this.frameCounter / 18) % 3;
@@ -1851,10 +1901,10 @@ class GameEngine {
             // Draw the base tile first
             drawPixelMatrix(this.ctx, x, y, matrix, false, 4.5);
             
-            // Pulsing glow overlay using 'lighter' composite
+            // Pulsing glow overlay using 'screen' composite
             const pulse = (Math.sin(this.frameCounter * 0.1) + 1) / 2; // 0..1 oscillation
             this.ctx.save();
-            this.ctx.globalCompositeOperation = 'lighter';
+            this.ctx.globalCompositeOperation = 'screen';
             this.ctx.globalAlpha = 0.15 + pulse * 0.25; // 0.15 to 0.40 breathing range
             const grd = this.ctx.createRadialGradient(
                 x + TILE_SIZE / 2, y + TILE_SIZE / 2, 2,
@@ -1901,8 +1951,8 @@ class GameEngine {
                 this.ctx.shadowBlur  = 20 + pulseSin * 30; // pulses 20 50
                 this.ctx.drawImage(portalImg, px2, py2, pw, ph);
 
-                // Layer 2 - smooth color-dodge bright inner light overlay
-                this.ctx.globalCompositeOperation = 'lighter';
+                // Layer 2 - smooth screen-blend bright inner light overlay
+                this.ctx.globalCompositeOperation = 'screen';
                 this.ctx.globalAlpha = 0.10 + pulseSin * 0.30; // Smooth 0.10 to 0.40
                 
                 // Draw a radial inner-glow ellipse over the portal aperture
@@ -1918,8 +1968,6 @@ class GameEngine {
                 this.ctx.fillRect(px2, py2, pw, ph);
 
                 this.ctx.restore();
-            } else {
-                matrix = SPRITES.TILES.PORTAL;
             }
             return; // Portal handled — skip matrix draw
         }
@@ -2060,29 +2108,6 @@ class GameEngine {
             }
             
             ctx.restore();
-        } else {
-            // Bulletproof Fallback: if PNG fails/hasn't loaded, draw the high-def 26x30 matrix
-            let frame = SPRITES.HEXLY.IDLE;
-            if (p.hurtTimer > 0) {
-                frame = SPRITES.HEXLY.HURT;
-            } else if (this.state === 'VICTORY') {
-                frame = SPRITES.HEXLY.WIN;
-            } else if (p.crouching) {
-                frame = SPRITES.HEXLY.JUMP; // Fallback representation of crouching
-            } else if (!p.grounded) {
-                frame = SPRITES.HEXLY.JUMP;
-            } else if (Math.abs(p.vx) > 0.2) {
-                const runCycle = Math.floor(p.animTime * 2.5) % 2;
-                frame = runCycle === 0 ? SPRITES.HEXLY.RUN_A : SPRITES.HEXLY.RUN_B;
-            }
-
-            const drawX = Math.round(p.x);
-            const drawY = Math.round(p.y);
-            
-            // Draw original colors base matrix normally
-            drawPixelMatrix(ctx, drawX, drawY, frame, p.direction === -1, 3.0);
-
-            // Matrix rendering already handles base appearance.
         }
         
         ctx.restore();
