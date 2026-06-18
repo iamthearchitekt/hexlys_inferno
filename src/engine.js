@@ -1377,7 +1377,7 @@ class GameEngine {
     }
 
     damagePlayer(instantDeath = false) {
-        if (this.devGodMode && this.player.health > 0) return; // God mode always on in dev builds
+        if (this.isDevMode && this.player.health > 0) return; // God mode only while tile editor is active
         if (!instantDeath && (this.player.invulTimer > 0 || this.player.superPowered)) return;
 
         // If powered up, lose fireball power but stay alive! (Nintendo style)
