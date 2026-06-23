@@ -413,6 +413,8 @@ class GameEngine {
             document.getElementById('game-container').style.backgroundImage = 'url("' + lvl.background + '")';
             this.background.mirror = lvl.mirrorBackground !== false;
         } else {
+            bgImgLoaded = false;
+            bgImg.src = '';
             document.getElementById('game-container').style.backgroundImage = 'none';
             this.background.mirror = true;
         }
@@ -583,6 +585,8 @@ class GameEngine {
             document.getElementById('game-container').style.backgroundImage = 'url("' + lvl.background + '")';
             this.background.mirror = lvl.mirrorBackground !== false;
         } else {
+            bgImgLoaded = false;
+            bgImg.src = '';
             document.getElementById('game-container').style.backgroundImage = 'none';
             this.background.mirror = true;
         }
@@ -862,6 +866,8 @@ class GameEngine {
                             }
                             document.getElementById('game-container').style.backgroundImage = 'url("' + lvl.background + '")';
                         } else {
+                            bgImgLoaded = false;
+                            bgImg.src = '';
                             document.getElementById('game-container').style.backgroundImage = 'none';
                         }
                         return;
@@ -1184,9 +1190,9 @@ class GameEngine {
             if (fb.dead) this.fireballs.splice(i, 1);
         }
 
-        // 6b. Enemy fireball spawning (Bowser-style, every 4-8 seconds)
+        // 6b. Enemy fireball spawning — level 1 only
         this.enemyFireballTimer--;
-        if (this.enemyFireballTimer <= 0 && !this.disableEnemyFireballs) {
+        if (this.enemyFireballTimer <= 0 && !this.disableEnemyFireballs && this.currentLevelIndex === 0) {
             // Spawn from right edge of current viewport + offset
             const spawnX = this.camera.x + this.width + 40;
             // Pick a random Y in the upper 2/3 of the level so it has room to arc down
