@@ -2,6 +2,8 @@ const level4 = {
     "id": 4,
     "name": "The Avarice Yard",
     "music": "music_level1",
+    "background": "backgrounds/background4.png",
+    "mirrorBackground": false,
     "startX": 80,
     "startY": 300,
     "layout": [
