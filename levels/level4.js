@@ -1,6 +1,6 @@
 const level4 = {
     "id": 4,
-    "name": "Level 4",
+    "name": "The Avarice Yard",
     "music": "music_level1",
     "startX": 80,
     "startY": 300,

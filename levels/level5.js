@@ -1,6 +1,6 @@
 const level5 = {
     "id": 5,
-    "name": "Level 5",
+    "name": "The Styx Marsh",
     "music": "music_level1",
     "startX": 80,
     "startY": 300,

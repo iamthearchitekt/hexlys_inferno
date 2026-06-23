@@ -1,6 +1,6 @@
 const level2 = {
     "id": 2,
-    "name": "The Ashen Wastes",
+    "name": "The Black Gale",
     "music": "music_level2",
     "disableEnemyFireballs": true,
     "disableEmbers": true,

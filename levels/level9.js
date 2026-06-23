@@ -1,6 +1,6 @@
 const level9 = {
     "id": 9,
-    "name": "Level 9",
+    "name": "Cocytus",
     "music": "music_level1",
     "startX": 80,
     "startY": 300,

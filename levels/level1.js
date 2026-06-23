@@ -1,6 +1,6 @@
 const level1 = {
     "id": 1,
-    "name": "Level 1: The Descent",
+    "name": "The Infernal Gates",
     "music": "music_level1",
     "background": "backgrounds/background_lvl1.png",
     "mirrorBackground": false,

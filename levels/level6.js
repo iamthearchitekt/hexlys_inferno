@@ -1,6 +1,6 @@
 const level6 = {
     "id": 6,
-    "name": "Level 6",
+    "name": "The Burning City of Dis",
     "music": "music_level1",
     "startX": 80,
     "startY": 300,

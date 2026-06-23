@@ -1,6 +1,6 @@
 const level3 = {
     "id": 3,
-    "name": "Toxic Swamp",
+    "name": "The Glutton Mire",
     "music": "music_level3",
     "disableEnemyFireballs": true,
     "background": "backgrounds/background3.png",
