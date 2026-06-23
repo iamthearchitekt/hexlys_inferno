@@ -461,7 +461,8 @@ const TILES = {
     BOG_ZOMBIE: 17,
     ONE_UP: 18,
     SOUL_REWARD: 19,
-    SPENT_SOUL_REWARD: 20
+    SPENT_SOUL_REWARD: 20,
+    CRUSHER: 21
 };
 
 // 12-Row Map Data (7 = Coin, 8 = Skelly Bug, 9 = Winged Skull, 10 = Spine Crawler, 12 = Lava Flower Powerup)

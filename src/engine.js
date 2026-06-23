@@ -259,6 +259,7 @@ class GameEngine {
         this.platformTimers = {};
         this.fallingPlatforms = [];
         this.bosses = [];
+        this.crushers = [];
         this.chainPattern = null;
 
         // Hexly configuration parameters (Size 78x90px - Super-sized 2 tiles tall!)
@@ -441,6 +442,7 @@ class GameEngine {
         this.platformTimers = {};
         this.fallingPlatforms = [];
         this.bosses = [];
+        this.crushers = [];
         this.mapCols = activeLevel[0].length;
         // Clear leftover particles from previous levels (e.g. red embers from level 1 bleeding into level 3)
         if (typeof particles !== 'undefined') particles.particles = [];
@@ -480,6 +482,12 @@ class GameEngine {
                     this.levelGrid[actualRow][c] = TILES.EMPTY;
                 } else if (cell === 15) {
                     this.enemies.push(new Ghost(c * TILE_SIZE, actualRow * TILE_SIZE));
+                    this.levelGrid[actualRow][c] = TILES.EMPTY;
+                } else if (cell === 21) {
+                    // Crusher — level 4 (The Avarice Yard) only
+                    if (this.currentLevelIndex === 3) {
+                        this.crushers.push(new Crusher(c * TILE_SIZE, actualRow * TILE_SIZE));
+                    }
                     this.levelGrid[actualRow][c] = TILES.EMPTY;
                 } else {
                     this.levelGrid[actualRow][c] = cell;
@@ -1184,6 +1192,7 @@ class GameEngine {
             b.update(this);
             if (b.dead) this.bosses.splice(i, 1);
         }
+        this.crushers.forEach(c => c.update(this));
 
         
         for (let i = this.fireballs.length - 1; i >= 0; i--) {
@@ -1744,6 +1753,7 @@ class GameEngine {
         this.enemyFireballs.forEach(ef => ef.draw(this.ctx));
         this.fallingPlatforms.forEach(p => p.draw(this.ctx, this));
         this.bosses.forEach(b => b.draw(this.ctx, this.camera.x));
+        this.crushers.forEach(c => c.draw(this.ctx, this.camera.x));
 
         this.enemies.forEach(enemy => {
             if (!enemy.dead) enemy.draw(this.ctx, this.camera.x, this.player);

@@ -198,6 +198,11 @@ let soulShardImgLoaded = false;
 soulShardImg.onload = () => { soulShardImgLoaded = true; };
 soulShardImg.src = 'power_ups/soul_shard.png';
 
+const crusherImg = new Image();
+let crusherImgLoaded = false;
+crusherImg.onload = () => { crusherImgLoaded = true; };
+crusherImg.src = 'landscape elements/crusher.png';
+
 const PALETTE = {
     '.': 'transparent',
     'b': '#000000',       /* Pitch Black */

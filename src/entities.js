@@ -712,3 +712,138 @@ class Enemy {
 
 
 // ----------------------------------------------------
+
+// ============================================================
+// CRUSHER — Ceiling-mounted instant-kill trap
+// Placed via tile ID 21 in the level layout.
+// Hangs from the ceiling, detects Hexly entering its column,
+// slams down at high speed for an instant kill, then slowly
+// retracts. Cycle repeats indefinitely.
+// ============================================================
+class Crusher {
+    constructor(x, y) {
+        // x, y = top-left of the tile cell that placed this crusher
+        this.tileX = x;
+        this.tileY = y;
+
+        // Visual size (pixels)
+        this.width  = TILE_SIZE;       // 45px wide — one tile column
+        this.height = TILE_SIZE * 1.5; // 67px tall — imposing block
+
+        // Rest at ceiling: crusher top flush with the tile row above
+        this.restY  = y - this.height + TILE_SIZE * 0.5;
+        this.y      = this.restY;
+
+        // State machine: 'WAIT' | 'SLAM' | 'RETRACT'
+        this.state  = 'WAIT';
+
+        // Travel range: slam down until bottom hits the ground row
+        this.slamTargetY = y + TILE_SIZE * 0.5; // just below the tile row
+
+        // Speeds
+        this.slamSpeed    = 28;  // pixels/frame — brutal
+        this.retractSpeed = 1.8; // pixels/frame — slow menacing return
+
+        // Cooldown after retracting before slamming again (frames)
+        this.waitFrames = 80;
+        this.waitTimer  = this.waitFrames;
+
+        // Detection column half-width (trigger when Hexly centre is within)
+        this.triggerWidth = TILE_SIZE * 0.7;
+
+        this.hasKilledThisSlam = false;
+    }
+
+    update(engine) {
+        const p = engine.player;
+
+        switch (this.state) {
+            case 'WAIT':
+                // Trigger when Hexly is inside this column and below the crusher
+                if (this.waitTimer > 0) {
+                    this.waitTimer--;
+                    break;
+                }
+                const hexlyCentreX = p.x + p.width / 2;
+                const crushCentreX = this.tileX + this.width / 2;
+                const inColumn = Math.abs(hexlyCentreX - crushCentreX) < this.triggerWidth;
+                const below    = p.y > this.y;
+                if (inColumn && below) {
+                    this.state = 'SLAM';
+                    this.hasKilledThisSlam = false;
+                    if (typeof synth !== 'undefined' && synth.playBrickBreak) {
+                        synth.playBrickBreak(); // Repurpose existing sfx for now
+                    }
+                }
+                break;
+
+            case 'SLAM':
+                this.y = Math.min(this.y + this.slamSpeed, this.slamTargetY);
+
+                // Kill check — instant death on contact
+                if (!this.hasKilledThisSlam) {
+                    const crusherBottom = this.y + this.height;
+                    const pTop  = p.y;
+                    const pLeft = p.x;
+                    const pRight = p.x + p.width;
+                    const cLeft  = this.tileX;
+                    const cRight = this.tileX + this.width;
+
+                    const overlapX = pRight > cLeft && pLeft < cRight;
+                    const overlapY = crusherBottom >= pTop && this.y < pTop + p.height;
+
+                    if (overlapX && overlapY) {
+                        this.hasKilledThisSlam = true;
+                        engine.damagePlayer(true); // instant death
+                    }
+                }
+
+                if (this.y >= this.slamTargetY) {
+                    this.state = 'RETRACT';
+                }
+                break;
+
+            case 'RETRACT':
+                this.y = Math.max(this.y - this.retractSpeed, this.restY);
+                if (this.y <= this.restY) {
+                    this.state = 'WAIT';
+                    this.waitTimer = this.waitFrames;
+                }
+                break;
+        }
+    }
+
+    draw(ctx, cameraX) {
+        const drawX = Math.round(this.tileX - cameraX);
+        const drawY = Math.round(this.y);
+
+        if (crusherImgLoaded) {
+            // Draw the crusher sprite, stretched to fill the block
+            ctx.drawImage(crusherImg, drawX, drawY, this.width, this.height);
+        } else {
+            // Fallback: dark grey block with red warning stripe
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(drawX, drawY, this.width, this.height);
+            ctx.fillStyle = '#cc0000';
+            ctx.fillRect(drawX, drawY + this.height - 8, this.width, 8);
+        }
+
+        // Draw the chain/rod connecting crusher to the ceiling
+        ctx.strokeStyle = 'rgba(60,60,60,0.9)';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(drawX + this.width / 2, drawY);
+        ctx.lineTo(drawX + this.width / 2, Math.round(this.tileY - cameraX < 0 ? 0 : 0)); // ceiling line
+        ctx.stroke();
+
+        // Slam state: add red warning glow
+        if (this.state === 'SLAM') {
+            ctx.save();
+            ctx.shadowColor = '#ff2200';
+            ctx.shadowBlur  = 20;
+            ctx.fillStyle   = 'rgba(255,34,0,0.18)';
+            ctx.fillRect(drawX, drawY, this.width, this.height);
+            ctx.restore();
+        }
+    }
+}
