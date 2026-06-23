@@ -826,9 +826,11 @@ class GameEngine {
         let desired = 'default';
         if (this.isDevMode) {
             desired = 'crosshair';
-        } else if (this.state === 'PLAYING' || this.state === 'DYING') {
-            desired = 'none';
         }
+        // TEMP: cursor visible during level building — re-enable 'none' before ship
+        // } else if (this.state === 'PLAYING' || this.state === 'DYING') {
+        //     desired = 'none';
+        // }
         if (document.body.style.cursor !== desired) {
             document.body.style.cursor = desired;
         }
