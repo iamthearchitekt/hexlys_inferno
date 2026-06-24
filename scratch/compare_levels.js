@@ -1,53 +1,25 @@
-const { execSync } = require('child_process');
 const fs = require('fs');
+let c = fs.readFileSync('C:/Users/archi/.gemini/antigravity/scratch/hexlys_inferno/levels.js', 'utf8')
+    .replace('export default LEVELS;', '')
+    .replace('const LEVELS =', 'global.LEVELS =');
+eval(c);
 
-try {
-    const committed = execSync('git show HEAD:levels.js', { maxBuffer: 15 * 1024 * 1024 }).toString('utf8');
-    const workspace = fs.readFileSync('levels.js', 'utf8');
+// Compare level 2 and level 3 layouts
+const l2 = global.LEVELS.find(l => l.id === 2);
+const l3 = global.LEVELS.find(l => l.id === 3);
 
-    const getLevelsNames = (code) => {
-        const re = /name: "([^"]+)"/g;
-        const names = [];
-        let m;
-        while ((m = re.exec(code)) !== null) {
-            names.push(m[1]);
-        }
-        return names;
-    };
+console.log('Level 2:', l2.name, '| rows:', l2.layout.length, '| cols:', l2.layout[0].length);
+console.log('Level 3:', l3.name, '| rows:', l3.layout.length, '| cols:', l3.layout[0].length);
 
-    console.log('Committed level names:', getLevelsNames(committed));
-    console.log('Workspace level names:', getLevelsNames(workspace));
+// Are the layouts identical?
+const l2str = JSON.stringify(l2.layout);
+const l3str = JSON.stringify(l3.layout);
+console.log('\nLayouts identical?', l2str === l3str);
 
-    // Compare each level's layout string
-    const getLevels = (code) => {
-        const re = /name: "([^"]+)"[\s\S]*?layout: (\[[\s\S]*?\])\s*\}/g;
-        const map = {};
-        let m;
-        while ((m = re.exec(code)) !== null) {
-            map[m[1]] = m[2];
-        }
-        return map;
-    };
-
-    const commMap = getLevels(committed);
-    const workMap = getLevels(workspace);
-
-    Object.keys(commMap).forEach(name => {
-        if (!workMap[name]) {
-            console.log(`Level "${name}" is missing in workspace!`);
-        } else {
-            const cleanStr = (s) => s.replace(/\s+/g, '');
-            const cStr = cleanStr(commMap[name]);
-            const wStr = cleanStr(workMap[name]);
-            if (cStr === wStr) {
-                console.log(`Level "${name}" matches exactly.`);
-            } else {
-                console.log(`Level "${name}" is DIFFERENT!`);
-                console.log(`  Committed len: ${cStr.length}, Workspace len: ${wStr.length}`);
-            }
-        }
-    });
-
-} catch (e) {
-    console.error('Error comparing levels:', e.message);
-}
+// Also compare with level_saves
+const save2 = JSON.parse(fs.readFileSync('level_saves/level2_export.json', 'utf8'));
+const save3 = JSON.parse(fs.readFileSync('level_saves/level3_export.json', 'utf8'));
+console.log('\nLevel 2 in levels.js matches level2_export?', l2str === JSON.stringify(save2));
+console.log('Level 2 in levels.js matches level3_export?', l2str === JSON.stringify(save3));
+console.log('Level 3 in levels.js matches level3_export?', l3str === JSON.stringify(save3));
+console.log('Level 3 in levels.js matches level2_export?', l3str === JSON.stringify(save2));
