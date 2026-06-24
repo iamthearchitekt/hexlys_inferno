@@ -1203,8 +1203,8 @@ class GameEngine {
         this.crushers.forEach(crusher => {
             crusher.update(this);
 
-            // Solid collision — crusher body is impassable once below ceiling
-            if (crusher.state === 'WAIT' || crusher.state === 'SHAKE') return;
+            // Solid collision — crusher body is impassable once descending
+            if (crusher.state === 'SHAKE') return; // still at ceiling, not blocking yet
             const p = this.player;
             const cLeft   = crusher.tileX + crusher.drawOffsetX;
             const cRight  = cLeft + crusher.width;

@@ -7,23 +7,47 @@
     "start": "electron .",
     "build": "electron-builder build --win"
   },
-  "dependencies": {
-    "canvas": "^3.2.3",
-    "jimp": "^1.6.1",
-    "puppeteer": "^25.1.0"
-  },
+  "dependencies": {},
   "build": {
     "appId": "com.hexlysinferno.game",
     "productName": "Hexlys Inferno",
     "directories": {
       "output": "dist"
     },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "style.css",
+      "audiosynth.js",
+      "levels.js",
+      "hexly_icon.png",
+      "background.png",
+      "try_again_button.png",
+      "start.mp4",
+      "src/**/*",
+      "levels/**/*",
+      "backgrounds/**/*",
+      "tiles/**/*",
+      "sprites/**/*",
+      "fireballs/**/*",
+      "power_ups/**/*",
+      "sfx/**/*",
+      "music/**/*",
+      "game ui/**/*",
+      "cut scenes/**/*",
+      "hexly sprite/**/*",
+      "landscape elements/**/*"
+    ],
     "win": {
       "target": "nsis",
       "icon": "hexly_icon.png"
     }
   },
   "devDependencies": {
+    "canvas": "^3.2.3",
+    "jimp": "^1.6.1",
+    "puppeteer": "^25.1.0",
     "electron": "^42.4.0",
     "electron-builder": "^26.15.3"
   }

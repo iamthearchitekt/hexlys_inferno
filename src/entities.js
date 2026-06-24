@@ -743,19 +743,16 @@ class Crusher {
         this.slamSpeed    = 22;  // px/frame — fast and brutal
         this.retractSpeed = 1.5; // px/frame — slow, menacing return
 
-        // Timer-driven cycle (frames @ 60fps)
-        // WAIT(300) → SHAKE(60) → SLAM → RETRACT → repeat
-        this.WAIT_FRAMES  = 300; // 5 seconds idle
-        this.SHAKE_FRAMES = 60;  // 1 second warning shake
+        // Pure cycle — no idle wait, no player detection
+        // SHAKE(60f) → SLAM → RETRACT → repeat
+        this.SHAKE_FRAMES = 60; // 1 second warning shake
 
-        // State machine: 'WAIT' | 'SHAKE' | 'SLAM' | 'RETRACT'
-        this.state      = 'WAIT';
-        this.stateTimer = this.WAIT_FRAMES;
+        // State: 'SHAKE' | 'SLAM' | 'RETRACT'
+        this.state      = 'SHAKE'; // start with warning shake immediately
+        this.shakeTimer = this.SHAKE_FRAMES;
 
-        // Shake offset (set each frame while shaking)
         this.shakeX = 0;
         this.shakeY = 0;
-
         this.hasKilledThisSlam = false;
     }
 
@@ -764,37 +761,26 @@ class Crusher {
 
         switch (this.state) {
 
-            case 'WAIT':
-                this.shakeX = 0;
-                this.shakeY = 0;
-                this.stateTimer--;
-                if (this.stateTimer <= 0) {
-                    this.state      = 'SHAKE';
-                    this.stateTimer = this.SHAKE_FRAMES;
-                    this.hasKilledThisSlam = false;
-                }
-                break;
-
             case 'SHAKE':
-                // Mirror the falling-platform shake: ±4px random jitter
+                // ±4px random jitter — warning before slam
                 this.shakeX = (Math.random() - 0.5) * 4;
                 this.shakeY = (Math.random() - 0.5) * 4;
-                this.stateTimer--;
-                if (this.stateTimer <= 0) {
+                this.shakeTimer--;
+                if (this.shakeTimer <= 0) {
                     this.shakeX = 0;
                     this.shakeY = 0;
                     this.state  = 'SLAM';
+                    this.hasKilledThisSlam = false;
                 }
                 break;
 
             case 'SLAM':
                 this.y = Math.min(this.y + this.slamSpeed, this.slamTargetY);
 
-                // Kill check — instant death on contact
+                // Kill check — instant death on contact during descent
                 if (!this.hasKilledThisSlam) {
-                    const baseDrawX  = this.tileX + this.drawOffsetX;
-                    const cLeft      = baseDrawX;
-                    const cRight     = baseDrawX + this.width;
+                    const cLeft      = this.tileX + this.drawOffsetX;
+                    const cRight     = cLeft + this.width;
                     const crusherBot = this.y + this.height;
 
                     const overlapX = p.x + p.width > cLeft && p.x < cRight;
@@ -802,28 +788,31 @@ class Crusher {
 
                     if (overlapX && overlapY) {
                         this.hasKilledThisSlam = true;
-                        engine.damagePlayer(true); // instant death
+                        engine.damagePlayer(true);
                     }
                 }
 
                 if (this.y >= this.slamTargetY) {
                     this.state = 'RETRACT';
+                    this.hasKilledThisSlam = false;
                 }
                 break;
 
             case 'RETRACT':
                 this.y = Math.max(this.y - this.retractSpeed, this.restY);
                 if (this.y <= this.restY) {
-                    this.state      = 'WAIT';
-                    this.stateTimer = this.WAIT_FRAMES;
+                    // Back at ceiling — start shaking immediately for next slam
+                    this.state      = 'SHAKE';
+                    this.shakeTimer = this.SHAKE_FRAMES;
                 }
                 break;
         }
     }
 
     draw(ctx, cameraX) {
-        const baseX = this.tileX + this.drawOffsetX;
-        const drawX = Math.round(baseX - cameraX + this.shakeX);
+        // Canvas is already translated by -cameraX in the render loop.
+        // Draw at world coordinates — DO NOT subtract cameraX here.
+        const drawX = Math.round(this.tileX + this.drawOffsetX + this.shakeX);
 
         if (crusherImgLoaded) {
             // Preserve natural aspect ratio — sprite includes its own chains
