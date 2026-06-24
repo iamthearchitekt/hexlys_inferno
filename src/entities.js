@@ -725,14 +725,12 @@ class Crusher {
         this.tileX = x;
         this.tileY = y;
 
-        // Visual size — wide and brutal (4 tiles wide × 2 tiles tall)
-        // Reference image shows crusher ~4x the character's width, landscape orientation
-        this.width  = TILE_SIZE * 4;   // 180px wide
-        this.height = TILE_SIZE * 2;   // 90px tall
+        // Visual size — 3 tiles wide, height set at draw time from image aspect ratio
+        this.width  = TILE_SIZE * 3;  // 135px
+        this.height = TILE_SIZE * 2;  // collision box height (2 tiles, bottom of block)
 
-        // Draw centered on the placed tile column
-        // (4 tiles wide, so offset left by 1.5 tiles to center on the 1-tile anchor)
-        this.drawOffsetX = -TILE_SIZE * 1.5;
+        // Center the 3-wide block on the 1-tile anchor column
+        this.drawOffsetX = -TILE_SIZE;
 
         // Rest position: hangs from ceiling, bottom flush with the tile row
         this.restY      = y - this.height + TILE_SIZE;
@@ -826,24 +824,19 @@ class Crusher {
     draw(ctx, cameraX) {
         const baseX = this.tileX + this.drawOffsetX;
         const drawX = Math.round(baseX - cameraX + this.shakeX);
-        const drawY = Math.round(this.y + this.shakeY);
 
-        // 3 chains matching reference image: left, center, right
-        ctx.strokeStyle = '#3a3a3a';
-        ctx.lineWidth   = 5;
-        const chainPositions = [drawX + this.width * 0.15, drawX + this.width * 0.5, drawX + this.width * 0.85];
-        chainPositions.forEach(cx => {
-            ctx.beginPath();
-            ctx.moveTo(cx, 0);
-            ctx.lineTo(cx, drawY);
-            ctx.stroke();
-        });
-
-        // Crusher body
         if (crusherImgLoaded) {
-            ctx.drawImage(crusherImg, drawX, drawY, this.width, this.height);
+            // Preserve natural aspect ratio — sprite includes its own chains
+            const drawW = this.width;
+            const aspect = crusherImg.naturalHeight / crusherImg.naturalWidth;
+            const drawH = drawW * aspect;
+            // Anchor the BOTTOM of the sprite to the bottom of the crusher block
+            // so chains visually extend upward as the block drops
+            const drawY = Math.round(this.y + this.height - drawH + this.shakeY);
+            ctx.drawImage(crusherImg, drawX, drawY, drawW, drawH);
         } else {
-            // Fallback: dark slab with red warning stripe at bottom
+            // Fallback: dark slab with spikes at bottom
+            const drawY = Math.round(this.y + this.shakeY);
             ctx.fillStyle = '#2a2a2a';
             ctx.fillRect(drawX, drawY, this.width, this.height);
             ctx.fillStyle = '#880000';
