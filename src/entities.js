@@ -720,25 +720,24 @@ class Enemy {
 // then slowly retracts. Player detection is NOT required.
 // ============================================================
 class Crusher {
-    constructor(x, y) {
-        // x, y = top-left pixel of the tile cell that placed this crusher
+    constructor(x, floorY) {
+        // x        = world X of the anchor tile column
+        // floorY   = world Y of the floor surface (scanned from levelGrid by engine)
         this.tileX = x;
-        this.tileY = y;
 
-        // Visual size — 3 tiles wide, height set at draw time from image aspect ratio
-        this.width  = TILE_SIZE * 3;  // 135px
-        this.height = TILE_SIZE * 2;  // collision box height (2 tiles, bottom of block)
+        // Visual size — 3 tiles wide, 2 tiles tall (collision box)
+        this.width  = TILE_SIZE * 3;
+        this.height = TILE_SIZE * 2;
 
         // Center the 3-wide block on the 1-tile anchor column
         this.drawOffsetX = -TILE_SIZE;
 
-        // Always hangs from the ceiling — the tile's Y row is ignored.
-        // Only the X column from tile placement matters.
-        this.restY      = TILE_SIZE;                     // top of play area (below 1-row padding)
+        // Always hangs from the ceiling — tile row is irrelevant
+        this.restY      = TILE_SIZE;
         this.y          = this.restY;
 
-        // Slam all the way down to just above the ground (floor at row 10 in levelGrid, accounting for 1-row top padding)
-        this.slamTargetY = 10 * TILE_SIZE - this.height;  // block bottom flush with floor surface
+        // Slam until block bottom lands on the real floor surface
+        this.slamTargetY = floorY - this.height;
 
         // Speeds
         this.slamSpeed    = 22;  // px/frame — fast and brutal

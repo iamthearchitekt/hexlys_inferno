@@ -486,7 +486,15 @@ class GameEngine {
                 } else if (cell === 21) {
                     // Crusher — level 4 (The Avarice Yard) only
                     if (this.currentLevelIndex === 3) {
-                        this.crushers.push(new Crusher(c * TILE_SIZE, actualRow * TILE_SIZE));
+                        // Scan down from ceiling to find the actual floor Y for this column
+                        let floorY = this.levelGrid.length * TILE_SIZE; // fallback: bottom of grid
+                        for (let scanRow = 2; scanRow < this.levelGrid.length; scanRow++) {
+                            if (this.isSolid(this.levelGrid[scanRow][c])) {
+                                floorY = scanRow * TILE_SIZE;
+                                break;
+                            }
+                        }
+                        this.crushers.push(new Crusher(c * TILE_SIZE, floorY));
                     }
                     this.levelGrid[actualRow][c] = TILES.EMPTY;
                 } else {
@@ -1192,7 +1200,36 @@ class GameEngine {
             b.update(this);
             if (b.dead) this.bosses.splice(i, 1);
         }
-        this.crushers.forEach(c => c.update(this));
+        this.crushers.forEach(crusher => {
+            crusher.update(this);
+
+            // Solid collision — crusher body is impassable once below ceiling
+            if (crusher.state === 'WAIT' || crusher.state === 'SHAKE') return;
+            const p = this.player;
+            const cLeft   = crusher.tileX + crusher.drawOffsetX;
+            const cRight  = cLeft + crusher.width;
+            const cTop    = crusher.y;
+            const cBottom = crusher.y + crusher.height;
+            const overlapX = p.x + p.width > cLeft && p.x < cRight;
+            const overlapY = p.y + p.height > cTop  && p.y < cBottom;
+            if (overlapX && overlapY) {
+                // Instant kill if crusher is actively slamming down
+                if (crusher.state === 'SLAM') {
+                    this.damagePlayer(true);
+                    return;
+                }
+                // Otherwise push player out horizontally (impassable wall)
+                const pushLeft  = p.x + p.width - cLeft;
+                const pushRight = cRight - p.x;
+                if (pushLeft < pushRight) {
+                    p.x = cLeft - p.width;
+                } else {
+                    p.x = cRight;
+                }
+                p.vx = 0;
+            }
+        });
+
 
         
         for (let i = this.fireballs.length - 1; i >= 0; i--) {
