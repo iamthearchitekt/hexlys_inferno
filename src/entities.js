@@ -732,12 +732,13 @@ class Crusher {
         // Center the 3-wide block on the 1-tile anchor column
         this.drawOffsetX = -TILE_SIZE;
 
-        // Rest position: hangs from ceiling, bottom flush with the tile row
-        this.restY      = y - this.height + TILE_SIZE;
+        // Always hangs from the ceiling — the tile's Y row is ignored.
+        // Only the X column from tile placement matters.
+        this.restY      = TILE_SIZE;                     // top of play area (below 1-row padding)
         this.y          = this.restY;
 
-        // Slam target: bottom of crusher reaches the floor of the open space
-        this.slamTargetY = y + TILE_SIZE * 1.5;
+        // Slam all the way down to just above the ground (floor at row 10 in levelGrid, accounting for 1-row top padding)
+        this.slamTargetY = 10 * TILE_SIZE - this.height;  // block bottom flush with floor surface
 
         // Speeds
         this.slamSpeed    = 22;  // px/frame — fast and brutal
