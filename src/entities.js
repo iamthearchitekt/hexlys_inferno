@@ -715,41 +715,46 @@ class Enemy {
 
 // ============================================================
 // CRUSHER — Ceiling-mounted instant-kill trap
-// Placed via tile ID 21 in the level layout.
-// Hangs from the ceiling, detects Hexly entering its column,
-// slams down at high speed for an instant kill, then slowly
-// retracts. Cycle repeats indefinitely.
+// Tile ID 21 — Level 4 (The Avarice Yard) only.
+// Timer-driven: every ~5 seconds it warns (shake), then slams,
+// then slowly retracts. Player detection is NOT required.
 // ============================================================
 class Crusher {
     constructor(x, y) {
-        // x, y = top-left of the tile cell that placed this crusher
+        // x, y = top-left pixel of the tile cell that placed this crusher
         this.tileX = x;
         this.tileY = y;
 
-        // Visual size (pixels)
-        this.width  = TILE_SIZE;       // 45px wide — one tile column
-        this.height = TILE_SIZE * 1.5; // 67px tall — imposing block
+        // Visual size — big and imposing (2 tiles wide, 3 tiles tall)
+        this.width  = TILE_SIZE * 2;
+        this.height = TILE_SIZE * 3;
 
-        // Rest at ceiling: crusher top flush with the tile row above
-        this.restY  = y - this.height + TILE_SIZE * 0.5;
-        this.y      = this.restY;
+        // Draw centered on the placed tile column
+        this.drawOffsetX = -TILE_SIZE / 2; // shift left half a tile to center the 2-wide block
 
-        // State machine: 'WAIT' | 'SLAM' | 'RETRACT'
-        this.state  = 'WAIT';
+        // Rest position: hangs from ceiling, bottom flush with the tile row
+        this.restY      = y - this.height + TILE_SIZE;
+        this.y          = this.restY;
 
-        // Travel range: slam down until bottom hits the ground row
-        this.slamTargetY = y + TILE_SIZE * 0.5; // just below the tile row
+        // Slam target: bottom of crusher reaches the floor of the open space
+        this.slamTargetY = y + TILE_SIZE * 1.5;
 
         // Speeds
-        this.slamSpeed    = 28;  // pixels/frame — brutal
-        this.retractSpeed = 1.8; // pixels/frame — slow menacing return
+        this.slamSpeed    = 22;  // px/frame — fast and brutal
+        this.retractSpeed = 1.5; // px/frame — slow, menacing return
 
-        // Cooldown after retracting before slamming again (frames)
-        this.waitFrames = 80;
-        this.waitTimer  = this.waitFrames;
+        // Timer-driven cycle (frames @ 60fps)
+        // WAIT(300) → SHAKE(60) → SLAM → RETRACT → repeat
+        this.WAIT_FRAMES  = 300; // 5 seconds idle
+        this.SHAKE_FRAMES = 60;  // 1 second warning shake
 
-        // Detection column half-width (trigger when Hexly centre is within)
-        this.triggerWidth = TILE_SIZE * 0.7;
+        // State machine: 'WAIT' | 'SHAKE' | 'SLAM' | 'RETRACT'
+        this.state      = 'WAIT';
+        this.stateTimer = this.WAIT_FRAMES;
+
+        // Shake offset (set each frame while shaking)
+        this.shakeX = 0;
+        this.shakeY = 0;
 
         this.hasKilledThisSlam = false;
     }
@@ -758,22 +763,27 @@ class Crusher {
         const p = engine.player;
 
         switch (this.state) {
+
             case 'WAIT':
-                // Trigger when Hexly is inside this column and below the crusher
-                if (this.waitTimer > 0) {
-                    this.waitTimer--;
-                    break;
-                }
-                const hexlyCentreX = p.x + p.width / 2;
-                const crushCentreX = this.tileX + this.width / 2;
-                const inColumn = Math.abs(hexlyCentreX - crushCentreX) < this.triggerWidth;
-                const below    = p.y > this.y;
-                if (inColumn && below) {
-                    this.state = 'SLAM';
+                this.shakeX = 0;
+                this.shakeY = 0;
+                this.stateTimer--;
+                if (this.stateTimer <= 0) {
+                    this.state      = 'SHAKE';
+                    this.stateTimer = this.SHAKE_FRAMES;
                     this.hasKilledThisSlam = false;
-                    if (typeof synth !== 'undefined' && synth.playBrickBreak) {
-                        synth.playBrickBreak(); // Repurpose existing sfx for now
-                    }
+                }
+                break;
+
+            case 'SHAKE':
+                // Mirror the falling-platform shake: ±4px random jitter
+                this.shakeX = (Math.random() - 0.5) * 4;
+                this.shakeY = (Math.random() - 0.5) * 4;
+                this.stateTimer--;
+                if (this.stateTimer <= 0) {
+                    this.shakeX = 0;
+                    this.shakeY = 0;
+                    this.state  = 'SLAM';
                 }
                 break;
 
@@ -782,15 +792,13 @@ class Crusher {
 
                 // Kill check — instant death on contact
                 if (!this.hasKilledThisSlam) {
-                    const crusherBottom = this.y + this.height;
-                    const pTop  = p.y;
-                    const pLeft = p.x;
-                    const pRight = p.x + p.width;
-                    const cLeft  = this.tileX;
-                    const cRight = this.tileX + this.width;
+                    const baseDrawX  = this.tileX + this.drawOffsetX;
+                    const cLeft      = baseDrawX;
+                    const cRight     = baseDrawX + this.width;
+                    const crusherBot = this.y + this.height;
 
-                    const overlapX = pRight > cLeft && pLeft < cRight;
-                    const overlapY = crusherBottom >= pTop && this.y < pTop + p.height;
+                    const overlapX = p.x + p.width > cLeft && p.x < cRight;
+                    const overlapY = crusherBot >= p.y && this.y < p.y + p.height;
 
                     if (overlapX && overlapY) {
                         this.hasKilledThisSlam = true;
@@ -806,44 +814,40 @@ class Crusher {
             case 'RETRACT':
                 this.y = Math.max(this.y - this.retractSpeed, this.restY);
                 if (this.y <= this.restY) {
-                    this.state = 'WAIT';
-                    this.waitTimer = this.waitFrames;
+                    this.state      = 'WAIT';
+                    this.stateTimer = this.WAIT_FRAMES;
                 }
                 break;
         }
     }
 
     draw(ctx, cameraX) {
-        const drawX = Math.round(this.tileX - cameraX);
-        const drawY = Math.round(this.y);
+        const baseX = this.tileX + this.drawOffsetX;
+        const drawX = Math.round(baseX - cameraX + this.shakeX);
+        const drawY = Math.round(this.y + this.shakeY);
+        const midX  = drawX + this.width / 2;
 
-        if (crusherImgLoaded) {
-            // Draw the crusher sprite, stretched to fill the block
-            ctx.drawImage(crusherImg, drawX, drawY, this.width, this.height);
-        } else {
-            // Fallback: dark grey block with red warning stripe
-            ctx.fillStyle = '#2a2a2a';
-            ctx.fillRect(drawX, drawY, this.width, this.height);
-            ctx.fillStyle = '#cc0000';
-            ctx.fillRect(drawX, drawY + this.height - 8, this.width, 8);
-        }
-
-        // Draw the chain/rod connecting crusher to the ceiling
-        ctx.strokeStyle = 'rgba(60,60,60,0.9)';
-        ctx.lineWidth = 5;
+        // Chain from ceiling to top of crusher
+        ctx.strokeStyle = '#3a3a3a';
+        ctx.lineWidth   = 6;
         ctx.beginPath();
-        ctx.moveTo(drawX + this.width / 2, drawY);
-        ctx.lineTo(drawX + this.width / 2, Math.round(this.tileY - cameraX < 0 ? 0 : 0)); // ceiling line
+        ctx.moveTo(midX, 0);
+        ctx.lineTo(midX, drawY);
         ctx.stroke();
 
-        // Slam state: add red warning glow
-        if (this.state === 'SLAM') {
-            ctx.save();
-            ctx.shadowColor = '#ff2200';
-            ctx.shadowBlur  = 20;
-            ctx.fillStyle   = 'rgba(255,34,0,0.18)';
+        // Crusher body
+        if (crusherImgLoaded) {
+            ctx.drawImage(crusherImg, drawX, drawY, this.width, this.height);
+        } else {
+            // Fallback: dark slab with red warning stripe at bottom
+            ctx.fillStyle = '#2a2a2a';
             ctx.fillRect(drawX, drawY, this.width, this.height);
-            ctx.restore();
+            ctx.fillStyle = '#880000';
+            ctx.fillRect(drawX, drawY + this.height - 10, this.width, 10);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px monospace';
+            ctx.fillText('CRUSHER', drawX + 8, drawY + this.height / 2 + 4);
         }
     }
 }
+
