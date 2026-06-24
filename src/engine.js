@@ -2328,7 +2328,7 @@ class GameEngine {
                 const existing = layout[row][col];
                 
                 // Pick up existing if it matches a placeable type, else use selected type
-                const placeables = [1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17];
+                const placeables = [1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 21];
                 const typeToDrag = placeables.includes(existing) ? existing : selectedTileType;
                 
                 if (typeToDrag === 7) {
@@ -2451,6 +2451,20 @@ class GameEngine {
                 else if (t === 15 && ghostIdleImg.complete) this.ctx.drawImage(ghostIdleImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
                 else if (t === 17 && bogZombie1ImgLoaded) this.ctx.drawImage(bogZombie1Img, drawX, drawY, TILE_SIZE, TILE_SIZE);
                 else if (t === 18 && oneUpTileImgLoaded) this.ctx.drawImage(oneUpTileImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
+                else if (t === 21) {
+                    // Crusher: grey block + red warning stripe
+                    if (crusherImgLoaded) {
+                        this.ctx.drawImage(crusherImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
+                    } else {
+                        this.ctx.fillStyle = '#2a2a2a';
+                        this.ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        this.ctx.fillStyle = '#cc0000';
+                        this.ctx.fillRect(drawX, drawY + TILE_SIZE - 8, TILE_SIZE, 8);
+                        this.ctx.fillStyle = '#ffffff';
+                        this.ctx.font = '8px monospace';
+                        this.ctx.fillText('CR', drawX + 14, drawY + 26);
+                    }
+                }
             }
         }
 
@@ -2477,6 +2491,17 @@ class GameEngine {
             else if (t === 15 && ghostIdleImg.complete) this.ctx.drawImage(ghostIdleImg, drawX, drawY, TILE_SIZE, TILE_SIZE);
             else if (t === 16) { this.ctx.fillStyle = 'rgba(0, 100, 0, 0.7)'; this.ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE); }
             else if (t === 17 && bogZombie1ImgLoaded) this.ctx.drawImage(bogZombie1Img, drawX, drawY, TILE_SIZE, TILE_SIZE);
+            else if (t === 21) {
+                // Crusher drag preview
+                if (crusherImgLoaded) {
+                    this.ctx.drawImage(crusherImg, drawX, drawY, TILE_SIZE, TILE_SIZE * 1.5);
+                } else {
+                    this.ctx.fillStyle = '#2a2a2a';
+                    this.ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                    this.ctx.fillStyle = '#cc0000';
+                    this.ctx.fillRect(drawX, drawY + TILE_SIZE - 8, TILE_SIZE, 8);
+                }
+            }
             this.ctx.globalAlpha = 1.0;
         }
 
